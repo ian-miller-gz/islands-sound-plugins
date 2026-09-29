@@ -16,10 +16,8 @@ void contour(
 }
 
 void glide(DUO::Synth &synth) {
-  for (CORE::VOICE::Allocator *allocator : {&synth.low, &synth.high}) {
-    allocator->glide.time = synth.rows[DUO::GLIDE];
-    CORE::VOICE::settle(*allocator, synth.rate);
-  }
+  synth.allocator.glide.time = synth.rows[DUO::GLIDE];
+  CORE::VOICE::settle(synth.allocator, synth.rate);
 }
 
 void swing(DUO::Synth &synth) {

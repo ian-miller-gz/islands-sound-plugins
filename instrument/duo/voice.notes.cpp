@@ -20,16 +20,15 @@ void lifted(DUO::Synth &synth, const CORE::VOICE::Note &) {
 
 using Visit = void (*)(DUO::Synth &, const CORE::VOICE::Note &);
 
-constexpr Visit LOWS[] = {kept, struck, tied, lifted};
-constexpr Visit HIGHS[] = {kept, tied, tied, kept};
-static_assert(std::size(LOWS) == CORE::VOICE::LIFTED + 1);
-static_assert(std::size(HIGHS) == CORE::VOICE::LIFTED + 1);
+constexpr Whole CHANGES = CORE::VOICE::LIFTED + 1;
 
-template <Whole COUNT>
-void visit(
-  const Visit (&visits)[COUNT], DUO::Synth &synth,
-  const CORE::VOICE::Note &note) {
-  if (note.change < COUNT) visits[note.change](synth, note);
+constexpr Visit VISITS[CORE::VOICE::PARTS][CHANGES] = {
+  {kept, struck, tied, lifted}, {kept, tied, tied, kept}};
+
+void visit(DUO::Synth &synth, const CORE::VOICE::Note &note) {
+  const Whole part = Whole(&note - synth.allocator.notes);
+  if (part >= CORE::VOICE::PARTS || note.change >= CHANGES) return;
+  VISITS[part][note.change](synth, note);
 }
 
 }  // namespace
@@ -45,12 +44,9 @@ void SOUND::PLUGINS::DUO::sample(Synth &synth) {
 
 void SOUND::PLUGINS::DUO::apply(
   Synth &synth, const AUDIO::PLUGIN::Event &event) {
-  CORE::VOICE::apply(
-    synth.high, event,
-    [&synth](const CORE::VOICE::Note &note) { ::visit(HIGHS, synth, note); });
   const Whole row = CORE::VOICE::apply(
-    synth.low, event,
-    [&synth](const CORE::VOICE::Note &note) { ::visit(LOWS, synth, note); });
+    synth.allocator, event,
+    [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);

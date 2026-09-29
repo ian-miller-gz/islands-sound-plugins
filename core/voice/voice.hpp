@@ -9,11 +9,12 @@ constexpr Whole PHASES = 4;
 constexpr Whole NONE = ~Whole(0);
 constexpr Float FULL = 1.0f;
 
-enum Mode : Whole { POLY, MONO, MODES };
+enum Mode : Whole { POLY, MONO, DUO, MODES };
 enum Steal : Whole { OLDEST, QUIETEST, STEALS };
 enum Priority : Whole { LAST, LOW, HIGH, PRIORITIES };
 enum Slide : Whole { ALWAYS, LEGATO, SLIDES };
 enum Change : Whole { KEPT, STRUCK, TIED, LIFTED };
+enum Part : Whole { LOWER, UPPER, PARTS };
 
 struct Note {
   Whole pitch = 0;
@@ -48,10 +49,15 @@ struct Allocator {
   Glide glide;
   Whole keys[PHASE::PITCHES] = {};
   Whole clock = 0;
+  Flag hold = false;
+  Flag lifts[PHASE::PITCHES] = {};
 };
 
 void settle(Allocator &allocator, Whole rate);
 auto apply(Allocator &allocator, const AUDIO::PLUGIN::Event &event) -> Whole;
+void strike(Allocator &allocator, Whole pitch, Float velocity);
+void lift(Allocator &allocator, Whole pitch);
+void hold(Allocator &allocator, Flag held);
 auto tick(Note &note, const Glide &glide) -> Float;
 
 auto limit(const Allocator &allocator) -> Whole;
@@ -77,15 +83,12 @@ auto apply(
   return row;
 }
 
+template <class Visit>
+void hold(Allocator &allocator, Flag held, Visit &&visit) {
+  hold(allocator, held);
+  drain(allocator, visit);
+}
+
 }  // namespace SOUND::PLUGINS::CORE::VOICE
 
-namespace SOUND::PLUGINS::CORE::VOICE::POLYPHONY {
-void strike(Allocator &allocator, Whole pitch, Float velocity);
-void lift(Allocator &allocator, Whole pitch);
-}  // namespace SOUND::PLUGINS::CORE::VOICE::POLYPHONY
-
-namespace SOUND::PLUGINS::CORE::VOICE::MONOPHONY {
-auto choose(const Allocator &allocator) -> Whole;
-void strike(Allocator &allocator, Whole pitch, Float velocity);
-void lift(Allocator &allocator, Whole pitch);
-}  // namespace SOUND::PLUGINS::CORE::VOICE::MONOPHONY
+#include "voice.modes.hpp"

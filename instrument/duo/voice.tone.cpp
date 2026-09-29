@@ -19,7 +19,7 @@ auto swing(DUO::Synth &synth) -> Float {
   const Float value = CORE::MODULATOR::tick(synth.lfo);
   if (synth.lfo.phase >= before) return value;
   if (synth.rows[DUO::CLOCK] == 0) synth.held = synth.input;
-  const CORE::VOICE::Note &lead = synth.low.notes[0];
+  const CORE::VOICE::Note &lead = synth.allocator.notes[CORE::VOICE::LOWER];
   if (synth.rows[DUO::REPEAT] > 0 && lead.held)
     DUO::strike(synth, lead.velocity);
   return value;
@@ -33,8 +33,12 @@ auto width(const DUO::Synth &synth, Float lfo, Float adsr) -> Float {
 void quiet(DUO::Synth &synth) {
   if (CORE::ENVELOPE::sounding(synth.adsr.gate)) return;
   if (CORE::ENVELOPE::sounding(synth.ar.gate)) return;
-  synth.low.notes[0].sounding = false;
-  synth.high.notes[0].sounding = false;
+  for (CORE::VOICE::Note &note : synth.allocator.notes) note.sounding = false;
+}
+
+auto glide(DUO::Synth &synth, Whole part) -> Float {
+  CORE::VOICE::Allocator &allocator = synth.allocator;
+  return CORE::VOICE::tick(allocator.notes[part], allocator.glide);
 }
 
 }  // namespace
@@ -46,8 +50,8 @@ auto SOUND::PLUGINS::DUO::sound(Synth &synth) -> Float {
   const Float random = CORE::MODULATOR::tick(synth.lag, synth.held);
   const Float adsr = CORE::ENVELOPE::tick(synth.adsr.gate, synth.adsr.envelope);
   const Float ar = CORE::ENVELOPE::tick(synth.ar.gate, synth.ar.envelope);
-  const Float low = CORE::VOICE::tick(synth.low.notes[0], synth.low.glide);
-  const Float high = CORE::VOICE::tick(synth.high.notes[0], synth.high.glide);
+  const Float low = ::glide(synth, CORE::VOICE::LOWER);
+  const Float high = ::glide(synth, CORE::VOICE::UPPER);
   const Float drift =
     synth.tune + rows[BEND] + rows[VIBRATO] * lfo + rows[SAMPLE] * random;
   const Float root = rows[KEYBOARD] > 0 ? low : REFERENCE + ::DRONE;

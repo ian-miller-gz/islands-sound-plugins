@@ -36,36 +36,19 @@ auto route(POLYMOD::Synth &synth, const Event &event) -> Whole {
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
 }
 
-auto lifting(const Event &event) -> Flag {
-  if (event.kind == Event::NOTE_OFF) return true;
-  return event.kind == Event::NOTE_ON && event.value <= 0;
-}
-
-auto deferred(POLYMOD::Synth &synth, const Event &event) -> Flag {
-  if (event.index >= CORE::PHASE::PITCHES) return false;
-  const Flag lift = ::lifting(event);
-  if (event.kind == Event::NOTE_ON && !lift) synth.lifts[event.index] = false;
-  if (!lift || synth.rows[POLYMOD::HOLD] <= 0) return false;
-  synth.lifts[event.index] = true;
-  return true;
-}
-
-void release(POLYMOD::Synth &synth) {
-  for (Whole pitch = 0; pitch < CORE::PHASE::PITCHES; ++pitch) {
-    if (!synth.lifts[pitch]) continue;
-    synth.lifts[pitch] = false;
-    ::route(synth, {.kind = Event::NOTE_OFF, .index = pitch});
-  }
+void sustain(POLYMOD::Synth &synth) {
+  CORE::VOICE::hold(
+    synth.allocator, synth.rows[POLYMOD::HOLD] > 0,
+    [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
 }
 
 }  // namespace
 
 void SOUND::PLUGINS::POLYMOD::apply(
   Synth &synth, const AUDIO::PLUGIN::Event &event) {
-  if (::deferred(synth, event)) return;
   const Whole row = ::route(synth, event);
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);
-  if (row == HOLD && synth.rows[HOLD] <= 0) ::release(synth);
+  if (row == HOLD) ::sustain(synth);
 }

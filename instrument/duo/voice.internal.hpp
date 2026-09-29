@@ -28,16 +28,8 @@ struct Synth {
   Whole rate = 0;
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
-  CORE::VOICE::Allocator low = {
-    .count = 1,
-    .mode = CORE::VOICE::MONO,
-    .priority = CORE::VOICE::LOW,
-    .legato = true};
-  CORE::VOICE::Allocator high = {
-    .count = 1,
-    .mode = CORE::VOICE::MONO,
-    .priority = CORE::VOICE::HIGH,
-    .legato = true};
+  CORE::VOICE::Allocator allocator = {
+    .count = CORE::VOICE::PARTS, .mode = CORE::VOICE::DUO, .legato = true};
   CORE::OSCILLATOR::Oscillator first;
   CORE::OSCILLATOR::Sync second;
   CORE::NOISE::Pink noise;

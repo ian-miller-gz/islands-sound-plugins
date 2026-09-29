@@ -34,9 +34,6 @@ const AUDIO::PLUGIN::Plug surface = {
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
 [[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
-  {.name = "duo",
-   .type = "instrument",
-   .voicing = SOUND::PLUGIN::MONO,
-   .surface = &surface});
+  {.name = "duo", .type = "instrument", .voicing = "duo", .surface = &surface});
 
 }  // namespace

@@ -48,10 +48,14 @@ void sing(
 
 }  // namespace
 
+auto SOUND::PLUGINS::CORE::VOICE::MONOPHONY::choose(
+  const Allocator &allocator, Whole priority) -> Whole {
+  return ::CHOOSERS[priority < PRIORITIES ? priority : LAST](allocator);
+}
+
 auto SOUND::PLUGINS::CORE::VOICE::MONOPHONY::choose(const Allocator &allocator)
   -> Whole {
-  const Whole priority = allocator.priority;
-  return ::CHOOSERS[priority < PRIORITIES ? priority : LAST](allocator);
+  return choose(allocator, allocator.priority);
 }
 
 void SOUND::PLUGINS::CORE::VOICE::MONOPHONY::strike(

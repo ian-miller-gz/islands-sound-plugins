@@ -6,7 +6,7 @@ import pytest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TYPES = {'instrument', 'effect', 'notes', 'control', 'device', 'modular', 'emulator', 'core'}
 VOICED = {'instrument', 'emulator'}
-VOICINGS = {'mono', 'poly'}
+VOICINGS = {'mono', 'poly', 'duo'}
 LINES = 100
 CONTEXT = 'SOUND::PLUGINS'
 SEAM = 'SOUND::PLUGIN'

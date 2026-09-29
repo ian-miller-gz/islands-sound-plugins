@@ -37,7 +37,6 @@ struct Synth {
   CORE::ENVELOPE::Envelope contour;
   CORE::ENVELOPE::Envelope loudness;
   Float tune = 0;
-  Flag lifts[CORE::PHASE::PITCHES] = {};
   CORE::BLOCK::Meter meter;
 };
 

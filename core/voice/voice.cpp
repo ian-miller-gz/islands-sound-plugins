@@ -10,30 +10,16 @@ constexpr Whole KINDS = AUDIO::PLUGIN::Event::PROGRAM + 1;
 constexpr Float WIDTH = 2.0f;
 constexpr Float HALF = 0.5f;
 
-using Strike = void (*)(VOICE::Allocator &, Whole, Float);
-using Lift = void (*)(VOICE::Allocator &, Whole);
-
-constexpr Strike STRIKES[VOICE::MODES] = {
-  VOICE::POLYPHONY::strike, VOICE::MONOPHONY::strike};
-constexpr Lift LIFTS[VOICE::MODES] = {
-  VOICE::POLYPHONY::lift, VOICE::MONOPHONY::lift};
-
-auto mode(const VOICE::Allocator &allocator) -> Whole {
-  return allocator.mode < VOICE::MODES ? allocator.mode : VOICE::POLY;
-}
-
 auto lifted(VOICE::Allocator &allocator, const AUDIO::PLUGIN::Event &event)
   -> Whole {
-  if (event.index < PHASE::PITCHES)
-    LIFTS[mode(allocator)](allocator, event.index);
+  VOICE::lift(allocator, event.index);
   return VOICE::NONE;
 }
 
 auto struck(VOICE::Allocator &allocator, const AUDIO::PLUGIN::Event &event)
   -> Whole {
   if (event.value <= 0) return lifted(allocator, event);
-  if (event.index < PHASE::PITCHES)
-    STRIKES[mode(allocator)](allocator, event.index, event.value);
+  VOICE::strike(allocator, event.index, event.value);
   return VOICE::NONE;
 }
 
