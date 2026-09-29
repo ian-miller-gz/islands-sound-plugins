@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto flanged(
   const FLANGER::Effect &effect, FLANGER::Channel &strip, Float in,
@@ -14,7 +14,7 @@ auto flanged(
 
 }  // namespace
 
-void SOUND::FLANGER::render(
+void SOUND::PLUGINS::FLANGER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

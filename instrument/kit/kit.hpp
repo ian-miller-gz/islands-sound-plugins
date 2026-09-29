@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::KIT {
+namespace SOUND::PLUGINS::KIT {
 
 enum Drum : Whole {
   KICK,
@@ -51,4 +51,4 @@ inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 constexpr Whole PARAMETERS = SHEET.count;
 static_assert(PARAMETERS == ACCENT + 1);
 
-}  // namespace SOUND::KIT
+}  // namespace SOUND::PLUGINS::KIT

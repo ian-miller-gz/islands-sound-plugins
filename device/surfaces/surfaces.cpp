@@ -6,8 +6,8 @@
 #include "surfaces.internal.hpp"
 
 namespace {
-using namespace SOUND;
-using namespace SOUND::SURFACES;
+using namespace SOUND::PLUGINS;
+using namespace SOUND::PLUGINS::SURFACES;
 
 auto hearing(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
@@ -82,12 +82,12 @@ const AUDIO::PLUGIN::Plug midiout = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}},
   .outs = {}};
 
+const SOUND::PLUGIN::Offer OFFERS[] = {
+  {.name = INPUT, .type = "device", .surface = &input, .bind = hear},
+  {.name = OUTPUT, .type = "device", .surface = &output, .bind = sound},
+  {.name = MIDIOUT, .type = "device", .surface = &midiout, .bind = speak}};
+
 [[maybe_unused]] const Flag offers =
-  PLUGIN::offer(
-    {.name = SURFACES::INPUT, .surface = &input, .bind = SURFACES::hear}) &&
-  PLUGIN::offer(
-    {.name = SURFACES::OUTPUT, .surface = &output, .bind = SURFACES::sound}) &&
-  PLUGIN::offer(
-    {.name = SURFACES::MIDIOUT, .surface = &midiout, .bind = SURFACES::speak});
+  std::ranges::all_of(OFFERS, SOUND::PLUGIN::offer);
 
 }  // namespace

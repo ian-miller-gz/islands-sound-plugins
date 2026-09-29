@@ -2,7 +2,7 @@
 #pragma once
 #include "oscillator.wave.hpp"
 
-namespace SOUND::CORE::OSCILLATOR {
+namespace SOUND::PLUGINS::CORE::OSCILLATOR {
 
 constexpr Whole SAWS = 7;
 constexpr Whole MIDDLE = SAWS / 2;
@@ -21,4 +21,4 @@ void settle(Super &super, Float hertz, Float detune, Float mix, Whole rate);
 void scatter(Super &super, Wheel seed);
 auto tick(Super &super) -> Float;
 
-}  // namespace SOUND::CORE::OSCILLATOR
+}  // namespace SOUND::PLUGINS::CORE::OSCILLATOR

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<DCO::Synth, DCO::SHEET>;
 
@@ -34,7 +34,10 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "dco", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "dco",
+   .type = "instrument",
+   .voicing = SOUND::PLUGIN::POLY,
+   .surface = &surface});
 
 }  // namespace

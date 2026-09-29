@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 
-namespace SOUND::RINGMOD {
+namespace SOUND::PLUGINS::RINGMOD {
 
 constexpr Float UNITY = 1.0f;
 
@@ -28,4 +28,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::RINGMOD
+}  // namespace SOUND::PLUGINS::RINGMOD

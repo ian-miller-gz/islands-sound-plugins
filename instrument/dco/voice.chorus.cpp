@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float MILLISECOND = 0.001f;
 constexpr Float SPAN = 12;
@@ -32,7 +32,7 @@ static_assert(std::size(MODES) == std::size(DCO::CHORUSES));
 
 }  // namespace
 
-void SOUND::DCO::build(Chorus &chorus, Whole rate) {
+void SOUND::PLUGINS::DCO::build(Chorus &chorus, Whole rate) {
   CORE::LINE::build(chorus.line, Whole(SPAN * MILLISECOND * Float(rate)));
   for (Whole at = 0; at < LINES; ++at) {
     CORE::MODULATOR::Lfo &lfo = chorus.lfos[at];
@@ -42,7 +42,7 @@ void SOUND::DCO::build(Chorus &chorus, Whole rate) {
   }
 }
 
-void SOUND::DCO::settle(Chorus &chorus, Whole mode, Whole rate) {
+void SOUND::PLUGINS::DCO::settle(Chorus &chorus, Whole mode, Whole rate) {
   const Mode &chosen = ::MODES[mode < std::size(::MODES) ? mode : 0];
   for (Whole at = 0; at < LINES; ++at) {
     chorus.lfos[at].hertz = chosen.rate;
@@ -54,7 +54,7 @@ void SOUND::DCO::settle(Chorus &chorus, Whole mode, Whole rate) {
   chorus.wet = chosen.wet;
 }
 
-auto SOUND::DCO::tick(Chorus &chorus, Float in) -> Pair {
+auto SOUND::PLUGINS::DCO::tick(Chorus &chorus, Float in) -> Pair {
   Float wets[LINES];
   for (Whole at = 0; at < LINES; ++at) {
     const Float swing = CORE::MODULATOR::tick(chorus.lfos[at]);

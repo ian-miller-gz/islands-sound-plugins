@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float ONE = 1.0f;
 
@@ -33,7 +33,7 @@ auto frame(BUS::Bus &bus, AUDIO::PLUGIN::Sample *const *lanes, Whole frame)
 
 }  // namespace
 
-void SOUND::BUS::render(
+void SOUND::PLUGINS::BUS::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

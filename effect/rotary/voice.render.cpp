@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto heard(
   ROTARY::Effect &effect, AUDIO::PLUGIN::Sample *const *lanes,
@@ -45,7 +45,7 @@ void place(
 
 }  // namespace
 
-void SOUND::ROTARY::render(
+void SOUND::PLUGINS::ROTARY::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

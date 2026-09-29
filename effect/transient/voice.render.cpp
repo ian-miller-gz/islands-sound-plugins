@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto lead(Float over, Float under) -> Float {
   if (over <= under || over <= TRANSIENT::QUIET) return 0;
@@ -23,7 +23,7 @@ void play(
 
 }  // namespace
 
-void SOUND::TRANSIENT::render(
+void SOUND::PLUGINS::TRANSIENT::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

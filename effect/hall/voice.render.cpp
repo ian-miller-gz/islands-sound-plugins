@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto heard(
   const HALL::Effect &effect, AUDIO::PLUGIN::Sample *const *lanes,
@@ -29,7 +29,7 @@ void place(
 
 }  // namespace
 
-void SOUND::HALL::render(
+void SOUND::PLUGINS::HALL::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

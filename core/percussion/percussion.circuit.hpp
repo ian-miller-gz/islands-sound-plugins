@@ -7,7 +7,7 @@
 #include "../oscillator/oscillator.hpp"
 #include "../shaper/shaper.hpp"
 
-namespace SOUND::CORE::PERCUSSION {
+namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
 constexpr Whole BANK = 6;
 constexpr Float METALLIC[BANK] = {205.3f, 304.4f, 369.6f,
@@ -33,7 +33,11 @@ struct Sweep {
   Float depth = 0;
 };
 
+namespace HEIGHT {
+
 enum Height : Whole { LOW, MID, HIGH, HEIGHTS };
+
+}  // namespace HEIGHT
 
 struct Key {
   Whole pitch;
@@ -83,4 +87,4 @@ auto play(
   return peak;
 }
 
-}  // namespace SOUND::CORE::PERCUSSION
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION

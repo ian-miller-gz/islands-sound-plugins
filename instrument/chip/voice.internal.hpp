@@ -6,7 +6,7 @@
 #include "../../core/phase/phase.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::CHIP {
+namespace SOUND::PLUGINS::CHIP {
 
 constexpr Float CPU = 1789773;
 constexpr Whole VOICES = 1;
@@ -93,4 +93,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::CHIP
+}  // namespace SOUND::PLUGINS::CHIP

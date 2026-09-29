@@ -2,7 +2,7 @@
 #include "percussion.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float DETUNE = 1.8333f;
 constexpr Float BODY = 0.6f;
@@ -14,7 +14,7 @@ constexpr Float FLAT = 0;
 
 }  // namespace
 
-void SOUND::CORE::PERCUSSION::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Snare &snare, Float tune, Float tone, Float snappy, Float decay, Whole rate) {
   settle(snare.low, tune, decay * BODY, rate);
   settle(snare.high, tune * DETUNE, decay * BODY, rate);
@@ -24,14 +24,14 @@ void SOUND::CORE::PERCUSSION::settle(
   snare.snappy = snappy;
 }
 
-void SOUND::CORE::PERCUSSION::strike(Snare &snare, Float velocity) {
+void SOUND::PLUGINS::CORE::PERCUSSION::strike(Snare &snare, Float velocity) {
   snare.velocity = struck(velocity);
   strike(snare.low, snare.velocity);
   strike(snare.high, snare.velocity * UPPER);
   ENVELOPE::strike(snare.gate, snare.rattle, snare.velocity);
 }
 
-auto SOUND::CORE::PERCUSSION::tick(Snare &snare) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Snare &snare) -> Float {
   const Float tones = (tick(snare.low) + tick(snare.high)) * TONES;
   const Float banded = FILTER::tick(snare.band, NOISE::tick(snare.white));
   const Float noise = FILTER::tick(snare.floor, banded);

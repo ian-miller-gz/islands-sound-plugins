@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float HALF = 0.5f;
@@ -58,7 +58,7 @@ auto quiet(const MONO::Synth &synth) -> Flag {
 
 }  // namespace
 
-auto SOUND::MONO::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::MONO::sound(Synth &synth) -> Float {
   CORE::VOICE::Note &note = synth.allocator.notes[0];
   const Float noise = CORE::NOISE::tick(synth.noise);
   const Float lfo = ::swing(synth, noise);

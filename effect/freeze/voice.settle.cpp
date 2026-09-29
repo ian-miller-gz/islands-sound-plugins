@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto frames(Float milliseconds, Whole rate) -> Float {
   return milliseconds / FREEZE::SECOND * Float(rate);
@@ -12,7 +12,7 @@ auto frames(Float milliseconds, Whole rate) -> Float {
 
 }  // namespace
 
-void SOUND::FREEZE::build(Effect &effect) {
+void SOUND::PLUGINS::FREEZE::build(Effect &effect) {
   effect.strips.resize(effect.channels);
   const Float reach =
     OVERLAP * ::frames(LONGEST, effect.rate) + CORE::LINE::NEAREST;
@@ -24,7 +24,7 @@ void SOUND::FREEZE::build(Effect &effect) {
   CORE::MODULATOR::settle(effect.latch, effect.rate);
 }
 
-void SOUND::FREEZE::settle(Effect &effect) {
+void SOUND::PLUGINS::FREEZE::settle(Effect &effect) {
   const Float size = ::frames(effect.rows[SIZE], effect.rate);
   effect.grain.span = OVERLAP * size;
   effect.grain.step = -UNITY;
@@ -38,13 +38,14 @@ void SOUND::FREEZE::settle(Effect &effect) {
   effect.held = effect.rows[HOLD] >= HALF;
 }
 
-void SOUND::FREEZE::engage(Effect &effect) {
+void SOUND::PLUGINS::FREEZE::engage(Effect &effect) {
   for (Strip &strip : effect.strips) CORE::CLOUD::clear(strip.cloud);
   effect.level = UNITY;
   effect.countdown = 0;
 }
 
-void SOUND::FREEZE::apply(Effect &effect, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::FREEZE::apply(
+  Effect &effect, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   const Flag was = effect.held;

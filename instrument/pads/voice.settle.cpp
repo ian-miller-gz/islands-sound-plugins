@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr CORE::PERCUSSION::Key KEYS[] = {
   {35, PADS::KICK}, {36, PADS::KICK}, {38, PADS::SNARE}, {40, PADS::SNARE},
@@ -15,7 +15,7 @@ auto knob(const PADS::Kit &kit, Whole pad, Whole knob) -> Float {
 
 }  // namespace
 
-void SOUND::PADS::settle(Kit &kit, Whole pad) {
+void SOUND::PLUGINS::PADS::settle(Kit &kit, Whole pad) {
   if (pad >= PADS) return;
   const CORE::PERCUSSION::Voicing voicing = {
     .tune = ::knob(kit, pad, TUNE),
@@ -27,11 +27,11 @@ void SOUND::PADS::settle(Kit &kit, Whole pad) {
   CORE::PERCUSSION::settle(kit.pads[pad], voicing, kit.rate);
 }
 
-void SOUND::PADS::settle(Kit &kit) {
+void SOUND::PLUGINS::PADS::settle(Kit &kit) {
   for (Whole pad = 0; pad < PADS; ++pad) settle(kit, pad);
 }
 
-void SOUND::PADS::apply(Kit &kit, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::PADS::apply(Kit &kit, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     if (event.index >= PARAMETERS) return;
     kit.rows[event.index] =

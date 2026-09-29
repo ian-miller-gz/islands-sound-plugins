@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto pitched(Float hertz) -> Float {
   return CORE::PHASE::ANCHOR +
@@ -41,14 +41,14 @@ void steer(
 
 }  // namespace
 
-void SOUND::HARMONIZER::follow(Harmonizer &harmonizer, Float sample) {
+void SOUND::PLUGINS::HARMONIZER::follow(Harmonizer &harmonizer, Float sample) {
   if (!CORE::PITCH::feed(harmonizer.detector, &sample, 1)) return;
   const CORE::PITCH::Estimate &estimate = harmonizer.detector.estimate;
   if (estimate.confidence < VOICED || estimate.hertz <= 0) return;
   harmonizer.pitch = ::pitched(estimate.hertz);
 }
 
-void SOUND::HARMONIZER::steer(Harmonizer &harmonizer) {
+void SOUND::PLUGINS::HARMONIZER::steer(Harmonizer &harmonizer) {
   for (Whole at = 0; at < VOICES; ++at) {
     CORE::VOICE::Note &note = harmonizer.allocator.notes[at];
     if (note.sounding) ::steer(harmonizer, harmonizer.parts[at], note);

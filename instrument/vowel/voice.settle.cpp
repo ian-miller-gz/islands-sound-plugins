@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 struct Shape {
   Float place;
@@ -21,7 +21,7 @@ void voice(const VOWEL::Singer &singer, VOWEL::Throat &throat, Shape shape) {
 
 }  // namespace
 
-void SOUND::VOWEL::settle(Singer &singer) {
+void SOUND::PLUGINS::VOWEL::settle(Singer &singer) {
   const Float *rows = singer.rows;
   singer.gain = rows[GAIN];
   singer.envelope = CORE::ENVELOPE::ADSR::create(

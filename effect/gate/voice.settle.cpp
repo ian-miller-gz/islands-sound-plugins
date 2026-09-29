@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-void SOUND::GATE::build(Effect &effect) {
+void SOUND::PLUGINS::GATE::build(Effect &effect) {
   effect.keys.resize(effect.channels);
   effect.sense.kind = CORE::DYNAMICS::PEAK;
   effect.sense.release = SENSE;
@@ -9,7 +9,7 @@ void SOUND::GATE::build(Effect &effect) {
   effect.envelope.kind = CORE::DYNAMICS::PEAK;
 }
 
-void SOUND::GATE::settle(Effect &effect) {
+void SOUND::PLUGINS::GATE::settle(Effect &effect) {
   for (auto &key : effect.keys) {
     key.hertz = effect.rows[SIDECHAIN];
     CORE::DYNAMICS::settle(key, effect.rate);

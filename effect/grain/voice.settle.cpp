@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto reach(Whole rate) -> Whole {
   const Float climb = CORE::PHASE::ratio(GRAIN::OCTAVES * GRAIN::SEMITONE);
@@ -18,7 +18,7 @@ auto frames(Float milliseconds, Whole rate) -> Float {
 
 }  // namespace
 
-void SOUND::GRAIN::build(Effect &effect) {
+void SOUND::PLUGINS::GRAIN::build(Effect &effect) {
   effect.strips.resize(effect.channels);
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
   for (Strip &strip : effect.strips) {
@@ -29,7 +29,7 @@ void SOUND::GRAIN::build(Effect &effect) {
   }
 }
 
-void SOUND::GRAIN::settle(Effect &effect) {
+void SOUND::PLUGINS::GRAIN::settle(Effect &effect) {
   const Float span = ::frames(effect.rows[SIZE], effect.rate);
   const Float ratio = CORE::PHASE::ratio(effect.rows[PITCH] * SEMITONE);
   const Float overlap = effect.rows[DENSITY] * effect.rows[SIZE] / SECOND;
@@ -45,7 +45,8 @@ void SOUND::GRAIN::settle(Effect &effect) {
   effect.wet = effect.rows[MIX];
 }
 
-void SOUND::GRAIN::apply(Effect &effect, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::GRAIN::apply(
+  Effect &effect, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   effect.rows[event.index] =

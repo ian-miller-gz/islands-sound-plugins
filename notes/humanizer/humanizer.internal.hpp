@@ -5,9 +5,9 @@
 #include "../../core/noise/noise.hpp"
 #include "../../core/notes/notes.hpp"
 
-namespace SOUND::HUMANIZER {
+namespace SOUND::PLUGINS::HUMANIZER {
 
-constexpr Whole WAITING = PLUGIN::ROOM;
+constexpr Whole WAITING = SOUND::PLUGIN::ROOM;
 constexpr Float FAINTEST = 0.01f;
 constexpr Float LOUDEST = 1.0f;
 
@@ -25,7 +25,7 @@ struct Humanizer {
   Pending queue[WAITING] = {};
   Whole queued = 0;
   CORE::NOTES::Tally tally;
-  AUDIO::PLUGIN::Event notes[PLUGIN::ROOM] = {};
+  AUDIO::PLUGIN::Event notes[SOUND::PLUGIN::ROOM] = {};
   CORE::NOTES::Out out;
 };
 
@@ -39,4 +39,4 @@ auto answer(
   void *instance, const AUDIO::PLUGIN::Event *events, Whole count,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole;
 
-}  // namespace SOUND::HUMANIZER
+}  // namespace SOUND::PLUGINS::HUMANIZER

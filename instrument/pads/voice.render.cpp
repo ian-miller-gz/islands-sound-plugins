@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-auto SOUND::PADS::mix(Kit &kit) -> Float {
+auto SOUND::PLUGINS::PADS::mix(Kit &kit) -> Float {
   Float sum = 0;
   for (Whole pad = 0; pad < PADS; ++pad)
     sum += CORE::PERCUSSION::tick(kit.pads[pad]) * kit.rows[place(pad, LEVEL)];
   return CORE::SHAPER::soft(sum);
 }
 
-void SOUND::PADS::render(
+void SOUND::PLUGINS::PADS::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

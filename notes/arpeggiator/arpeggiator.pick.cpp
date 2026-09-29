@@ -2,7 +2,7 @@
 #include "arpeggiator.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Pick = auto (*)(ARPEGGIATOR::Arpeggio &, Whole, Whole) -> Whole;
 
@@ -34,8 +34,8 @@ static_assert(sizeof(PICKS) / sizeof(PICKS[0]) == ARPEGGIATOR::MODES);
 
 }  // namespace
 
-auto SOUND::ARPEGGIATOR::pick(Arpeggio &arpeggio, Whole step, Whole total)
-  -> Whole {
+auto SOUND::PLUGINS::ARPEGGIATOR::pick(
+  Arpeggio &arpeggio, Whole step, Whole total) -> Whole {
   const Whole mode = Whole(arpeggio.rows[MODE]);
   return ::PICKS[mode < MODES ? mode : 0](arpeggio, step, total);
 }

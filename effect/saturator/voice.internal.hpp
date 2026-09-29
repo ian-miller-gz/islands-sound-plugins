@@ -6,7 +6,7 @@
 #include "../../core/noise/noise.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::SATURATOR {
+namespace SOUND::PLUGINS::SATURATOR {
 
 constexpr Float STILL = 10.0f;
 constexpr Float TRIM = 0.5f;
@@ -43,4 +43,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::SATURATOR
+}  // namespace SOUND::PLUGINS::SATURATOR

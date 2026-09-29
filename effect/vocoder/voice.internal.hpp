@@ -10,7 +10,7 @@
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::VOCODER {
+namespace SOUND::PLUGINS::VOCODER {
 
 constexpr Whole BANDS = 16;
 constexpr Whole CARRIERS = CORE::VOICE::VOICES;
@@ -63,4 +63,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::VOCODER
+}  // namespace SOUND::PLUGINS::VOCODER

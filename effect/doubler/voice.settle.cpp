@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float UNITY = 1.0f;
 constexpr Float HALF = 0.5f;
@@ -31,7 +31,7 @@ void seat(
 
 }  // namespace
 
-void SOUND::DOUBLER::build(Doubler &doubler) {
+void SOUND::PLUGINS::DOUBLER::build(Doubler &doubler) {
   const Float longest =
     ::frames(doubler, LONGEST * ::FARTHEST + SWING * ::BOTH);
   CORE::LINE::build(doubler.line, Whole(longest) + 1);
@@ -42,7 +42,7 @@ void SOUND::DOUBLER::build(Doubler &doubler) {
   }
 }
 
-void SOUND::DOUBLER::settle(Doubler &doubler) {
+void SOUND::PLUGINS::DOUBLER::settle(Doubler &doubler) {
   doubler.count = doubler.rows[VOICES] >= ::HALF ? COPIES : ::PAIRED;
   doubler.scale = ::UNITY / std::sqrt(Float(doubler.count));
   doubler.swing = ::frames(doubler, doubler.rows[WOBBLE] * SWING);
@@ -59,7 +59,7 @@ void SOUND::DOUBLER::settle(Doubler &doubler) {
   }
 }
 
-void SOUND::DOUBLER::apply(
+void SOUND::PLUGINS::DOUBLER::apply(
   Doubler &doubler, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;

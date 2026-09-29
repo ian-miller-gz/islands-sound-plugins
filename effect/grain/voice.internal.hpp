@@ -6,7 +6,7 @@
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::GRAIN {
+namespace SOUND::PLUGINS::GRAIN {
 
 constexpr Whole GRAINS = 64;
 constexpr Float UNITY = 1.0f;
@@ -45,4 +45,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::GRAIN
+}  // namespace SOUND::PLUGINS::GRAIN

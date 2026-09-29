@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-void SOUND::STEPS::render(
+void SOUND::PLUGINS::STEPS::render(
   void *instance, AUDIO::PLUGIN::Sample *const *, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

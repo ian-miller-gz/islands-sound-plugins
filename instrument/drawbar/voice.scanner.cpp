@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float MILLISECOND = 0.001f;
 constexpr Float SPAN = 4;
@@ -28,7 +28,7 @@ static_assert(std::size(MODES) == std::size(DRAWBAR::SCANNERS));
 
 }  // namespace
 
-void SOUND::DRAWBAR::build(Scanner &scanner, Whole rate) {
+void SOUND::PLUGINS::DRAWBAR::build(Scanner &scanner, Whole rate) {
   CORE::LINE::build(scanner.line, Whole(SPAN * MILLISECOND * Float(rate)));
   scanner.lfo.wave = CORE::MODULATOR::TRIANGLE;
   scanner.lfo.hertz = SCAN;
@@ -36,7 +36,7 @@ void SOUND::DRAWBAR::build(Scanner &scanner, Whole rate) {
   CORE::MODULATOR::reset(scanner.lfo);
 }
 
-void SOUND::DRAWBAR::settle(Scanner &scanner, Whole mode, Whole rate) {
+void SOUND::PLUGINS::DRAWBAR::settle(Scanner &scanner, Whole mode, Whole rate) {
   const Mode &chosen = ::MODES[mode < std::size(::MODES) ? mode : 0];
   CORE::LINE::settle(
     scanner.sweep, CENTRE * MILLISECOND, chosen.depth * MILLISECOND, 0, rate);
@@ -44,7 +44,7 @@ void SOUND::DRAWBAR::settle(Scanner &scanner, Whole mode, Whole rate) {
   scanner.dry = chosen.dry;
 }
 
-auto SOUND::DRAWBAR::tick(Scanner &scanner, Float in) -> Float {
+auto SOUND::PLUGINS::DRAWBAR::tick(Scanner &scanner, Float in) -> Float {
   const Float swing = CORE::MODULATOR::tick(scanner.lfo);
   const Float wet = CORE::LINE::read(scanner.line, scanner.sweep, swing);
   CORE::LINE::write(scanner.line, in);

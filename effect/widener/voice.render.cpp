@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto cascade(CORE::FILTER::Biquad *stages, Float in) -> Float {
   for (Whole stage = 0; stage < WIDENER::ORDER; ++stage)
@@ -35,7 +35,7 @@ void play(
 
 }  // namespace
 
-void SOUND::WIDENER::render(
+void SOUND::PLUGINS::WIDENER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

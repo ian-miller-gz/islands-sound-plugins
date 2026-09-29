@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::RHYTHM {
+namespace SOUND::PLUGINS::RHYTHM {
 
 enum Voice : Whole { KICK, SNARE, HAT, CYMBAL, VOICES };
 
@@ -33,4 +33,4 @@ inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 constexpr Whole PARAMETERS = SHEET.count;
 static_assert(PARAMETERS == LEVELS + VOICES);
 
-}  // namespace SOUND::RHYTHM
+}  // namespace SOUND::PLUGINS::RHYTHM

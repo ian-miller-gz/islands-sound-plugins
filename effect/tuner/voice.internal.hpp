@@ -5,7 +5,7 @@
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/pitch/pitch.hpp"
 
-namespace SOUND::TUNER {
+namespace SOUND::PLUGINS::TUNER {
 
 constexpr Float LOWEST = 70.0f;
 constexpr Float HIGHEST = 1000.0f;
@@ -47,4 +47,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::TUNER
+}  // namespace SOUND::PLUGINS::TUNER

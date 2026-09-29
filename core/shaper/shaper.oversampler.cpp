@@ -2,7 +2,7 @@
 #include "shaper.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float TWO = 2.0f;
 constexpr Float HALF = 0.5f;
@@ -27,12 +27,14 @@ auto folded(const Float (&history)[SHAPER::SPAN]) -> Float {
 
 }  // namespace
 
-auto SOUND::CORE::SHAPER::up(Oversampler &oversampler, Float in) -> Pair {
+auto SOUND::PLUGINS::CORE::SHAPER::up(Oversampler &oversampler, Float in)
+  -> Pair {
   ::push(oversampler.ups, in);
   return {TWO * ::folded(oversampler.ups), oversampler.ups[SIDE - 1]};
 }
 
-auto SOUND::CORE::SHAPER::down(Oversampler &oversampler, Pair pair) -> Float {
+auto SOUND::PLUGINS::CORE::SHAPER::down(Oversampler &oversampler, Pair pair)
+  -> Float {
   ::push(oversampler.odds, pair.late);
   ::push(oversampler.evens, pair.early);
   return ::folded(oversampler.odds) + HALF * oversampler.evens[SIDE - 1];

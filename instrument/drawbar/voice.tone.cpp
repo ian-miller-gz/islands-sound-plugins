@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float LEVEL = 0.08f;
 constexpr Float FULL = 1;
@@ -35,7 +35,7 @@ auto drive(const Float *rows, Float in) -> Float {
 
 }  // namespace
 
-auto SOUND::DRAWBAR::sound(Organ &organ) -> Pair {
+auto SOUND::PLUGINS::DRAWBAR::sound(Organ &organ) -> Pair {
   const Tones tones = ::turn(organ);
   const Float decay = CORE::ENVELOPE::tick(organ.gate, organ.percussion);
   const Float percussion = tones.struck * decay * organ.accent;

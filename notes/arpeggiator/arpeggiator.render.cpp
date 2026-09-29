@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "arpeggiator.internal.hpp"
 
-void SOUND::ARPEGGIATOR::render(
+void SOUND::PLUGINS::ARPEGGIATOR::render(
   void *instance, AUDIO::PLUGIN::Sample *const *, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

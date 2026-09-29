@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::QUANTIZER {
+namespace SOUND::PLUGINS::QUANTIZER {
 
 constexpr Whole SCALE = 0;
 constexpr Whole ROOT = 1;
@@ -32,4 +32,4 @@ static_assert(sizeof(ROWS) / sizeof(ROWS[0]) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::QUANTIZER
+}  // namespace SOUND::PLUGINS::QUANTIZER

@@ -2,7 +2,7 @@
 #include "quantizer.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void lift(
   QUANTIZER::Quantizer &quantizer, Whole key, Whole offset,
@@ -31,7 +31,7 @@ void turn(QUANTIZER::Quantizer &quantizer, const AUDIO::PLUGIN::Event &event) {
 
 }  // namespace
 
-void SOUND::QUANTIZER::apply(
+void SOUND::PLUGINS::QUANTIZER::apply(
   Quantizer &quantizer, const AUDIO::PLUGIN::Event &event,
   CORE::NOTES::Out &out) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER)

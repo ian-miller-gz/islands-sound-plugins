@@ -5,7 +5,7 @@
 #include "oscillator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float HALF = 0.5f;
 
@@ -17,19 +17,19 @@ auto offset(Float radians) -> OSCILLATOR::Wheel {
 
 }  // namespace
 
-void SOUND::CORE::OSCILLATOR::settle(
+void SOUND::PLUGINS::CORE::OSCILLATOR::settle(
   Operator &unit, Float hertz, Float feedback, Whole rate) {
   const Float top = Float(rate) * HALF;
   unit.step = PHASE::step(hertz < 0 ? 0 : hertz > top ? top : hertz, rate);
   unit.feedback = feedback;
 }
 
-void SOUND::CORE::OSCILLATOR::reset(Operator &unit, Wheel phase) {
+void SOUND::PLUGINS::CORE::OSCILLATOR::reset(Operator &unit, Wheel phase) {
   unit.phase = phase;
   for (Float &past : unit.history) past = 0;
 }
 
-auto SOUND::CORE::OSCILLATOR::tick(
+auto SOUND::PLUGINS::CORE::OSCILLATOR::tick(
   Operator &unit, const Table &table, Float modulation, Float level) -> Float {
   const Float looped =
     unit.feedback * (unit.history[0] + unit.history[1]) * HALF;

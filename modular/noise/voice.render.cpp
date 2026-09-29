@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto white(NOISE::Source &source) -> Float {
   return CORE::NOISE::tick(source.white);
@@ -31,7 +31,7 @@ auto colour(const NOISE::Module &module) -> Colour {
 
 }  // namespace
 
-void SOUND::NOISE::render(
+void SOUND::PLUGINS::NOISE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

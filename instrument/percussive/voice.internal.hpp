@@ -6,7 +6,7 @@
 
 #include "percussive.hpp"
 
-namespace SOUND::PERCUSSIVE {
+namespace SOUND::PLUGINS::PERCUSSIVE {
 
 constexpr Whole TABLE = 1024;
 constexpr Whole SHIFT = 22;
@@ -48,12 +48,12 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::PERCUSSIVE
+}  // namespace SOUND::PLUGINS::PERCUSSIVE
 
-namespace SOUND::PERCUSSIVE::SURFACE {
+namespace SOUND::PLUGINS::PERCUSSIVE::SURFACE {
 auto parameters(void *instance) -> Whole;
 auto name(void *instance, Whole index) -> String;
 auto reading(void *instance, Whole index) -> String;
 auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::PERCUSSIVE::SURFACE
+}  // namespace SOUND::PLUGINS::PERCUSSIVE::SURFACE

@@ -6,42 +6,46 @@
 namespace {
 
 auto least(Whole index) -> Float {
-  return index == SOUND::FADER::PAN ? -SOUND::FADER::UNITY : 0.0f;
+  return index == SOUND::PLUGINS::FADER::PAN ? -SOUND::PLUGINS::FADER::UNITY
+                                             : 0.0f;
 }
 
 auto most(Whole index) -> Float {
-  return index == SOUND::FADER::PAN ? SOUND::FADER::UNITY
-                                    : SOUND::FADER::LOUDEST;
+  return index == SOUND::PLUGINS::FADER::PAN ? SOUND::PLUGINS::FADER::UNITY
+                                             : SOUND::PLUGINS::FADER::LOUDEST;
 }
 
 auto sane(void *instance, Whole index) -> Flag {
-  return instance != nullptr && index < SOUND::FADER::PARAMETERS;
+  return instance != nullptr && index < SOUND::PLUGINS::FADER::PARAMETERS;
 }
 
 }  // namespace
 
-auto SOUND::FADER::clamped(Whole index, Float value) -> Float {
+auto SOUND::PLUGINS::FADER::clamped(Whole index, Float value) -> Float {
   const Float floor = ::least(index);
   const Float ceiling = ::most(index);
   return value < floor ? floor : value > ceiling ? ceiling : value;
 }
 
-auto SOUND::FADER::SURFACE::parameters(void *instance) -> Whole {
+auto SOUND::PLUGINS::FADER::SURFACE::parameters(void *instance) -> Whole {
   return instance == nullptr ? 0 : PARAMETERS;
 }
 
-auto SOUND::FADER::SURFACE::name(void *instance, Whole index) -> String {
+auto SOUND::PLUGINS::FADER::SURFACE::name(void *instance, Whole index)
+  -> String {
   if (!::sane(instance, index)) return {};
   return index == GAIN ? "Gain" : "Pan";
 }
 
-auto SOUND::FADER::SURFACE::held(void *instance, Whole index) -> Float {
+auto SOUND::PLUGINS::FADER::SURFACE::held(void *instance, Whole index)
+  -> Float {
   if (!::sane(instance, index)) return 0;
   const auto &level = *static_cast<const Level *>(instance);
   return index == GAIN ? level.gain : level.pan;
 }
 
-auto SOUND::FADER::SURFACE::reading(void *instance, Whole index) -> String {
+auto SOUND::PLUGINS::FADER::SURFACE::reading(void *instance, Whole index)
+  -> String {
   if (!::sane(instance, index)) return {};
   char buffer[16];
   std::snprintf(
@@ -49,7 +53,7 @@ auto SOUND::FADER::SURFACE::reading(void *instance, Whole index) -> String {
   return buffer;
 }
 
-auto SOUND::FADER::SURFACE::control(
+auto SOUND::PLUGINS::FADER::SURFACE::control(
   void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
   if (!::sane(instance, index)) return false;
   out = {

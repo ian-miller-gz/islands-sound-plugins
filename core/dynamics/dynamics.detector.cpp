@@ -6,7 +6,7 @@
 #include "../modulator/modulator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float TAU = 6.2831853f;
 
@@ -29,12 +29,13 @@ auto kind(const DYNAMICS::Detector &detector) -> Whole {
 
 }  // namespace
 
-void SOUND::CORE::DYNAMICS::settle(Detector &detector, Whole rate) {
+void SOUND::PLUGINS::CORE::DYNAMICS::settle(Detector &detector, Whole rate) {
   detector.rise = MODULATOR::pole(detector.attack, rate);
   detector.fall = MODULATOR::pole(detector.release, rate);
 }
 
-auto SOUND::CORE::DYNAMICS::tick(Detector &detector, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::DYNAMICS::tick(Detector &detector, Float in)
+  -> Float {
   const Whole measured = ::kind(detector);
   const Float heard = ::MEASURES[measured](in);
   const Float pole = heard > detector.level ? detector.rise : detector.fall;
@@ -42,18 +43,18 @@ auto SOUND::CORE::DYNAMICS::tick(Detector &detector, Float in) -> Float {
   return ::READINGS[measured](detector.level);
 }
 
-auto SOUND::CORE::DYNAMICS::RING::create(Whole capacity) -> Ring {
+auto SOUND::PLUGINS::CORE::DYNAMICS::RING::create(Whole capacity) -> Ring {
   Ring ring;
   ring.samples.assign(capacity + 1, 0);
   return ring;
 }
 
-void SOUND::CORE::DYNAMICS::delay(Ring &ring, Whole length) {
+void SOUND::PLUGINS::CORE::DYNAMICS::delay(Ring &ring, Whole length) {
   const Whole most = ring.samples.empty() ? 0 : ring.samples.size() - 1;
   ring.length = length > most ? most : length;
 }
 
-auto SOUND::CORE::DYNAMICS::tick(Ring &ring, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::DYNAMICS::tick(Ring &ring, Float in) -> Float {
   if (ring.samples.empty()) return in;
   const Whole size = ring.samples.size();
   ring.samples[ring.at] = in;
@@ -62,12 +63,13 @@ auto SOUND::CORE::DYNAMICS::tick(Ring &ring, Float in) -> Float {
   return ring.samples[from];
 }
 
-void SOUND::CORE::DYNAMICS::settle(Highpass &highpass, Whole rate) {
+void SOUND::PLUGINS::CORE::DYNAMICS::settle(Highpass &highpass, Whole rate) {
   const Float turn = rate == 0 ? 0 : TAU * highpass.hertz / Float(rate);
   highpass.pole = turn <= 0 ? 0 : UNITY - std::exp(-turn);
 }
 
-auto SOUND::CORE::DYNAMICS::tick(Highpass &highpass, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::DYNAMICS::tick(Highpass &highpass, Float in)
+  -> Float {
   highpass.low += (in - highpass.low) * highpass.pole;
   return in - highpass.low;
 }

@@ -6,7 +6,7 @@
 #include "../../core/table/table.hpp"
 #include "mono.indices.hpp"
 
-namespace SOUND::MONO {
+namespace SOUND::PLUGINS::MONO {
 
 constexpr Whole FEET = 3;
 constexpr Whole THREEWAY = 2;
@@ -64,4 +64,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::MONO
+}  // namespace SOUND::PLUGINS::MONO

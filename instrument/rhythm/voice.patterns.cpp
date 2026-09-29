@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole QUADRUPLE = 4;
 constexpr Whole TRIPLE = 3;
@@ -50,16 +50,16 @@ constexpr RHYTHM::Pattern TABLE[RHYTHM::PATTERNS] = {
 
 }  // namespace
 
-auto SOUND::RHYTHM::pattern(Whole index) -> const Pattern & {
+auto SOUND::PLUGINS::RHYTHM::pattern(Whole index) -> const Pattern & {
   return ::TABLE[index < PATTERNS ? index : 0];
 }
 
-auto SOUND::RHYTHM::length(const Pattern &pattern) -> Whole {
+auto SOUND::PLUGINS::RHYTHM::length(const Pattern &pattern) -> Whole {
   return pattern.beats * pattern.division;
 }
 
-auto SOUND::RHYTHM::struck(const Pattern &pattern, Whole voice, Whole step)
-  -> Flag {
+auto SOUND::PLUGINS::RHYTHM::struck(
+  const Pattern &pattern, Whole voice, Whole step) -> Flag {
   const Whole steps = length(pattern);
   if (voice >= VOICES || step >= steps) return false;
   return ((pattern.lanes[voice] >> (steps - ::BIT - step)) & ::BIT) != 0;

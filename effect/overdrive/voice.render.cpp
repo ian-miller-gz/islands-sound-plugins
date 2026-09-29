@@ -3,7 +3,7 @@
 #include "../../core/shaper/shaper.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto drive(OVERDRIVE::Strip &strip, Float in, Float gain) -> Float {
   const Float mids = CORE::FILTER::tick(strip.hump, in);
@@ -22,7 +22,7 @@ void play(
 
 }  // namespace
 
-void SOUND::OVERDRIVE::render(
+void SOUND::PLUGINS::OVERDRIVE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

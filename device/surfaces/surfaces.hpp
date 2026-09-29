@@ -2,10 +2,10 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::SURFACES {
+namespace SOUND::PLUGINS::SURFACES {
 
 constexpr STRING::Hot INPUT = "input";
 constexpr STRING::Hot OUTPUT = "output";
 constexpr STRING::Hot MIDIOUT = "midiout";
 
-}  // namespace SOUND::SURFACES
+}  // namespace SOUND::PLUGINS::SURFACES

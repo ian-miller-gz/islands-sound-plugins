@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float HALF = 0.5f;
 constexpr Float CENTRE = 0.012f;
@@ -31,7 +31,7 @@ auto blend(CHOIR::Stereo dry, CHOIR::Stereo wet, Float mix) -> CHOIR::Stereo {
 
 }  // namespace
 
-void SOUND::CHOIR::settle(
+void SOUND::PLUGINS::CHOIR::settle(
   Ensemble &ensemble, Room &room, const Float *rows, Whole rate) {
   ensemble.mix = rows[ENSEMBLE];
   for (Side &side : ensemble.sides)
@@ -45,7 +45,7 @@ void SOUND::CHOIR::settle(
   CORE::REVERB::settle(room.network, SIZE, DECAY, DAMP);
 }
 
-auto SOUND::CHOIR::spread(Choir &choir, Stereo dry) -> Stereo {
+auto SOUND::PLUGINS::CHOIR::spread(Choir &choir, Stereo dry) -> Stereo {
   Ensemble &ensemble = choir.ensemble;
   Float swings[TAPS];
   for (Whole tap = 0; tap < TAPS; ++tap)

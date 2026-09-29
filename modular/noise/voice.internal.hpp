@@ -5,7 +5,7 @@
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/noise/noise.hpp"
 
-namespace SOUND::NOISE {
+namespace SOUND::PLUGINS::NOISE {
 
 constexpr Float SMOOTH = 0.005f;
 constexpr CORE::NOISE::Register SPACING = 0x9E3779B9u;
@@ -35,4 +35,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::NOISE
+}  // namespace SOUND::PLUGINS::NOISE

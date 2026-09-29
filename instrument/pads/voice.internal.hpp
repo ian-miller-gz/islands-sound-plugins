@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/percussion/percussion.hpp"
 
-namespace SOUND::PADS {
+namespace SOUND::PLUGINS::PADS {
 
 struct Kit {
   Whole rate = 0;
@@ -25,4 +25,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::PADS
+}  // namespace SOUND::PLUGINS::PADS

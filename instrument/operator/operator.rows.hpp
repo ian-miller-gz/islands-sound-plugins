@@ -6,7 +6,7 @@
 #include "operator.indices.hpp"
 #include "operator.names.hpp"
 
-namespace SOUND::OPERATOR {
+namespace SOUND::PLUGINS::OPERATOR {
 
 constexpr Float ALGORITHMS = 32;
 constexpr Float LOOPS = 7;
@@ -78,4 +78,4 @@ constexpr auto describe(Whole index) -> CORE::TABLE::Row {
   return row;
 }
 
-}  // namespace SOUND::OPERATOR
+}  // namespace SOUND::PLUGINS::OPERATOR

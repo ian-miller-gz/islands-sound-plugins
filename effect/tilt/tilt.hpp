@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::TILT {
+namespace SOUND::PLUGINS::TILT {
 
 constexpr Whole PIVOT = 0;
 constexpr Whole TILT = 1;
@@ -18,4 +18,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::TILT
+}  // namespace SOUND::PLUGINS::TILT

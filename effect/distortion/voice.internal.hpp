@@ -5,7 +5,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::DISTORTION {
+namespace SOUND::PLUGINS::DISTORTION {
 
 constexpr Float TIGHT = 80.0f;
 constexpr Float STILL = 10.0f;
@@ -41,4 +41,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::DISTORTION
+}  // namespace SOUND::PLUGINS::DISTORTION

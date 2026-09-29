@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/dynamics/dynamics.hpp"
 
-namespace SOUND::LIMITER {
+namespace SOUND::PLUGINS::LIMITER {
 
 constexpr Float AHEAD = 0.005f;
 constexpr Float RAMP = 0.2f;
@@ -31,4 +31,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::LIMITER
+}  // namespace SOUND::PLUGINS::LIMITER

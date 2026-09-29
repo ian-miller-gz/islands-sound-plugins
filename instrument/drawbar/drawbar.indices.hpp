@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::DRAWBAR {
+namespace SOUND::PLUGINS::DRAWBAR {
 
 constexpr Whole BARS = 9;
 constexpr Whole PERCUSSION = 9;
@@ -18,4 +18,4 @@ constexpr Whole TUNE = 18;
 constexpr Whole VOLUME = 19;
 constexpr Whole PARAMETERS = 20;
 
-}  // namespace SOUND::DRAWBAR
+}  // namespace SOUND::PLUGINS::DRAWBAR

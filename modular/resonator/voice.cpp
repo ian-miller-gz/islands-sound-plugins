@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<RESONATOR::Module, RESONATOR::SHEET>;
 
@@ -38,7 +38,7 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::AUDIO}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "resonator", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "resonator", .type = "modular", .surface = &surface});
 
 }  // namespace

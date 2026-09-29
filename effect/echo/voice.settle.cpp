@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto frames(Float milliseconds, Whole rate) -> Float {
   return milliseconds * ECHO::MILLISECOND * Float(rate);
@@ -23,7 +23,7 @@ void wind(CORE::MODULATOR::Lfo &lfo, Float hertz, Whole rate) {
 
 }  // namespace
 
-void SOUND::ECHO::build(Effect &effect) {
+void SOUND::PLUGINS::ECHO::build(Effect &effect) {
   const Float longest =
     ::frames(CORE::TABLE::found(SHEET, TIME)->most, effect.rate);
   const Float reach = REACH * (UNITY + SHARE) * Float(effect.rate);
@@ -40,7 +40,7 @@ void SOUND::ECHO::build(Effect &effect) {
   effect.reach = REACH * Float(effect.rate);
 }
 
-void SOUND::ECHO::settle(Effect &effect) {
+void SOUND::PLUGINS::ECHO::settle(Effect &effect) {
   effect.frames = ::frames(effect.rows[TIME], effect.rate);
   const Float cutoff = ::cutoff(effect.rows[DAMP]);
   for (auto &track : effect.tracks)

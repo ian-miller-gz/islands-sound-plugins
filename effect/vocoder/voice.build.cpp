@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float AIR = 4000.0f;
 constexpr Float SNAP = 0.002f;
@@ -29,7 +29,7 @@ void hiss(VOCODER::Hiss &hiss, Whole rate) {
 
 }  // namespace
 
-void SOUND::VOCODER::build(Vocoder &vocoder) {
+void SOUND::PLUGINS::VOCODER::build(Vocoder &vocoder) {
   vocoder.allocator.count = CARRIERS;
   for (Whole at = 0; at < CARRIERS; ++at)
     CORE::NOISE::seed(

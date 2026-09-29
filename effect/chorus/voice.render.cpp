@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto voiced(const CHORUS::Effect &effect, CHORUS::Channel &strip, Float in)
   -> Float {
@@ -17,7 +17,7 @@ auto voiced(const CHORUS::Effect &effect, CHORUS::Channel &strip, Float in)
 
 }  // namespace
 
-void SOUND::CHORUS::render(
+void SOUND::PLUGINS::CHORUS::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

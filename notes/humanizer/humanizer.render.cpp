@@ -2,7 +2,7 @@
 #include "humanizer.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void flush(HUMANIZER::Humanizer &humanizer, Whole frame) {
   const Whole moment = humanizer.now + frame;
@@ -20,7 +20,7 @@ void flush(HUMANIZER::Humanizer &humanizer, Whole frame) {
 
 }  // namespace
 
-void SOUND::HUMANIZER::render(
+void SOUND::PLUGINS::HUMANIZER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

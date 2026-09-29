@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float TAU = 6.2831853f;
 constexpr Whole NOTES = 128;
@@ -52,17 +52,20 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "additive", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "additive",
+   .type = "instrument",
+   .voicing = SOUND::PLUGIN::POLY,
+   .surface = &surface});
 
 }  // namespace
 
-auto SOUND::ADDITIVE::delta(Float span, Whole rate) -> Float {
+auto SOUND::PLUGINS::ADDITIVE::delta(Float span, Whole rate) -> Float {
   const Float frames = span * Float(rate);
   return frames <= 1.0f ? 1.0f : 1.0f / frames;
 }
 
-void SOUND::ADDITIVE::shape(Synth &synth) {
+void SOUND::PLUGINS::ADDITIVE::shape(Synth &synth) {
   synth.rise = delta(synth.attack, synth.rate);
   synth.fall = delta(synth.decay, synth.rate) * (1.0f - synth.sustain);
   synth.drop = delta(synth.release, synth.rate);

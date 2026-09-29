@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-void SOUND::NOISE::seed(Module &module) {
+void SOUND::PLUGINS::NOISE::seed(Module &module) {
   module.sources.assign(module.channels, Source{});
   CORE::NOISE::Register state = CORE::NOISE::SEED;
   for (Source &source : module.sources) {
@@ -13,13 +13,14 @@ void SOUND::NOISE::seed(Module &module) {
   }
 }
 
-void SOUND::NOISE::settle(Module &module) {
+void SOUND::PLUGINS::NOISE::settle(Module &module) {
   module.level.time = SMOOTH;
   CORE::MODULATOR::settle(module.level, module.rate);
   module.target = module.rows[GAIN] * module.rows[GATE];
 }
 
-void SOUND::NOISE::apply(Module &module, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::NOISE::apply(
+  Module &module, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   module.rows[event.index] =

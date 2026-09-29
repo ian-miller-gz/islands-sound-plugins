@@ -4,7 +4,7 @@
 
 #include "compressor.hpp"
 
-namespace SOUND::COMPRESSOR {
+namespace SOUND::PLUGINS::COMPRESSOR {
 
 constexpr Whole DECIBELS = Whole(LOUDEST - QUIETEST);
 
@@ -33,12 +33,12 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::COMPRESSOR
+}  // namespace SOUND::PLUGINS::COMPRESSOR
 
-namespace SOUND::COMPRESSOR::SURFACE {
+namespace SOUND::PLUGINS::COMPRESSOR::SURFACE {
 auto parameters(void *instance) -> Whole;
 auto name(void *instance, Whole index) -> String;
 auto reading(void *instance, Whole index) -> String;
 auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::COMPRESSOR::SURFACE
+}  // namespace SOUND::PLUGINS::COMPRESSOR::SURFACE

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole KINDS = AUDIO::PLUGIN::Event::PROGRAM + 1;
 
@@ -53,6 +53,7 @@ constexpr Handler HANDLERS[KINDS] = {press,  release, steer,
 
 }  // namespace
 
-void SOUND::ENSEMBLE::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::ENSEMBLE::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   if (event.kind < ::KINDS) ::HANDLERS[event.kind](synth, event);
 }

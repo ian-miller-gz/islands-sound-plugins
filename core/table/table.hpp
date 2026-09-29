@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::TABLE {
+namespace SOUND::PLUGINS::CORE::TABLE {
 
 struct Row {
   STRING::Hot name;
@@ -58,4 +58,4 @@ struct Surface {
   }
 };
 
-}  // namespace SOUND::CORE::TABLE
+}  // namespace SOUND::PLUGINS::CORE::TABLE

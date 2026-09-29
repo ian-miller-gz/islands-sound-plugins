@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::COMPRESSOR {
+namespace SOUND::PLUGINS::COMPRESSOR {
 
 constexpr Whole THRESHOLD = 0;
 constexpr Whole RATIO = 1;
@@ -32,4 +32,4 @@ auto clamped(Whole index, Float value) -> Float;
 auto label(Whole index) -> String;
 auto notation(Whole index, Float value) -> String;
 
-}  // namespace SOUND::COMPRESSOR
+}  // namespace SOUND::PLUGINS::COMPRESSOR

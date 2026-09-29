@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::SLEW {
+namespace SOUND::PLUGINS::SLEW {
 
 constexpr Whole RISE = 0;
 constexpr Whole FALL = 1;
@@ -18,4 +18,4 @@ static_assert(sizeof(ROWS) / sizeof(ROWS[0]) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::SLEW
+}  // namespace SOUND::PLUGINS::SLEW

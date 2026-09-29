@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float SEMITONE = 100.0f;
 
@@ -78,11 +78,11 @@ constexpr Settle SETTLES[KIT::DRUMS] = {
 
 }  // namespace
 
-void SOUND::KIT::settle(Kit &kit, Whole drum) {
+void SOUND::PLUGINS::KIT::settle(Kit &kit, Whole drum) {
   if (drum >= DRUMS) return;
   ::SETTLES[drum](kit, ::VOICINGS[drum], kit.rows[place(drum, TUNE)]);
 }
 
-void SOUND::KIT::settle(Kit &kit) {
+void SOUND::PLUGINS::KIT::settle(Kit &kit) {
   for (Whole drum = 0; drum < DRUMS; ++drum) settle(kit, drum);
 }

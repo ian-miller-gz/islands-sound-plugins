@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::ADDITIVE {
+namespace SOUND::PLUGINS::ADDITIVE {
 
 constexpr Whole PARTIALS = 8;
 constexpr Whole VOICES = 8;
@@ -21,4 +21,4 @@ auto clamped(Whole index, Float value) -> Float;
 auto label(Whole index) -> String;
 auto notation(Whole index, Float value) -> String;
 
-}  // namespace SOUND::ADDITIVE
+}  // namespace SOUND::PLUGINS::ADDITIVE

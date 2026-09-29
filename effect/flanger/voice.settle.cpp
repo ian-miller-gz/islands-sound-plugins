@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-void SOUND::FLANGER::settle(Effect &effect) {
+void SOUND::PLUGINS::FLANGER::settle(Effect &effect) {
   effect.sign = effect.rows[POLARITY] > 0 ? -UNITY : UNITY;
   effect.lfo.hertz = effect.rows[RATE];
   CORE::MODULATOR::settle(effect.lfo, effect.rate);

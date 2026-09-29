@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<STEPS::Sequencer, STEPS::SHEET>;
 
@@ -32,7 +32,10 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::NOTES}}};
 
-[[maybe_unused]] const Flag offered = PLUGIN::offer(
-  {.name = "steps", .surface = &surface, .answer = STEPS::answer});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "steps",
+   .type = "control",
+   .surface = &surface,
+   .answer = STEPS::answer});
 
 }  // namespace

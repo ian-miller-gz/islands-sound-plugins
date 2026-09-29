@@ -5,7 +5,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::RESONATOR {
+namespace SOUND::PLUGINS::RESONATOR {
 
 constexpr Whole STRIDE = 16;
 
@@ -27,4 +27,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::RESONATOR
+}  // namespace SOUND::PLUGINS::RESONATOR

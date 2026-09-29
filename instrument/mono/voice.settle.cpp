@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
@@ -65,7 +65,7 @@ void swing(MONO::Synth &synth) {
 
 }  // namespace
 
-void SOUND::MONO::settle(Synth &synth) {
+void SOUND::PLUGINS::MONO::settle(Synth &synth) {
   const Float *rows = synth.rows;
   const Division &division = DIVISIONS[Whole(rows[DOWN])];
   synth.divisor = division.divisor;

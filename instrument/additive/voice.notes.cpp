@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto claim(ADDITIVE::Synth &synth) -> ADDITIVE::Note & {
   ADDITIVE::Note *oldest = &synth.notes[0];
@@ -61,7 +61,8 @@ void steer(ADDITIVE::Synth &synth, Whole id, Float value) {
 
 }  // namespace
 
-void SOUND::ADDITIVE::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::ADDITIVE::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   switch (event.kind) {
     case AUDIO::PLUGIN::Event::NOTE_ON:
       if (event.value > 0)

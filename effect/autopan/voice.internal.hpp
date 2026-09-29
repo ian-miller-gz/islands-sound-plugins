@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::AUTOPAN {
+namespace SOUND::PLUGINS::AUTOPAN {
 
 constexpr Float SMOOTHING = 0.002f;
 constexpr Whole SIDES = 2;
@@ -37,4 +37,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::AUTOPAN
+}  // namespace SOUND::PLUGINS::AUTOPAN

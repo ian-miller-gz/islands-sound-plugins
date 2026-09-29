@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void kept(MULTIMODE::Synth &, Whole) {}
 
@@ -31,7 +31,8 @@ void visit(MULTIMODE::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::MULTIMODE::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::MULTIMODE::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

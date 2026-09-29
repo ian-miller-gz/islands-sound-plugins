@@ -6,7 +6,7 @@
 #include "line.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto bounded(const CORE::LINE::Line &line, Float delay) -> Float {
   const Float far = CORE::LINE::reach(line);
@@ -17,35 +17,35 @@ auto bounded(const CORE::LINE::Line &line, Float delay) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::LINE::build(Line &line, Whole frames) {
+void SOUND::PLUGINS::CORE::LINE::build(Line &line, Whole frames) {
   const Whole size = std::bit_ceil(frames + GUARD);
   line.ring.assign(size, 0);
   line.mask = size - 1;
   line.head = 0;
 }
 
-void SOUND::CORE::LINE::clear(Line &line) {
+void SOUND::PLUGINS::CORE::LINE::clear(Line &line) {
   std::fill(line.ring.begin(), line.ring.end(), 0.0f);
   line.head = 0;
 }
 
-auto SOUND::CORE::LINE::reach(const Line &line) -> Float {
+auto SOUND::PLUGINS::CORE::LINE::reach(const Line &line) -> Float {
   const Whole size = line.ring.size();
   return size > GUARD ? Float(size - GUARD) : NEAREST;
 }
 
-void SOUND::CORE::LINE::write(Line &line, Float in) {
+void SOUND::PLUGINS::CORE::LINE::write(Line &line, Float in) {
   if (line.ring.empty()) return;
   line.ring[line.head] = in;
   line.head = (line.head + 1) & line.mask;
 }
 
-auto SOUND::CORE::LINE::read(const Line &line, Whole delay) -> Float {
+auto SOUND::PLUGINS::CORE::LINE::read(const Line &line, Whole delay) -> Float {
   if (line.ring.empty()) return 0;
   return line.ring[(line.head - delay) & line.mask];
 }
 
-auto SOUND::CORE::LINE::read(const Line &line, Float delay) -> Float {
+auto SOUND::PLUGINS::CORE::LINE::read(const Line &line, Float delay) -> Float {
   const Float place = ::bounded(line, delay);
   const Float whole = std::floor(place);
   const Float part = place - whole;
@@ -54,8 +54,8 @@ auto SOUND::CORE::LINE::read(const Line &line, Float delay) -> Float {
   return near + (far - near) * part;
 }
 
-auto SOUND::CORE::LINE::read(const Line &line, Float delay, Allpass &allpass)
-  -> Float {
+auto SOUND::PLUGINS::CORE::LINE::read(
+  const Line &line, Float delay, Allpass &allpass) -> Float {
   const Float place = ::bounded(line, delay);
   Float whole = std::floor(place);
   Float part = place - whole;
@@ -70,8 +70,8 @@ auto SOUND::CORE::LINE::read(const Line &line, Float delay, Allpass &allpass)
   return allpass.held;
 }
 
-auto SOUND::CORE::LINE::read(const Line &line, const Tap *taps, Whole count)
-  -> Float {
+auto SOUND::PLUGINS::CORE::LINE::read(
+  const Line &line, const Tap *taps, Whole count) -> Float {
   Float sum = 0;
   for (Whole tap = 0; tap < count; ++tap)
     sum += taps[tap].gain * read(line, taps[tap].delay);

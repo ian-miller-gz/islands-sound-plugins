@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/reverb/reverb.hpp"
 
-namespace SOUND::ROOM {
+namespace SOUND::PLUGINS::ROOM {
 
 constexpr Whole MONO = 1;
 constexpr Float DAMP = 8000.0f;
@@ -31,4 +31,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::ROOM
+}  // namespace SOUND::PLUGINS::ROOM

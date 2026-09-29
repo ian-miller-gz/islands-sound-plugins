@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::PINGPONG {
+namespace SOUND::PLUGINS::PINGPONG {
 
 constexpr Whole TIME = 0;
 constexpr Whole FEEDBACK = 1;
@@ -20,4 +20,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::PINGPONG
+}  // namespace SOUND::PLUGINS::PINGPONG

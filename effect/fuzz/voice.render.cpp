@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto gated(FUZZ::Strip &strip, Float in) -> Float {
   const Float heard = CORE::DYNAMICS::tick(strip.gate, in);
@@ -31,7 +31,7 @@ void play(
 
 }  // namespace
 
-void SOUND::FUZZ::render(
+void SOUND::PLUGINS::FUZZ::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

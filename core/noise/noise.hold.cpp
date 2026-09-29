@@ -4,7 +4,7 @@
 #include "noise.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float HALF = 0.5f;
 constexpr Float UNIT = 1.0f;
@@ -17,19 +17,19 @@ auto audible(Float hertz, Whole rate) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::NOISE::settle(Hold &hold, Float hertz, Whole rate) {
+void SOUND::PLUGINS::CORE::NOISE::settle(Hold &hold, Float hertz, Whole rate) {
   hold.step = PHASE::step(::audible(hertz, rate), rate);
 }
 
-void SOUND::CORE::NOISE::reset(Hold &hold) { hold.phase = 0; }
+void SOUND::PLUGINS::CORE::NOISE::reset(Hold &hold) { hold.phase = 0; }
 
-auto SOUND::CORE::NOISE::tick(Hold &hold, Float input) -> Float {
+auto SOUND::PLUGINS::CORE::NOISE::tick(Hold &hold, Float input) -> Float {
   if (hold.phase < hold.step) hold.value = input;
   hold.phase += hold.step;
   return hold.value;
 }
 
-void SOUND::CORE::NOISE::settle(
+void SOUND::PLUGINS::CORE::NOISE::settle(
   Burst &burst, Float seconds, Float hertz, Whole rate) {
   const Float frames = seconds * Float(rate);
   burst.decay = frames <= UNIT ? 0 : std::exp(-UNIT / frames);
@@ -37,12 +37,12 @@ void SOUND::CORE::NOISE::settle(
   burst.colour = UNIT - std::exp(-turn);
 }
 
-void SOUND::CORE::NOISE::strike(Burst &burst, Float level) {
+void SOUND::PLUGINS::CORE::NOISE::strike(Burst &burst, Float level) {
   burst.level = level;
   burst.low = 0;
 }
 
-auto SOUND::CORE::NOISE::tick(Burst &burst) -> Float {
+auto SOUND::PLUGINS::CORE::NOISE::tick(Burst &burst) -> Float {
   if (burst.level == 0) return 0;
   burst.low += burst.colour * (tick(burst.white) - burst.low);
   const Float value = burst.low * burst.level;

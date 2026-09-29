@@ -4,7 +4,7 @@
 
 #include "oscillator.wave.hpp"
 
-namespace SOUND::CORE::OSCILLATOR {
+namespace SOUND::PLUGINS::CORE::OSCILLATOR {
 
 constexpr Whole BITS = 11;
 constexpr Whole SIZE = Whole(1) << BITS;
@@ -41,4 +41,4 @@ void reset(Operator &unit, Wheel phase);
 auto tick(Operator &unit, const Table &table, Float modulation, Float level)
   -> Float;
 
-}  // namespace SOUND::CORE::OSCILLATOR
+}  // namespace SOUND::PLUGINS::CORE::OSCILLATOR

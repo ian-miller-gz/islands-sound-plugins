@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float FULL = 1.0f;
 constexpr Float CENT = 100.0f;
@@ -40,7 +40,7 @@ void carrier(VOCODER::Vocoder &vocoder) {
 
 }  // namespace
 
-void SOUND::VOCODER::settle(Vocoder &vocoder) {
+void SOUND::PLUGINS::VOCODER::settle(Vocoder &vocoder) {
   vocoder.gain = vocoder.rows[GAIN] * LOUDNESS;
   ::bands(vocoder);
   ::carrier(vocoder);

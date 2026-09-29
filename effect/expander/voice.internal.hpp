@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/dynamics/dynamics.hpp"
 
-namespace SOUND::EXPANDER {
+namespace SOUND::PLUGINS::EXPANDER {
 
 constexpr Float MILLI = 0.001f;
 
@@ -25,4 +25,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::EXPANDER
+}  // namespace SOUND::PLUGINS::EXPANDER

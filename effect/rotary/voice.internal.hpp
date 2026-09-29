@@ -6,7 +6,7 @@
 #include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::ROTARY {
+namespace SOUND::PLUGINS::ROTARY {
 
 constexpr Whole SIDES = 2;
 constexpr Whole LEFT = 0;
@@ -57,4 +57,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::ROTARY
+}  // namespace SOUND::PLUGINS::ROTARY

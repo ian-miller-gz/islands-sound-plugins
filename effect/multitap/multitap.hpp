@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::MULTITAP {
+namespace SOUND::PLUGINS::MULTITAP {
 
 constexpr Whole TAPS = 4;
 constexpr Whole TIME = 0;
@@ -37,4 +37,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::MULTITAP
+}  // namespace SOUND::PLUGINS::MULTITAP

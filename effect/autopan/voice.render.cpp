@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 struct Gains {
   Float left;
@@ -34,7 +34,7 @@ void play(
 
 }  // namespace
 
-void SOUND::AUTOPAN::render(
+void SOUND::PLUGINS::AUTOPAN::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

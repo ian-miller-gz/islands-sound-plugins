@@ -4,7 +4,7 @@
 #include "filter.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float TEN = 10.0f;
 constexpr Float DECIBELS = 20.0f;
@@ -39,7 +39,7 @@ auto blend(Float from, Float to, Float part) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::FILTER::settle(
+void SOUND::PLUGINS::CORE::FILTER::settle(
   Formant &formant, Float vowel, Float shift, Whole rate) {
   const Float last = Float(U);
   const Float place = vowel < 0 ? 0 : vowel > last ? last : vowel;
@@ -57,7 +57,7 @@ void SOUND::CORE::FILTER::settle(
   }
 }
 
-auto SOUND::CORE::FILTER::tick(Formant &formant, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::FILTER::tick(Formant &formant, Float in) -> Float {
   Float sum = 0;
   for (Whole band = 0; band < FORMANTS; ++band)
     sum += formant.gains[band] * tick(formant.bands[band], in);

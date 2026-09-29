@@ -11,7 +11,7 @@
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::DCO {
+namespace SOUND::PLUGINS::DCO {
 
 constexpr Whole VOICES = 6;
 constexpr Whole LINES = 3;
@@ -71,4 +71,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::DCO
+}  // namespace SOUND::PLUGINS::DCO

@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
@@ -64,7 +64,7 @@ auto play(DCO::Synth &synth, Whole at, Sources sources) -> Float {
 
 }  // namespace
 
-auto SOUND::DCO::sound(Synth &synth) -> Pair {
+auto SOUND::PLUGINS::DCO::sound(Synth &synth) -> Pair {
   const Sources sources = {
     CORE::MODULATOR::tick(synth.lfo), CORE::NOISE::tick(synth.noise)};
   Float sum = 0;

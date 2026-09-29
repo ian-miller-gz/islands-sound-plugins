@@ -2,15 +2,15 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float HALF = 0.5f;
 constexpr Float NARROWING = 0.45f;
 
 }  // namespace
 
-auto SOUND::DCO::sing(Synth &synth, Voice &voice, Float pitch, Float shape)
-  -> Float {
+auto SOUND::PLUGINS::DCO::sing(
+  Synth &synth, Voice &voice, Float pitch, Float shape) -> Float {
   const Float *rows = synth.rows;
   const Float hertz = CORE::PHASE::hertz(pitch);
   const Float width =

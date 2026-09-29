@@ -2,7 +2,7 @@
 #include "fader.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole SIDES = 2;
 
@@ -52,7 +52,7 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::AUDIO}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "fader", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "fader", .type = "effect", .surface = &surface});
 
 }  // namespace

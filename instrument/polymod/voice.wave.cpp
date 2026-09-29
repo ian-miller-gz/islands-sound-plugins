@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 using CORE::OSCILLATOR::Oscillator;
 using CORE::OSCILLATOR::Sync;
 
@@ -28,7 +28,7 @@ auto mixed(const Float *rows, const Oscillator &master) -> Float {
 
 }  // namespace
 
-auto SOUND::POLYMOD::modulate(Synth &synth, Voice &voice, Float pitch)
+auto SOUND::PLUGINS::POLYMOD::modulate(Synth &synth, Voice &voice, Float pitch)
   -> Float {
   const Float *rows = synth.rows;
   const Float low = rows[LOW] > 0 ? DROP : 0;
@@ -41,8 +41,8 @@ auto SOUND::POLYMOD::modulate(Synth &synth, Voice &voice, Float pitch)
   return out;
 }
 
-auto SOUND::POLYMOD::sing(Synth &synth, Voice &voice, Float pitch, Float mod)
-  -> Float {
+auto SOUND::PLUGINS::POLYMOD::sing(
+  Synth &synth, Voice &voice, Float pitch, Float mod) -> Float {
   const Float *rows = synth.rows;
   const Float bent = rows[PITCH] > 0 ? SWING * mod : 0;
   const Float narrowed = rows[DUTY] > 0 ? SPAN * mod : 0;

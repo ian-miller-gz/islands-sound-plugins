@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::HAT {
+namespace SOUND::PLUGINS::HAT {
 
 constexpr Whole TUNE = 0;
 constexpr Whole CLOSED = 1;
@@ -20,8 +20,8 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 constexpr Whole PARAMETERS = SHEET.count;
 
-}  // namespace SOUND::HAT
+}  // namespace SOUND::PLUGINS::HAT
 
-namespace SOUND::HAT::PITCH {
+namespace SOUND::PLUGINS::HAT::PITCH {
 constexpr Whole OPEN = 46;
-}  // namespace SOUND::HAT::PITCH
+}  // namespace SOUND::PLUGINS::HAT::PITCH

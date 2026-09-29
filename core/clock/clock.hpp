@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::CLOCK {
+namespace SOUND::PLUGINS::CORE::CLOCK {
 
 constexpr Float MINUTE = 60.0f;
 constexpr Float SLOWEST = 1.0f;
@@ -33,4 +33,4 @@ void reset(Clock &clock);
 
 auto advance(Clock &clock, Whole frames, Edge *edges, Whole room) -> Whole;
 
-}  // namespace SOUND::CORE::CLOCK
+}  // namespace SOUND::PLUGINS::CORE::CLOCK

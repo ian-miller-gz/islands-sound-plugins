@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto alone(const DCO::Synth &synth, Whole at) -> Flag {
   for (Whole other = 0; other < DCO::VOICES; ++other)
@@ -38,7 +38,8 @@ void visit(DCO::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::DCO::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::DCO::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

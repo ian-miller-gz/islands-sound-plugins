@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float MILLISECOND = 0.001f;
 constexpr Float SPAN = 12;
@@ -27,7 +27,7 @@ void start(CORE::MODULATOR::Lfo &lfo, Whole at) {
 
 }  // namespace
 
-void SOUND::ENSEMBLE::build(Ensemble &ensemble, Whole rate) {
+void SOUND::PLUGINS::ENSEMBLE::build(Ensemble &ensemble, Whole rate) {
   CORE::LINE::build(ensemble.line, Whole(SPAN * MILLISECOND * Float(rate)));
   for (Whole at = 0; at < LINES; ++at) {
     ::start(ensemble.slow[at], at);
@@ -35,7 +35,7 @@ void SOUND::ENSEMBLE::build(Ensemble &ensemble, Whole rate) {
   }
 }
 
-void SOUND::ENSEMBLE::settle(
+void SOUND::PLUGINS::ENSEMBLE::settle(
   Ensemble &ensemble, const Float *rows, Whole rate) {
   CORE::FILTER::settle(ensemble.bucket, CORE::FILTER::LOW, BUCKET, rate);
   for (Whole at = 0; at < LINES; ++at) {
@@ -51,7 +51,7 @@ void SOUND::ENSEMBLE::settle(
   ensemble.vibrato = rows[DEPTH] * TREMBLE;
 }
 
-auto SOUND::ENSEMBLE::tick(Ensemble &ensemble, Float in) -> Pair {
+auto SOUND::PLUGINS::ENSEMBLE::tick(Ensemble &ensemble, Float in) -> Pair {
   Float wets[LINES];
   for (Whole at = 0; at < LINES; ++at) {
     const Float swing =

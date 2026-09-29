@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<TRANSIENT::Effect, TRANSIENT::SHEET>;
 
@@ -38,12 +38,12 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::AUDIO}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "transient", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "transient", .type = "effect", .surface = &surface});
 
 }  // namespace
 
-void SOUND::TRANSIENT::apply(
+void SOUND::PLUGINS::TRANSIENT::apply(
   Effect &effect, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;

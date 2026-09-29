@@ -4,7 +4,7 @@
 #include "compressor.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 struct Row {
   STRING::Hot label;
@@ -44,8 +44,8 @@ auto snapped(const Row &found, Float value) -> Float {
 
 }  // namespace
 
-auto SOUND::COMPRESSOR::control(Whole index, AUDIO::PLUGIN::Control &out)
-  -> Flag {
+auto SOUND::PLUGINS::COMPRESSOR::control(
+  Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
   Row found;
   if (!::row(index, found)) return false;
   Vector<String> positions;
@@ -55,12 +55,12 @@ auto SOUND::COMPRESSOR::control(Whole index, AUDIO::PLUGIN::Control &out)
   return true;
 }
 
-auto SOUND::COMPRESSOR::resting(Whole index) -> Float {
+auto SOUND::PLUGINS::COMPRESSOR::resting(Whole index) -> Float {
   Row found;
   return ::row(index, found) ? found.resting : 0;
 }
 
-auto SOUND::COMPRESSOR::clamped(Whole index, Float value) -> Float {
+auto SOUND::PLUGINS::COMPRESSOR::clamped(Whole index, Float value) -> Float {
   Row found;
   if (!::row(index, found)) return value;
   const Float held = value < found.least  ? found.least
@@ -69,7 +69,7 @@ auto SOUND::COMPRESSOR::clamped(Whole index, Float value) -> Float {
   return found.steps == 0 ? held : ::snapped(found, held);
 }
 
-auto SOUND::COMPRESSOR::notation(Whole index, Float value) -> String {
+auto SOUND::PLUGINS::COMPRESSOR::notation(Whole index, Float value) -> String {
   Row found;
   if (!::row(index, found)) return {};
   if (found.steps != 0) return CHOICES[Whole(clamped(index, value))];
@@ -78,7 +78,7 @@ auto SOUND::COMPRESSOR::notation(Whole index, Float value) -> String {
   return text;
 }
 
-auto SOUND::COMPRESSOR::label(Whole index) -> String {
+auto SOUND::PLUGINS::COMPRESSOR::label(Whole index) -> String {
   Row found;
   return ::row(index, found) ? String(found.label) : String();
 }

@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::BUS {
+namespace SOUND::PLUGINS::BUS {
 
 constexpr Whole ATTACK = 0;
 constexpr Whole SUSTAIN = 1;
@@ -27,4 +27,4 @@ inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 constexpr Whole PARAMETERS = SHEET.count;
 static_assert(PARAMETERS == OUTPUT + 1);
 
-}  // namespace SOUND::BUS
+}  // namespace SOUND::PLUGINS::BUS

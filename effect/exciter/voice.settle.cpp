@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void high(CORE::FILTER::Biquad &biquad, Float cutoff, Whole rate) {
   CORE::FILTER::settle(
@@ -13,11 +13,11 @@ void high(CORE::FILTER::Biquad &biquad, Float cutoff, Whole rate) {
 
 }  // namespace
 
-void SOUND::EXCITER::build(Effect &effect) {
+void SOUND::PLUGINS::EXCITER::build(Effect &effect) {
   effect.strips.resize(effect.channels);
 }
 
-void SOUND::EXCITER::settle(Effect &effect) {
+void SOUND::PLUGINS::EXCITER::settle(Effect &effect) {
   for (Strip &strip : effect.strips) {
     ::high(strip.split, effect.rows[FREQUENCY], effect.rate);
     ::high(strip.clean, effect.rows[FREQUENCY], effect.rate);
@@ -27,7 +27,8 @@ void SOUND::EXCITER::settle(Effect &effect) {
   effect.mix = effect.rows[MIX];
 }
 
-void SOUND::EXCITER::apply(Effect &effect, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::EXCITER::apply(
+  Effect &effect, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   effect.rows[event.index] =

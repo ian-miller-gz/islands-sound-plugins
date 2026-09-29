@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float UNITY = 1.0f;
 constexpr Float HALF = 0.5f;
@@ -10,7 +10,7 @@ constexpr Float MILLI = 1000.0f;
 
 }  // namespace
 
-void SOUND::TUNER::build(Tuner &tuner) {
+void SOUND::PLUGINS::TUNER::build(Tuner &tuner) {
   CORE::PITCH::build(tuner.detector, tuner.rate, LOWEST, HIGHEST, HOP);
   tuner.shifters.resize(tuner.channels);
   for (Shifter &shifter : tuner.shifters) {
@@ -19,7 +19,7 @@ void SOUND::TUNER::build(Tuner &tuner) {
   }
 }
 
-void SOUND::TUNER::retime(Tuner &tuner, Flag held) {
+void SOUND::PLUGINS::TUNER::retime(Tuner &tuner, Flag held) {
   const Float base = tuner.rows[RETUNE] / ::MILLI;
   const Float stretch =
     held ? ::UNITY + tuner.rows[HUMANISE] * HUMANE : ::UNITY;
@@ -27,12 +27,13 @@ void SOUND::TUNER::retime(Tuner &tuner, Flag held) {
   CORE::MODULATOR::settle(tuner.correction, tuner.rate / STRIDE);
 }
 
-void SOUND::TUNER::settle(Tuner &tuner) {
+void SOUND::PLUGINS::TUNER::settle(Tuner &tuner) {
   tuner.keep = tuner.rows[FORMANT] >= ::HALF;
   retime(tuner, false);
 }
 
-void SOUND::TUNER::apply(Tuner &tuner, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::TUNER::apply(
+  Tuner &tuner, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   tuner.rows[event.index] =
@@ -40,7 +41,7 @@ void SOUND::TUNER::apply(Tuner &tuner, const AUDIO::PLUGIN::Event &event) {
   settle(tuner);
 }
 
-void SOUND::TUNER::steer(Tuner &tuner) {
+void SOUND::PLUGINS::TUNER::steer(Tuner &tuner) {
   const Float correction =
     CORE::MODULATOR::tick(tuner.correction, tuner.target);
   const Float cents = correction + tuner.rows[SHIFT] * CENT;

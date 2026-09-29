@@ -2,7 +2,7 @@
 #pragma once
 #include "../line/line.hpp"
 
-namespace SOUND::CORE::CLOUD {
+namespace SOUND::PLUGINS::CORE::CLOUD {
 
 constexpr Whole POINTS = 1024;
 
@@ -25,4 +25,4 @@ void clear(Cloud &cloud);
 auto start(Cloud &cloud, const Grain &grain) -> Flag;
 auto tick(Cloud &cloud, const LINE::Line &line) -> Float;
 
-}  // namespace SOUND::CORE::CLOUD
+}  // namespace SOUND::PLUGINS::CORE::CLOUD

@@ -3,7 +3,7 @@
 #include "shaper.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float THREE = 3.0f;
@@ -12,24 +12,27 @@ constexpr Float TURN = 6.28318531f;
 
 }  // namespace
 
-void SOUND::CORE::SHAPER::settle(Chebyshev &chebyshev, Float even, Float odd) {
+void SOUND::PLUGINS::CORE::SHAPER::settle(
+  Chebyshev &chebyshev, Float even, Float odd) {
   chebyshev.even = even;
   chebyshev.odd = odd;
 }
 
-auto SOUND::CORE::SHAPER::tick(const Chebyshev &chebyshev, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::SHAPER::tick(const Chebyshev &chebyshev, Float in)
+  -> Float {
   const Float held = BLOCK::clipped(in);
   const Float square = held * held;
   const Float third = held * (FOUR * square - THREE);
   return in + chebyshev.even * square + chebyshev.odd * third;
 }
 
-void SOUND::CORE::SHAPER::settle(Blocker &blocker, Float cutoff, Whole rate) {
+void SOUND::PLUGINS::CORE::SHAPER::settle(
+  Blocker &blocker, Float cutoff, Whole rate) {
   const Float pole = ONE - TURN * cutoff / Float(rate);
   blocker.pole = pole < 0 ? 0 : pole > ONE ? ONE : pole;
 }
 
-auto SOUND::CORE::SHAPER::tick(Blocker &blocker, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::SHAPER::tick(Blocker &blocker, Float in) -> Float {
   blocker.out = in - blocker.in + blocker.pole * blocker.out;
   blocker.in = in;
   return blocker.out;

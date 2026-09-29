@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::MONO {
+namespace SOUND::PLUGINS::MONO {
 
 constexpr Whole TUNE = 0;
 constexpr Whole BEND = 1;
@@ -33,4 +33,4 @@ constexpr Whole AMPLIFIER = 25;
 constexpr Whole VOLUME = 26;
 constexpr Whole PARAMETERS = 27;
 
-}  // namespace SOUND::MONO
+}  // namespace SOUND::PLUGINS::MONO

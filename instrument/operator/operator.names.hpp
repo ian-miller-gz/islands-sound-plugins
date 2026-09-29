@@ -2,7 +2,7 @@
 #pragma once
 #include "operator.indices.hpp"
 
-namespace SOUND::OPERATOR {
+namespace SOUND::PLUGINS::OPERATOR {
 
 inline constexpr STRING::Hot NAMES[OPERATORS][FIELDS] = {
   {"Ratio1", "Detune1", "Output1", "Rate1.1", "Rate1.2", "Rate1.3", "Rate1.4",
@@ -18,4 +18,4 @@ inline constexpr STRING::Hot NAMES[OPERATORS][FIELDS] = {
   {"Ratio6", "Detune6", "Output6", "Rate6.1", "Rate6.2", "Rate6.3", "Rate6.4",
    "Level6.1", "Level6.2", "Level6.3", "Level6.4"}};
 
-}  // namespace SOUND::OPERATOR
+}  // namespace SOUND::PLUGINS::OPERATOR

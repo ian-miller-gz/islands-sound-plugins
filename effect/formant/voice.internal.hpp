@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/pitch/pitch.hpp"
 
-namespace SOUND::FORMANT {
+namespace SOUND::PLUGINS::FORMANT {
 
 constexpr Float WINDOW = 0.03f;
 constexpr Float CENT = 100.0f;
@@ -25,4 +25,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::FORMANT
+}  // namespace SOUND::PLUGINS::FORMANT

@@ -2,7 +2,7 @@
 #include "humanizer.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<HUMANIZER::Humanizer, HUMANIZER::SHEET>;
 
@@ -10,7 +10,7 @@ auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *humanizer = new HUMANIZER::Humanizer{};
   CORE::TABLE::rest(HUMANIZER::SHEET, humanizer->rows);
-  humanizer->out = {humanizer->notes, PLUGIN::ROOM, 0};
+  humanizer->out = {humanizer->notes, SOUND::PLUGIN::ROOM, 0};
   CORE::NOTES::sow(humanizer->white, humanizer->rows[HUMANIZER::SEED]);
   return humanizer;
 }
@@ -32,12 +32,15 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::NOTES}}};
 
-[[maybe_unused]] const Flag offered = PLUGIN::offer(
-  {.name = "humanizer", .surface = &surface, .answer = HUMANIZER::answer});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "humanizer",
+   .type = "notes",
+   .surface = &surface,
+   .answer = HUMANIZER::answer});
 
 }  // namespace
 
-auto SOUND::HUMANIZER::answer(
+auto SOUND::PLUGINS::HUMANIZER::answer(
   void *instance, const AUDIO::PLUGIN::Event *, Whole,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole {
   auto &humanizer = *static_cast<Humanizer *>(instance);

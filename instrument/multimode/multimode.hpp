@@ -6,7 +6,7 @@
 #include "../../core/table/table.hpp"
 #include "multimode.indices.hpp"
 
-namespace SOUND::MULTIMODE {
+namespace SOUND::PLUGINS::MULTIMODE {
 
 constexpr Float CENTS = 200;
 constexpr Float DETUNING = 50;
@@ -64,4 +64,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::MULTIMODE
+}  // namespace SOUND::PLUGINS::MULTIMODE

@@ -5,7 +5,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole DIGITS = std::numeric_limits<CORE::PHASE::Wheel>::digits;
 constexpr Whole STEPS = 8;
@@ -54,7 +54,7 @@ auto hiss(CHIP::Synth &synth) -> Whole {
 
 }  // namespace
 
-auto SOUND::CHIP::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::CHIP::sound(Synth &synth) -> Float {
   clock(synth);
   if (synth.stale) retune(synth);
   Whole squares = 0;

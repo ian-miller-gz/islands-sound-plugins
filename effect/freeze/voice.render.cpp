@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto looped(FREEZE::Effect &effect, FREEZE::Strip &strip, Flag frozen)
   -> Float {
@@ -37,12 +37,12 @@ void play(
 
 }  // namespace
 
-void SOUND::FREEZE::sow(Effect &effect) {
+void SOUND::PLUGINS::FREEZE::sow(Effect &effect) {
   for (Strip &strip : effect.strips)
     CORE::CLOUD::start(strip.cloud, effect.grain);
 }
 
-void SOUND::FREEZE::render(
+void SOUND::PLUGINS::FREEZE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

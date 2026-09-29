@@ -3,7 +3,7 @@
 #include "../shaper/shaper.hpp"
 #include "filter.linear.hpp"
 
-namespace SOUND::CORE::FILTER {
+namespace SOUND::PLUGINS::CORE::FILTER {
 
 constexpr Whole POLES = 4;
 constexpr Whole STAGES = 4;
@@ -52,4 +52,4 @@ void settle(
   Whole rate);
 auto tick(Sallen &sallen, Float in) -> Float;
 
-}  // namespace SOUND::CORE::FILTER
+}  // namespace SOUND::PLUGINS::CORE::FILTER

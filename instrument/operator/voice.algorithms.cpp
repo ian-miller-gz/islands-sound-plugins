@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole ONE = 1;
 constexpr Whole TWO = ONE << 1;
@@ -56,9 +56,11 @@ static_assert(std::size(ROUTINGS) == Whole(OPERATOR::ALGORITHMS));
 
 }  // namespace
 
-auto SOUND::OPERATOR::bit(Whole unit) -> Whole { return ::ONE << unit; }
+auto SOUND::PLUGINS::OPERATOR::bit(Whole unit) -> Whole {
+  return ::ONE << unit;
+}
 
-auto SOUND::OPERATOR::routed(Float algorithm) -> const Routing& {
+auto SOUND::PLUGINS::OPERATOR::routed(Float algorithm) -> const Routing& {
   const Whole at = algorithm < 1 ? 0 : Whole(algorithm) - 1;
   return ::ROUTINGS[at < std::size(::ROUTINGS) ? at : 0];
 }

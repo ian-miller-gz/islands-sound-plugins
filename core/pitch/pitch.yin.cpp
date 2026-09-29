@@ -2,7 +2,7 @@
 #include "pitch.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float UNITY = 1.0f;
 constexpr Float HALF = 0.5f;
@@ -58,7 +58,7 @@ auto refine(const CORE::PITCH::Detector &detector, Whole lag) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::PITCH::analyse(Detector &detector) {
+void SOUND::PLUGINS::CORE::PITCH::analyse(Detector &detector) {
   ::gather(detector);
   ::differ(detector);
   const Whole lag = ::pick(detector);

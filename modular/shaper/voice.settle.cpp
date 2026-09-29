@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float TEN = 10.0f;
 constexpr Float DECIBELS = 20.0f;
@@ -36,7 +36,7 @@ constexpr Path PATHS[SHAPER::CURVES] = {soft, hard, tube, fold, crush};
 
 }  // namespace
 
-void SOUND::SHAPER::settle(Module &module) {
+void SOUND::PLUGINS::SHAPER::settle(Module &module) {
   module.gain = std::pow(::TEN, module.rows[DRIVE] / ::DECIBELS);
   for (Stage &stage : module.stages) {
     CORE::SHAPER::settle(
@@ -45,7 +45,8 @@ void SOUND::SHAPER::settle(Module &module) {
   }
 }
 
-void SOUND::SHAPER::apply(Module &module, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::SHAPER::apply(
+  Module &module, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   module.rows[event.index] =
@@ -53,8 +54,8 @@ void SOUND::SHAPER::apply(Module &module, const AUDIO::PLUGIN::Event &event) {
   settle(module);
 }
 
-auto SOUND::SHAPER::shaped(const Module &module, Stage &stage, Float in)
-  -> Float {
+auto SOUND::PLUGINS::SHAPER::shaped(
+  const Module &module, Stage &stage, Float in) -> Float {
   const Whole curve = Whole(module.rows[CURVE]);
   const Path path = PATHS[curve < CURVES ? curve : SOFT];
   const Float wet =

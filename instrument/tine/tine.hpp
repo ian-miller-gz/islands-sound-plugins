@@ -5,7 +5,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::TINE {
+namespace SOUND::PLUGINS::TINE {
 
 constexpr Whole TONE = 0;
 constexpr Whole VELOCITY = 1;
@@ -57,4 +57,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::TINE
+}  // namespace SOUND::PLUGINS::TINE

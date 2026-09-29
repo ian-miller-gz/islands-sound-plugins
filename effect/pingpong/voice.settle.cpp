@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto frames(Float milliseconds, Whole rate) -> Float {
   return milliseconds * PINGPONG::MILLISECOND * Float(rate);
@@ -12,7 +12,7 @@ auto frames(Float milliseconds, Whole rate) -> Float {
 
 }  // namespace
 
-void SOUND::PINGPONG::build(Effect &effect) {
+void SOUND::PLUGINS::PINGPONG::build(Effect &effect) {
   const Float longest =
     ::frames(CORE::TABLE::found(SHEET, TIME)->most, effect.rate);
   for (auto &line : effect.lines)
@@ -22,7 +22,7 @@ void SOUND::PINGPONG::build(Effect &effect) {
   CORE::MODULATOR::jump(effect.time, ::frames(effect.rows[TIME], effect.rate));
 }
 
-void SOUND::PINGPONG::settle(Effect &effect) {
+void SOUND::PLUGINS::PINGPONG::settle(Effect &effect) {
   effect.frames = ::frames(effect.rows[TIME], effect.rate);
   effect.feedback = effect.rows[FEEDBACK];
   effect.width = effect.rows[WIDTH];
@@ -30,7 +30,7 @@ void SOUND::PINGPONG::settle(Effect &effect) {
   effect.wet = effect.rows[MIX];
 }
 
-auto SOUND::PINGPONG::bounce(Effect &effect, Float in) -> Stereo {
+auto SOUND::PLUGINS::PINGPONG::bounce(Effect &effect, Float in) -> Stereo {
   const Float at = CORE::MODULATOR::tick(effect.time, effect.frames);
   const Float left = CORE::LINE::read(effect.lines[LEFT], at);
   const Float right = CORE::LINE::read(effect.lines[RIGHT], at);

@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole BIT = 1;
 constexpr Whole TOP = 14;
@@ -35,13 +35,14 @@ constexpr auto SHARED = table<OTHERS>(OTHER);
 
 }  // namespace
 
-auto SOUND::CHIP::shift(Lfsr &noise) -> Whole {
+auto SOUND::PLUGINS::CHIP::shift(Lfsr &noise) -> Whole {
   const Whole feedback = (noise.bits ^ (noise.bits >> noise.tap)) & ::BIT;
   noise.bits = (noise.bits >> 1) | (feedback << ::TOP);
   return noise.bits & ::BIT;
 }
 
-auto SOUND::CHIP::mixed(Whole pulses, Whole triangle, Whole noise) -> Float {
+auto SOUND::PLUGINS::CHIP::mixed(Whole pulses, Whole triangle, Whole noise)
+  -> Float {
   const Whole others = ::WEIGHT * triangle + ::HISS * noise;
   const Float square = ::PULSED[pulses < ::SQUARES ? pulses : ::SQUARES - 1];
   return square + ::SHARED[others < ::OTHERS ? others : ::OTHERS - 1];

@@ -2,7 +2,7 @@
 #pragma once
 #include "../phase/phase.hpp"
 
-namespace SOUND::CORE::VOICE {
+namespace SOUND::PLUGINS::CORE::VOICE {
 
 constexpr Whole VOICES = 16;
 constexpr Whole PHASES = 4;
@@ -77,15 +77,15 @@ auto apply(
   return row;
 }
 
-}  // namespace SOUND::CORE::VOICE
+}  // namespace SOUND::PLUGINS::CORE::VOICE
 
-namespace SOUND::CORE::VOICE::POLYPHONY {
+namespace SOUND::PLUGINS::CORE::VOICE::POLYPHONY {
 void strike(Allocator &allocator, Whole pitch, Float velocity);
 void lift(Allocator &allocator, Whole pitch);
-}  // namespace SOUND::CORE::VOICE::POLYPHONY
+}  // namespace SOUND::PLUGINS::CORE::VOICE::POLYPHONY
 
-namespace SOUND::CORE::VOICE::MONOPHONY {
+namespace SOUND::PLUGINS::CORE::VOICE::MONOPHONY {
 auto choose(const Allocator &allocator) -> Whole;
 void strike(Allocator &allocator, Whole pitch, Float velocity);
 void lift(Allocator &allocator, Whole pitch);
-}  // namespace SOUND::CORE::VOICE::MONOPHONY
+}  // namespace SOUND::PLUGINS::CORE::VOICE::MONOPHONY

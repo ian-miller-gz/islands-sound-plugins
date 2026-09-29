@@ -5,7 +5,7 @@
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::OSCILLATOR {
+namespace SOUND::PLUGINS::OSCILLATOR {
 
 constexpr Float MIX = 0.5f;
 
@@ -32,4 +32,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::OSCILLATOR
+}  // namespace SOUND::PLUGINS::OSCILLATOR

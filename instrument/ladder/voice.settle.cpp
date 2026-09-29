@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float LO = -72;
 constexpr Float OCTAVE = 12;
@@ -61,7 +61,7 @@ void contour(
 
 }  // namespace
 
-void SOUND::LADDER::settle(Synth &synth) {
+void SOUND::PLUGINS::LADDER::settle(Synth &synth) {
   const Float *rows = synth.rows;
   for (Whole at = 0; at < OSCILLATORS; ++at) ::source(synth, at);
   const Flag held = rows[RELEASE] > 0;

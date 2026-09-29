@@ -2,7 +2,7 @@
 #include "quantizer.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<QUANTIZER::Quantizer, QUANTIZER::SHEET>;
 
@@ -31,12 +31,15 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::NOTES}}};
 
-[[maybe_unused]] const Flag offered = PLUGIN::offer(
-  {.name = "quantizer", .surface = &surface, .answer = QUANTIZER::answer});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "quantizer",
+   .type = "notes",
+   .surface = &surface,
+   .answer = QUANTIZER::answer});
 
 }  // namespace
 
-auto SOUND::QUANTIZER::answer(
+auto SOUND::PLUGINS::QUANTIZER::answer(
   void *instance, const AUDIO::PLUGIN::Event *events, Whole count,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole {
   auto &quantizer = *static_cast<Quantizer *>(instance);

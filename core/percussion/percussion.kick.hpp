@@ -2,7 +2,7 @@
 #pragma once
 #include "percussion.circuit.hpp"
 
-namespace SOUND::CORE::PERCUSSION {
+namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
 struct Kick {
   Resonator body;
@@ -25,4 +25,4 @@ void settle(
 void strike(Kick &kick, Float velocity);
 auto tick(Kick &kick) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION

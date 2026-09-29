@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float SCALE = 1.0f / 2147483648.0f;
 constexpr uint32_t SPIN = 1664525u;
@@ -42,7 +42,7 @@ void publish(PERCUSSIVE::Machine &machine, Float peak) {
 
 }  // namespace
 
-void SOUND::PERCUSSIVE::render(
+void SOUND::PLUGINS::PERCUSSIVE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   ::denormals();

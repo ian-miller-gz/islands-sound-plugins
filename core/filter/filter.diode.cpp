@@ -2,7 +2,7 @@
 #include "filter.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float FEEDBACK = 17.0f;
@@ -16,7 +16,7 @@ auto spill(const FILTER::Diode &diode, Whole at) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::FILTER::settle(
+void SOUND::PLUGINS::CORE::FILTER::settle(
   Diode &diode, Float cutoff, Float emphasis, Float drive, Whole rate) {
   const Float g = warped(cutoff, rate);
   Float above = 0, product = ONE;
@@ -37,7 +37,7 @@ void SOUND::CORE::FILTER::settle(
   diode.drive = drive;
 }
 
-auto SOUND::CORE::FILTER::tick(Diode &diode, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::FILTER::tick(Diode &diode, Float in) -> Float {
   diode.feedbacks[STAGES - 1] = 0;
   for (Whole at = STAGES - 1; at-- > 0;)
     diode.feedbacks[at] = ::spill(diode, at + 1);

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void play(
   SHIFTER::Effect &effect, AUDIO::PLUGIN::Sample *const *lanes, Whole frame) {
@@ -15,7 +15,7 @@ void play(
 
 }  // namespace
 
-void SOUND::SHIFTER::render(
+void SOUND::PLUGINS::SHIFTER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

@@ -2,7 +2,7 @@
 #include "chord.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<CHORD::Chord, CHORD::SHEET>;
 
@@ -31,12 +31,15 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::NOTES}}};
 
-[[maybe_unused]] const Flag offered = PLUGIN::offer(
-  {.name = "chord", .surface = &surface, .answer = CHORD::answer});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "chord",
+   .type = "notes",
+   .surface = &surface,
+   .answer = CHORD::answer});
 
 }  // namespace
 
-auto SOUND::CHORD::answer(
+auto SOUND::PLUGINS::CHORD::answer(
   void *instance, const AUDIO::PLUGIN::Event *events, Whole count,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole {
   auto &chord = *static_cast<Chord *>(instance);

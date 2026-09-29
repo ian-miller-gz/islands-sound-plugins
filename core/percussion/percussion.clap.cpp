@@ -2,7 +2,7 @@
 #include "percussion.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float WIDTH = 1.2f;
 constexpr Float FLAT = 0;
@@ -20,7 +20,7 @@ void advance(PERCUSSION::Clap &clap) {
 
 }  // namespace
 
-void SOUND::CORE::PERCUSSION::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Clap &clap, Float spread, Float decay, Float tone, Whole rate) {
   const Whole gap = Whole(spread * Float(rate));
   clap.gap = gap < SHORTEST ? SHORTEST : gap;
@@ -29,7 +29,7 @@ void SOUND::CORE::PERCUSSION::settle(
   FILTER::settle(clap.band, FILTER::BAND, tone, WIDTH, FLAT, rate);
 }
 
-void SOUND::CORE::PERCUSSION::strike(Clap &clap, Float velocity) {
+void SOUND::PLUGINS::CORE::PERCUSSION::strike(Clap &clap, Float velocity) {
   clap.velocity = struck(velocity);
   clap.burst = clap.velocity;
   clap.clock = 0;
@@ -37,8 +37,8 @@ void SOUND::CORE::PERCUSSION::strike(Clap &clap, Float velocity) {
   ENVELOPE::choke(clap.gate);
 }
 
-auto SOUND::CORE::PERCUSSION::tick(Clap &clap) -> Float {
-  const Float tail = ENVELOPE::tick(clap.gate, clap.tail) * TAIL;
+auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Clap &clap) -> Float {
+  const Float tail = ENVELOPE::tick(clap.gate, clap.tail) * ::TAIL;
   const Float level = clap.burst + tail * clap.velocity;
   ::advance(clap);
   const Float noise = FILTER::tick(clap.band, NOISE::tick(clap.white));

@@ -5,7 +5,7 @@
 #include "../../core/glottis/glottis.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::VOWEL {
+namespace SOUND::PLUGINS::VOWEL {
 
 constexpr Whole GAIN = 0;
 constexpr Whole VOWEL = 1;
@@ -54,4 +54,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::VOWEL
+}  // namespace SOUND::PLUGINS::VOWEL

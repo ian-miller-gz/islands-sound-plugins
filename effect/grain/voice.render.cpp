@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto scattered(GRAIN::Strip &strip) -> Float {
   return GRAIN::HALF * (CORE::MODULATOR::draw(strip.seed) + GRAIN::UNITY);
@@ -31,7 +31,7 @@ void play(
 
 }  // namespace
 
-void SOUND::GRAIN::sow(Effect &effect) {
+void SOUND::PLUGINS::GRAIN::sow(Effect &effect) {
   CORE::CLOUD::Grain grain = effect.grain;
   for (Strip &strip : effect.strips) {
     const Float scatter = effect.spray * ::scattered(strip);
@@ -40,7 +40,7 @@ void SOUND::GRAIN::sow(Effect &effect) {
   }
 }
 
-void SOUND::GRAIN::render(
+void SOUND::PLUGINS::GRAIN::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

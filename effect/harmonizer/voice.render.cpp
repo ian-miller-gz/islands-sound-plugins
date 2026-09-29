@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole SIDES = 2;
 constexpr Float HALF = 0.5f;
@@ -73,7 +73,7 @@ auto pour(
 
 }  // namespace
 
-void SOUND::HARMONIZER::render(
+void SOUND::PLUGINS::HARMONIZER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

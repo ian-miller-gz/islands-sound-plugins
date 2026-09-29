@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 using CORE::OSCILLATOR::Oscillator;
 
 constexpr Whole FORMS[] = {CORE::OSCILLATOR::SAW, CORE::OSCILLATOR::PULSE};
@@ -28,8 +28,8 @@ auto slave(DUO::Synth &synth, Float &ring) -> Float {
 
 }  // namespace
 
-auto SOUND::DUO::sing(Synth &synth, Float first, Float second, Float width)
-  -> Tones {
+auto SOUND::PLUGINS::DUO::sing(
+  Synth &synth, Float first, Float second, Float width) -> Tones {
   const Float *rows = synth.rows;
   Oscillator &master = synth.first;
   CORE::OSCILLATOR::settle(

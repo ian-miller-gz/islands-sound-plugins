@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void step(CHIP::Steps &steps, const CHIP::Shape &shape) {
   if (shape.decay == 0) {
@@ -17,12 +17,12 @@ void step(CHIP::Steps &steps, const CHIP::Shape &shape) {
 
 }  // namespace
 
-auto SOUND::CHIP::tick(Clock &clock) -> Flag {
+auto SOUND::PLUGINS::CHIP::tick(Clock &clock) -> Flag {
   clock.phase += clock.step;
   return clock.phase < clock.step;
 }
 
-void SOUND::CHIP::strike(Synth &synth) {
+void SOUND::PLUGINS::CHIP::strike(Synth &synth) {
   for (Whole at = 0; at < ENVELOPES; ++at)
     synth.steps[at] = {.level = synth.shapes[at].level, .held = true};
   synth.arpeggio.phase = 0;
@@ -31,7 +31,7 @@ void SOUND::CHIP::strike(Synth &synth) {
   synth.stale = true;
 }
 
-void SOUND::CHIP::lift(Synth &synth) {
+void SOUND::PLUGINS::CHIP::lift(Synth &synth) {
   for (Whole at = 0; at < ENVELOPES; ++at) {
     synth.steps[at].held = false;
     if (synth.shapes[at].decay == 0) synth.steps[at].level = 0;
@@ -39,7 +39,7 @@ void SOUND::CHIP::lift(Synth &synth) {
   synth.gated = false;
 }
 
-void SOUND::CHIP::clock(Synth &synth) {
+void SOUND::PLUGINS::CHIP::clock(Synth &synth) {
   if (tick(synth.frame))
     for (Whole at = 0; at < ENVELOPES; ++at)
       ::step(synth.steps[at], synth.shapes[at]);

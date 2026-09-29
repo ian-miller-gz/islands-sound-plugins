@@ -5,7 +5,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/reverb/reverb.hpp"
 
-namespace SOUND::SPRING {
+namespace SOUND::PLUGINS::SPRING {
 
 constexpr Whole MONO = 1;
 constexpr Whole LEFT = 0;
@@ -53,4 +53,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::SPRING
+}  // namespace SOUND::PLUGINS::SPRING

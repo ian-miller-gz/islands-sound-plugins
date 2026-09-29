@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::STEPS {
+namespace SOUND::PLUGINS::STEPS {
 
 constexpr Whole LENGTH = 16;
 constexpr Whole SHEETS = 3;
@@ -93,4 +93,4 @@ inline constexpr const CORE::TABLE::Row (&ROWS)[PARAMETERS] = BUILT.rows;
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::STEPS
+}  // namespace SOUND::PLUGINS::STEPS

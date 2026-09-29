@@ -2,11 +2,11 @@
 #include "voice.internal.hpp"
 #include "../../core/dynamics/dynamics.hpp"
 
-void SOUND::WIDENER::build(Effect &effect) {
+void SOUND::PLUGINS::WIDENER::build(Effect &effect) {
   effect.strips.resize(effect.channels / SIDES);
 }
 
-void SOUND::WIDENER::settle(Effect &effect) {
+void SOUND::PLUGINS::WIDENER::settle(Effect &effect) {
   effect.mid = CORE::DYNAMICS::gain(effect.rows[MID]);
   effect.side = effect.rows[WIDTH] * CORE::DYNAMICS::gain(effect.rows[SIDE]);
   for (Strip &strip : effect.strips)

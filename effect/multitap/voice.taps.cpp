@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-auto SOUND::MULTITAP::tick(Effect &effect, Float in) -> Stereo {
+auto SOUND::PLUGINS::MULTITAP::tick(Effect &effect, Float in) -> Stereo {
   Stereo echo;
   Float back = 0;
   for (Whole at = 0; at < TAPS; ++at) {

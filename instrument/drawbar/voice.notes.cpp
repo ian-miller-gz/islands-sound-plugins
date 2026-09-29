@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole KINDS = AUDIO::PLUGIN::Event::PROGRAM + 1;
 constexpr Float LETTING = 0.5f;
@@ -42,6 +42,7 @@ constexpr Handler HANDLERS[KINDS] = {press,  release, steer,
 
 }  // namespace
 
-void SOUND::DRAWBAR::apply(Organ &organ, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::DRAWBAR::apply(
+  Organ &organ, const AUDIO::PLUGIN::Event &event) {
   if (event.kind < ::KINDS) ::HANDLERS[event.kind](organ, event);
 }

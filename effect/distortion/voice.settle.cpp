@@ -5,7 +5,7 @@
 #include "../../core/dynamics/dynamics.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr CORE::SHAPER::Curve SHAPES[] = {
   CORE::SHAPER::hard, CORE::SHAPER::tube};
@@ -17,7 +17,7 @@ auto swept(Float least, Float most, Float place) -> Float {
 
 }  // namespace
 
-void SOUND::DISTORTION::build(Effect &effect) {
+void SOUND::PLUGINS::DISTORTION::build(Effect &effect) {
   effect.strips.resize(effect.channels);
   for (auto &strip : effect.strips) {
     CORE::FILTER::settle(strip.tight, CORE::FILTER::HIGH, TIGHT, effect.rate);
@@ -25,7 +25,7 @@ void SOUND::DISTORTION::build(Effect &effect) {
   }
 }
 
-void SOUND::DISTORTION::settle(Effect &effect) {
+void SOUND::PLUGINS::DISTORTION::settle(Effect &effect) {
   const Whole mode = Whole(effect.rows[MODE]);
   effect.curve = SHAPES[mode < MODES ? mode : HARD];
   effect.gain = ::swept(GENTLEST, HOTTEST, effect.rows[DRIVE]);

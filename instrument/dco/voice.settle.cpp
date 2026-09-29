@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 constexpr Float BLOCKED = 10;
@@ -62,7 +62,7 @@ void pass(DCO::Synth &synth) {
 
 }  // namespace
 
-void SOUND::DCO::settle(Synth &synth) {
+void SOUND::PLUGINS::DCO::settle(Synth &synth) {
   const Float *rows = synth.rows;
   synth.contour = ::contour(rows, synth.rate);
   synth.door = rows[AMPLIFIER] > 0 ? ::gate(synth.rate) : synth.contour;

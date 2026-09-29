@@ -2,7 +2,7 @@
 #include "percussion.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr PERCUSSION::HYBRID::Bend DROP = {
   .depth = 0.6f, .fast = 0.008f, .knee = 0.15f, .slow = 0.05f};
@@ -14,7 +14,7 @@ constexpr Float FLOOR = 900.0f;
 
 }  // namespace
 
-void SOUND::CORE::PERCUSSION::HYBRID::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::settle(
   Snare &snare, Float tune, Float decay, Float snappy, Float tone, Whole rate) {
   settle(snare.low, DROP, rate);
   settle(snare.high, DROP, rate);
@@ -27,7 +27,8 @@ void SOUND::CORE::PERCUSSION::HYBRID::settle(
   snare.snappy = snappy;
 }
 
-void SOUND::CORE::PERCUSSION::HYBRID::strike(Snare &snare, Float velocity) {
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(
+  Snare &snare, Float velocity) {
   snare.velocity = struck(velocity);
   strike(snare.low, snare.lower);
   strike(snare.high, snare.upper);
@@ -35,7 +36,7 @@ void SOUND::CORE::PERCUSSION::HYBRID::strike(Snare &snare, Float velocity) {
   ENVELOPE::strike(snare.snap, snare.rattle, snare.velocity);
 }
 
-auto SOUND::CORE::PERCUSSION::HYBRID::tick(Snare &snare) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::tick(Snare &snare) -> Float {
   if (!ENVELOPE::sounding(snare.snap)) return 0;
   const Float heads = tick(snare.low) + tick(snare.high) * SECOND;
   const Float shell = heads * ENVELOPE::tick(snare.tone, snare.body) * SHELL;

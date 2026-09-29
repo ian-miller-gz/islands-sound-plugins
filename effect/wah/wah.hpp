@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::WAH {
+namespace SOUND::PLUGINS::WAH {
 
 constexpr Whole SENSITIVITY = 0;
 constexpr Whole RANGE = 1;
@@ -22,4 +22,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::WAH
+}  // namespace SOUND::PLUGINS::WAH

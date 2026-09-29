@@ -2,7 +2,7 @@
 #include "reverb.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float MILLISECOND = 0.001f;
 constexpr Float FOLD = 2.0f;
@@ -21,7 +21,8 @@ auto frames(Float milliseconds, Float size, Whole rate) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::REVERB::build(Network &network, Whole count, Whole rate) {
+void SOUND::PLUGINS::CORE::REVERB::build(
+  Network &network, Whole count, Whole rate) {
   network.count = count > FOUR ? EIGHT : FOUR;
   network.rate = rate;
   const Float *base = ::bases(network.count);
@@ -31,7 +32,7 @@ void SOUND::CORE::REVERB::build(Network &network, Whole count, Whole rate) {
   }
 }
 
-void SOUND::CORE::REVERB::settle(
+void SOUND::PLUGINS::CORE::REVERB::settle(
   Network &network, Float size, Float seconds, Float cutoff) {
   const Float *base = ::bases(network.count);
   const Float scale = clamped(size);
@@ -43,7 +44,7 @@ void SOUND::CORE::REVERB::settle(
   }
 }
 
-auto SOUND::CORE::REVERB::tick(Network &network, Float in) -> Stereo {
+auto SOUND::PLUGINS::CORE::REVERB::tick(Network &network, Float in) -> Stereo {
   Float outs[EIGHT] = {};
   Float sum = 0;
   for (Whole at = 0; at < network.count; ++at) {

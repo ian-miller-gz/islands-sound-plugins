@@ -5,7 +5,7 @@
 #include "pitch.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float PI = std::numbers::pi_v<Float>;
 constexpr Float UNITY = 1.0f;
@@ -30,7 +30,8 @@ auto wrapped(Float phase) -> Float { return phase - std::floor(phase); }
 
 }  // namespace
 
-void SOUND::CORE::PITCH::build(Grains &grains, Float seconds, Whole rate) {
+void SOUND::PLUGINS::CORE::PITCH::build(
+  Grains &grains, Float seconds, Whole rate) {
   const Float frames = seconds * Float(rate);
   LINE::build(grains.line, Whole(frames + BASE) + 1);
   grains.weights.resize(POINTS + 1);
@@ -41,7 +42,7 @@ void SOUND::CORE::PITCH::build(Grains &grains, Float seconds, Whole rate) {
   grains.phase = 0;
 }
 
-void SOUND::CORE::PITCH::settle(
+void SOUND::PLUGINS::CORE::PITCH::settle(
   Grains &grains, Float cents, Float seconds, Whole rate) {
   const Float most = LINE::reach(grains.line) - BASE;
   const Float frames = seconds * Float(rate);
@@ -50,7 +51,7 @@ void SOUND::CORE::PITCH::settle(
   grains.step = (UNITY - grains.ratio) / grains.size;
 }
 
-auto SOUND::CORE::PITCH::tick(Grains &grains, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::PITCH::tick(Grains &grains, Float in) -> Float {
   if (grains.weights.empty()) return in;
   grains.phase = ::wrapped(grains.phase + grains.step);
   const Float other = ::wrapped(grains.phase + HALF);
@@ -59,17 +60,18 @@ auto SOUND::CORE::PITCH::tick(Grains &grains, Float in) -> Float {
   return out;
 }
 
-void SOUND::CORE::PITCH::build(Formant &formant, Float seconds, Whole rate) {
+void SOUND::PLUGINS::CORE::PITCH::build(
+  Formant &formant, Float seconds, Whole rate) {
   build(formant.envelope, ENVELOPE, rate);
   build(formant.pitch, seconds, rate);
 }
 
-void SOUND::CORE::PITCH::settle(
+void SOUND::PLUGINS::CORE::PITCH::settle(
   Formant &formant, Float pitch, Float shift, Float seconds, Whole rate) {
   settle(formant.envelope, shift - pitch, ENVELOPE, rate);
   settle(formant.pitch, pitch, seconds, rate);
 }
 
-auto SOUND::CORE::PITCH::tick(Formant &formant, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::PITCH::tick(Formant &formant, Float in) -> Float {
   return tick(formant.pitch, tick(formant.envelope, in));
 }

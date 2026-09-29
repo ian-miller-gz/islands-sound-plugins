@@ -4,7 +4,7 @@
 #include "../noise/noise.hpp"
 #include "../oscillator/oscillator.hpp"
 
-namespace SOUND::CORE::GLOTTIS {
+namespace SOUND::PLUGINS::CORE::GLOTTIS {
 
 constexpr Whole SHAPES = 16;
 constexpr Float CLOSEST = 0.3f;
@@ -31,4 +31,4 @@ void tune(Source &source, Float hertz, Whole rate);
 void reset(Source &source);
 auto tick(Source &source, const OSCILLATOR::Table &table) -> Float;
 
-}  // namespace SOUND::CORE::GLOTTIS
+}  // namespace SOUND::PLUGINS::CORE::GLOTTIS

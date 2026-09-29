@@ -2,7 +2,7 @@
 #pragma once
 #include "percussion.circuit.hpp"
 
-namespace SOUND::CORE::PERCUSSION {
+namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
 struct Cowbell {
   Metal metal;
@@ -18,4 +18,4 @@ void settle(Cowbell &cowbell, Float tune, Float decay, Whole rate);
 void strike(Cowbell &cowbell, Float velocity);
 auto tick(Cowbell &cowbell) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION

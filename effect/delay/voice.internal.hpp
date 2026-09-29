@@ -4,7 +4,7 @@
 
 #include "delay.hpp"
 
-namespace SOUND::DELAY {
+namespace SOUND::PLUGINS::DELAY {
 
 struct Lane {
   Vector<Float> ring;
@@ -35,12 +35,12 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::DELAY
+}  // namespace SOUND::PLUGINS::DELAY
 
-namespace SOUND::DELAY::SURFACE {
+namespace SOUND::PLUGINS::DELAY::SURFACE {
 auto parameters(void *instance) -> Whole;
 auto name(void *instance, Whole index) -> String;
 auto reading(void *instance, Whole index) -> String;
 auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::DELAY::SURFACE
+}  // namespace SOUND::PLUGINS::DELAY::SURFACE

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Change = void (*)(VOWEL::Singer &, CORE::VOICE::Note &, VOWEL::Throat &);
 
@@ -42,7 +42,8 @@ auto sung(VOWEL::Singer &singer, CORE::VOICE::Note &note, VOWEL::Throat &throat)
 
 }  // namespace
 
-void SOUND::VOWEL::apply(Singer &singer, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::VOWEL::apply(
+  Singer &singer, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     singer.allocator, event,
     [&singer](CORE::VOICE::Note &note) { ::voice(singer, note); });
@@ -51,7 +52,7 @@ void SOUND::VOWEL::apply(Singer &singer, const AUDIO::PLUGIN::Event &event) {
   settle(singer);
 }
 
-auto SOUND::VOWEL::sing(Singer &singer) -> Float {
+auto SOUND::PLUGINS::VOWEL::sing(Singer &singer) -> Float {
   Float sum = 0;
   for (Whole at = 0; at < VOICES; ++at) {
     CORE::VOICE::Note &note = singer.allocator.notes[at];

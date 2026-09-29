@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::PADS {
+namespace SOUND::PLUGINS::PADS {
 
 enum Pad : Whole { KICK, SNARE, HIGH, MID, LOW, FLOOR, PADS };
 
@@ -60,4 +60,4 @@ inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 constexpr Whole PARAMETERS = SHEET.count;
 static_assert(PARAMETERS == Whole(PADS) * KNOBS);
 
-}  // namespace SOUND::PADS
+}  // namespace SOUND::PLUGINS::PADS

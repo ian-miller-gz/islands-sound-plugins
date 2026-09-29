@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr uint32_t SEED = 0x9e3779b9u;
 constexpr uint32_t STRIDE = 0x85ebca6bu;
@@ -30,7 +30,8 @@ void hit(PERCUSSIVE::Machine &machine, Whole slot, Float velocity) {
 
 }  // namespace
 
-void SOUND::PERCUSSIVE::steer(Machine &machine, Whole id, Float value) {
+void SOUND::PLUGINS::PERCUSSIVE::steer(
+  Machine &machine, Whole id, Float value) {
   const Float held = clamped(id, value);
   if (id == GAIN) {
     machine.gain = held;
@@ -48,7 +49,7 @@ void SOUND::PERCUSSIVE::steer(Machine &machine, Whole id, Float value) {
     machine.decays[place] = held;
 }
 
-void SOUND::PERCUSSIVE::apply(
+void SOUND::PLUGINS::PERCUSSIVE::apply(
   Machine &machine, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     steer(machine, event.index, event.value);

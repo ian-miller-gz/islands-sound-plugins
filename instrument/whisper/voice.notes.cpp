@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Change = void (*)(WHISPER::Mouth &, CORE::VOICE::Note &, Whole);
 
@@ -48,7 +48,8 @@ auto hissed(WHISPER::Mouth &mouth, CORE::VOICE::Note &note, WHISPER::Hiss &hiss)
 
 }  // namespace
 
-void SOUND::WHISPER::apply(Mouth &mouth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::WHISPER::apply(
+  Mouth &mouth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     mouth.allocator, event,
     [&mouth](CORE::VOICE::Note &note) { ::voice(mouth, note); });
@@ -57,7 +58,7 @@ void SOUND::WHISPER::apply(Mouth &mouth, const AUDIO::PLUGIN::Event &event) {
   settle(mouth);
 }
 
-auto SOUND::WHISPER::breathe(Mouth &mouth) -> Float {
+auto SOUND::PLUGINS::WHISPER::breathe(Mouth &mouth) -> Float {
   Float sum = 0;
   for (Whole at = 0; at < VOICES; ++at) {
     CORE::VOICE::Note &note = mouth.allocator.notes[at];

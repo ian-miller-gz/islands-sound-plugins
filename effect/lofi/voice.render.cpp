@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto worn(LOFI::Effect &effect, LOFI::Strip &strip, Float in, Float wave)
   -> Float {
@@ -16,7 +16,7 @@ auto worn(LOFI::Effect &effect, LOFI::Strip &strip, Float in, Float wave)
 
 }  // namespace
 
-void SOUND::LOFI::render(
+void SOUND::PLUGINS::LOFI::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

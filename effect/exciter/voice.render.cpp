@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto excited(EXCITER::Effect &effect, EXCITER::Strip &strip, Float in)
   -> Float {
@@ -22,7 +22,7 @@ void play(
 
 }  // namespace
 
-void SOUND::EXCITER::render(
+void SOUND::PLUGINS::EXCITER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

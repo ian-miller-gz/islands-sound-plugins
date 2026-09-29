@@ -6,7 +6,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void tune(const CORE::FILTER::Variable &from, CORE::FILTER::Variable &into) {
   into.damping = from.damping;
@@ -25,17 +25,17 @@ void shape(WAH::Effect &effect, Float centre) {
 
 }  // namespace
 
-void SOUND::WAH::sweep(Effect &effect, Float level) {
+void SOUND::PLUGINS::WAH::sweep(Effect &effect, Float level) {
   const Float reach = std::min(level * effect.gain, UNITY);
   ::shape(effect, HEEL * std::exp(reach * effect.span));
 }
 
-void SOUND::WAH::build(Effect &effect) {
+void SOUND::PLUGINS::WAH::build(Effect &effect) {
   effect.strips.resize(effect.channels);
   effect.detector.kind = CORE::DYNAMICS::PEAK;
 }
 
-void SOUND::WAH::settle(Effect &effect) {
+void SOUND::PLUGINS::WAH::settle(Effect &effect) {
   effect.detector.attack = effect.rows[ATTACK] * MILLI;
   effect.detector.release = effect.rows[RELEASE] * MILLI;
   CORE::DYNAMICS::settle(effect.detector, effect.rate);

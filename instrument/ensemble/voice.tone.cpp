@@ -2,13 +2,13 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float LEVEL = 0.25f;
 
 }  // namespace
 
-auto SOUND::ENSEMBLE::sound(Synth &synth) -> Pair {
+auto SOUND::PLUGINS::ENSEMBLE::sound(Synth &synth) -> Pair {
   const Float swell = CORE::ENVELOPE::tick(synth.gate, synth.envelope);
   const Sums sums = divide(synth);
   Float mixed = 0;

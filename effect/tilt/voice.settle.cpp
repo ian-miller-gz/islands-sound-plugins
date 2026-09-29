@@ -2,11 +2,11 @@
 #include "voice.internal.hpp"
 #include "../../core/dynamics/dynamics.hpp"
 
-void SOUND::TILT::build(Effect &effect) {
+void SOUND::PLUGINS::TILT::build(Effect &effect) {
   effect.poles.resize(effect.channels);
 }
 
-void SOUND::TILT::settle(Effect &effect) {
+void SOUND::PLUGINS::TILT::settle(Effect &effect) {
   for (auto &pole : effect.poles)
     CORE::FILTER::settle(
       pole, CORE::FILTER::LOW, effect.rows[PIVOT], effect.rate);

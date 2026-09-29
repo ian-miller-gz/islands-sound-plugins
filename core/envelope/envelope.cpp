@@ -4,7 +4,7 @@
 #include "envelope.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float SINGLE = 1.0f;
 constexpr Float RISE = 0.3f;
@@ -36,16 +36,18 @@ auto built(const ENVELOPE::Envelope &envelope) -> Builder {
 
 }  // namespace
 
-auto SOUND::CORE::ENVELOPE::frames(Float seconds, Whole rate) -> Float {
+auto SOUND::PLUGINS::CORE::ENVELOPE::frames(Float seconds, Whole rate)
+  -> Float {
   return seconds * Float(rate);
 }
 
-auto SOUND::CORE::ENVELOPE::weigh(Float velocity, Float depth) -> Float {
+auto SOUND::PLUGINS::CORE::ENVELOPE::weigh(Float velocity, Float depth)
+  -> Float {
   const Float struck = velocity < 0 ? 0 : velocity > FULL ? FULL : velocity;
   return FULL - depth + depth * struck;
 }
 
-void SOUND::CORE::ENVELOPE::shape(Envelope &envelope, Whole rate) {
+void SOUND::PLUGINS::CORE::ENVELOPE::shape(Envelope &envelope, Whole rate) {
   const Builder build = ::built(envelope);
   const Float sustain = envelope.sustain;
   envelope.slopes[IDLE] = {0, 0};
@@ -60,7 +62,7 @@ void SOUND::CORE::ENVELOPE::shape(Envelope &envelope, Whole rate) {
     envelope.bounds[stage] = bounds[stage];
 }
 
-auto SOUND::CORE::ENVELOPE::ADSR::create(
+auto SOUND::PLUGINS::CORE::ENVELOPE::ADSR::create(
   Float attack, Float decay, Float sustain, Float release) -> Envelope {
   Envelope envelope;
   envelope.attack = attack;
@@ -70,18 +72,19 @@ auto SOUND::CORE::ENVELOPE::ADSR::create(
   return envelope;
 }
 
-auto SOUND::CORE::ENVELOPE::AD::create(Float attack, Float decay) -> Envelope {
+auto SOUND::PLUGINS::CORE::ENVELOPE::AD::create(Float attack, Float decay)
+  -> Envelope {
   Envelope envelope = ADSR::create(attack, decay, 0, decay);
   envelope.sustained = false;
   return envelope;
 }
 
-auto SOUND::CORE::ENVELOPE::AR::create(Float attack, Float release)
+auto SOUND::PLUGINS::CORE::ENVELOPE::AR::create(Float attack, Float release)
   -> Envelope {
   return ADSR::create(attack, 0, FULL, release);
 }
 
-auto SOUND::CORE::ENVELOPE::GATE::create(Float depth) -> Envelope {
+auto SOUND::PLUGINS::CORE::ENVELOPE::GATE::create(Float depth) -> Envelope {
   Envelope envelope = ADSR::create(0, 0, FULL, 0);
   envelope.depth = depth;
   return envelope;

@@ -5,7 +5,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float PI = 3.14159265f;
 constexpr Float CENT = 100;
@@ -56,7 +56,7 @@ void swing(OPERATOR::Synth &synth) {
 
 }  // namespace
 
-void SOUND::OPERATOR::settle(Synth &synth) {
+void SOUND::PLUGINS::OPERATOR::settle(Synth &synth) {
   synth.routing = &routed(synth.rows[ALGORITHM]);
   synth.feedback = ::looped(synth.rows[FEEDBACK]);
   for (Whole unit = 0; unit < OPERATORS; ++unit) ::prepare(synth, unit);

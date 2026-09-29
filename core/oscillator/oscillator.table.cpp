@@ -5,7 +5,7 @@
 #include "oscillator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float UNIT = 1.0f;
 
@@ -29,18 +29,18 @@ auto partial(Whole at, Whole harmonic) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::OSCILLATOR::build(Table &table, Whole frames) {
+void SOUND::PLUGINS::CORE::OSCILLATOR::build(Table &table, Whole frames) {
   table.frames = frames;
   table.values.assign(frames * STRIDE, 0);
 }
 
-void SOUND::CORE::OSCILLATOR::build(Table &table) {
+void SOUND::PLUGINS::CORE::OSCILLATOR::build(Table &table) {
   constexpr Float FUNDAMENTAL[] = {UNIT};
   build(table, SINGLE);
   draw(table, 0, FUNDAMENTAL, std::size(FUNDAMENTAL));
 }
 
-void SOUND::CORE::OSCILLATOR::draw(
+void SOUND::PLUGINS::CORE::OSCILLATOR::draw(
   Table &table, Whole frame, const Float *partials, Whole count) {
   if (frame >= table.frames) return;
   Float *values = table.values.data() + frame * STRIDE;
@@ -56,8 +56,8 @@ void SOUND::CORE::OSCILLATOR::draw(
   values[SIZE] = values[0];
 }
 
-auto SOUND::CORE::OSCILLATOR::read(const Table &table, Whole frame, Wheel phase)
-  -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::read(
+  const Table &table, Whole frame, Wheel phase) -> Float {
   if (table.frames == 0) return 0;
   const Float *values = ::start(table, frame);
   const Whole at = phase >> SHIFT;
@@ -65,7 +65,7 @@ auto SOUND::CORE::OSCILLATOR::read(const Table &table, Whole frame, Wheel phase)
   return values[at] + (values[at + 1] - values[at]) * part;
 }
 
-auto SOUND::CORE::OSCILLATOR::morph(
+auto SOUND::PLUGINS::CORE::OSCILLATOR::morph(
   const Table &table, Float position, Wheel phase) -> Float {
   const Float top = table.frames == 0 ? 0 : Float(table.frames - 1);
   const Float held = position < 0 ? 0 : position > top ? top : position;
@@ -75,6 +75,7 @@ auto SOUND::CORE::OSCILLATOR::morph(
   return from + (read(table, low + 1, phase) - from) * part;
 }
 
-auto SOUND::CORE::OSCILLATOR::sine(const Table &table, Wheel phase) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::sine(const Table &table, Wheel phase)
+  -> Float {
   return read(table, 0, phase);
 }

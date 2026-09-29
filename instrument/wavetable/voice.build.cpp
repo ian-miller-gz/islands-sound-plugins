@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr WAVETABLE::Spectrum SPECTRA[] = {
   WAVETABLE::SPECTRUM::sine,    WAVETABLE::SPECTRUM::harmonic,
@@ -38,7 +38,8 @@ void blend(CORE::OSCILLATOR::Table &table, Whole from, Whole to) {
 
 }  // namespace
 
-void SOUND::WAVETABLE::build(CORE::OSCILLATOR::Table &table, Whole layout) {
+void SOUND::PLUGINS::WAVETABLE::build(
+  CORE::OSCILLATOR::Table &table, Whole layout) {
   const Spectrum spectrum = ::SPECTRA[layout < TABLES ? layout : 0];
   CORE::OSCILLATOR::build(table, FRAMES);
   for (Whole at = 0; at < KEYS; ++at) ::key(table, spectrum, at * SPAN);

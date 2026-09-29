@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto heard(AUDIO::PLUGIN::Sample *const *lanes, Whole channels, Whole frame)
   -> Float {
@@ -31,7 +31,7 @@ auto pour(
 
 }  // namespace
 
-void SOUND::VOCODER::render(
+void SOUND::PLUGINS::VOCODER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

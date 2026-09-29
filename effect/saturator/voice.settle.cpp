@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 #include "../../core/dynamics/dynamics.hpp"
 
-void SOUND::SATURATOR::build(Effect &effect) {
+void SOUND::PLUGINS::SATURATOR::build(Effect &effect) {
   effect.strips.resize(effect.channels);
   CORE::NOISE::Register seed = CORE::NOISE::SEED;
   for (auto &strip : effect.strips) {
@@ -13,7 +13,7 @@ void SOUND::SATURATOR::build(Effect &effect) {
   }
 }
 
-void SOUND::SATURATOR::settle(Effect &effect) {
+void SOUND::PLUGINS::SATURATOR::settle(Effect &effect) {
   effect.gain = CORE::DYNAMICS::gain(effect.rows[DRIVE]);
   effect.bias = effect.rows[BIAS];
   effect.rest = CORE::SHAPER::soft(effect.bias);

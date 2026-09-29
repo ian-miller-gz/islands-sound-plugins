@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::OVERDRIVE {
+namespace SOUND::PLUGINS::OVERDRIVE {
 
 constexpr Float HUMP = 720.0f;
 constexpr Float GENTLEST = 12.0f;
@@ -36,4 +36,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::OVERDRIVE
+}  // namespace SOUND::PLUGINS::OVERDRIVE

@@ -5,7 +5,7 @@
 #include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::FLANGER {
+namespace SOUND::PLUGINS::FLANGER {
 
 constexpr Float GLIDE = 0.002f;
 constexpr Float OPEN = 0;
@@ -36,4 +36,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::FLANGER
+}  // namespace SOUND::PLUGINS::FLANGER

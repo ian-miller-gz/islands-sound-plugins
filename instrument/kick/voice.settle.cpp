@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-void SOUND::KICK::settle(Voice &voice) {
+void SOUND::PLUGINS::KICK::settle(Voice &voice) {
   CORE::PERCUSSION::settle(
     voice.kick, voice.rows[TUNE], voice.rows[DECAY], voice.rows[ATTACK],
     voice.rows[DRIVE], voice.rows[TONE], voice.rate);
 }
 
-void SOUND::KICK::apply(Voice &voice, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::KICK::apply(
+  Voice &voice, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     if (event.index >= PARAMETERS) return;
     voice.rows[event.index] =

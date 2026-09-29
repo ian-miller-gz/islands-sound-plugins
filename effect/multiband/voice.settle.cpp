@@ -5,7 +5,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void copy(const CORE::FILTER::Biquad &design, CORE::FILTER::Biquad &into) {
   std::copy(
@@ -50,7 +50,7 @@ void settle(MULTIBAND::Band &band, const Float *rows, Whole at, Whole rate) {
 
 }  // namespace
 
-void SOUND::MULTIBAND::build(Effect &effect) {
+void SOUND::PLUGINS::MULTIBAND::build(Effect &effect) {
   effect.strips.resize(effect.channels);
   for (Band &band : effect.bands) {
     band.detector.kind = CORE::DYNAMICS::PEAK;
@@ -58,7 +58,7 @@ void SOUND::MULTIBAND::build(Effect &effect) {
   }
 }
 
-void SOUND::MULTIBAND::settle(Effect &effect) {
+void SOUND::PLUGINS::MULTIBAND::settle(Effect &effect) {
   for (Whole at = 0; at < CROSSOVERS; ++at) ::cross(effect, at);
   for (Whole at = 0; at < BANDS; ++at)
     ::settle(effect.bands[at], effect.rows, at, effect.rate);

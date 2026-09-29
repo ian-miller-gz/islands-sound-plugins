@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto saw(OSCILLATOR::Module &module) -> Float {
   return CORE::OSCILLATOR::tick(module.oscillator, CORE::OSCILLATOR::SAW);
@@ -46,7 +46,7 @@ auto sound(OSCILLATOR::Module &module) -> Float {
 
 }  // namespace
 
-void SOUND::OSCILLATOR::render(
+void SOUND::PLUGINS::OSCILLATOR::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

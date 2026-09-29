@@ -2,7 +2,7 @@
 #include "reverb.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole COUNT = CORE::REVERB::TAPS * CORE::REVERB::SIDES;
 
@@ -21,13 +21,14 @@ auto placed(const CORE::LINE::Tap &tap, Float scale) -> CORE::LINE::Tap {
 
 }  // namespace
 
-void SOUND::CORE::REVERB::build(Reflections &reflections, Whole rate) {
+void SOUND::PLUGINS::CORE::REVERB::build(Reflections &reflections, Whole rate) {
   reflections.rate = rate;
   const Float most = LATEST * LARGEST * Float(rate);
   LINE::build(reflections.line, Whole(most) + 1);
 }
 
-void SOUND::CORE::REVERB::settle(Reflections &reflections, Float size) {
+void SOUND::PLUGINS::CORE::REVERB::settle(
+  Reflections &reflections, Float size) {
   const Float scale = clamped(size) * Float(reflections.rate);
   for (Whole tap = 0; tap < TAPS; ++tap) {
     reflections.left[tap] = ::placed(TABLE[tap * SIDES], scale);
@@ -35,7 +36,8 @@ void SOUND::CORE::REVERB::settle(Reflections &reflections, Float size) {
   }
 }
 
-auto SOUND::CORE::REVERB::tick(Reflections &reflections, Float in) -> Stereo {
+auto SOUND::PLUGINS::CORE::REVERB::tick(Reflections &reflections, Float in)
+  -> Stereo {
   const Stereo out = {
     LINE::read(reflections.line, reflections.left, TAPS),
     LINE::read(reflections.line, reflections.right, TAPS)};

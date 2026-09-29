@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float UNIT = 1.0f;
 
@@ -14,14 +14,14 @@ auto beats(const STEPS::Sequencer &sequencer) -> Float {
 
 }  // namespace
 
-void SOUND::STEPS::settle(Sequencer &sequencer) {
+void SOUND::PLUGINS::STEPS::settle(Sequencer &sequencer) {
   const Float lean = sequencer.rows[SWING] / EVEN - ::UNIT;
   CORE::CLOCK::settle(
     sequencer.clock, sequencer.rows[TEMPO], ::beats(sequencer), lean,
     sequencer.rate);
 }
 
-void SOUND::STEPS::run(Sequencer &sequencer, Whole frame) {
+void SOUND::PLUGINS::STEPS::run(Sequencer &sequencer, Whole frame) {
   const Flag on = sequencer.rows[RUN] > HALF;
   if (on == sequencer.clock.running) return;
   if (!on) {
@@ -32,7 +32,7 @@ void SOUND::STEPS::run(Sequencer &sequencer, Whole frame) {
   CORE::CLOCK::run(sequencer.clock);
 }
 
-void SOUND::STEPS::apply(
+void SOUND::PLUGINS::STEPS::apply(
   Sequencer &sequencer, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::NOTE_ON && event.value > 0) {
     silence(sequencer, event.offset);

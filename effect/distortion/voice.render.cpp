@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto drive(const DISTORTION::Effect &effect, DISTORTION::Strip &strip, Float in)
   -> Float {
@@ -24,7 +24,7 @@ void play(
 
 }  // namespace
 
-void SOUND::DISTORTION::render(
+void SOUND::PLUGINS::DISTORTION::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

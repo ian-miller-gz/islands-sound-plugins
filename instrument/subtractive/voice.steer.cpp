@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float LOOSE = 2.0f;
 constexpr Float SQUEEZE = 2.0f;
@@ -72,7 +72,7 @@ auto curved(SUBTRACTIVE::Synth &synth, Whole id, Float held) -> Whole {
 
 }  // namespace
 
-void SOUND::SUBTRACTIVE::steer(Synth &synth, Whole id, Float value) {
+void SOUND::PLUGINS::SUBTRACTIVE::steer(Synth &synth, Whole id, Float value) {
   const Float held = clamped(id, value);
   if (::tone(synth, id, held)) return;
   const Whole curve = ::curved(synth, id, held);

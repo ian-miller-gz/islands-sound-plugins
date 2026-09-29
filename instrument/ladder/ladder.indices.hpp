@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::LADDER {
+namespace SOUND::PLUGINS::LADDER {
 
 constexpr Whole TUNE = 0;
 constexpr Whole BEND = 1;
@@ -40,4 +40,4 @@ constexpr Whole RELEASE = 32;
 constexpr Whole VOLUME = 33;
 constexpr Whole PARAMETERS = 34;
 
-}  // namespace SOUND::LADDER
+}  // namespace SOUND::PLUGINS::LADDER

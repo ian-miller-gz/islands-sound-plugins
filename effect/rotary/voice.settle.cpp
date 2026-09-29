@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void build(ROTARY::Rotor &rotor, const ROTARY::Build &build, Whole rate) {
   const Float seconds = ROTARY::MARGIN + build.reach * Float(ROTARY::SIDES);
@@ -33,12 +33,12 @@ void settle(
 
 }  // namespace
 
-void SOUND::ROTARY::build(Effect &effect) {
+void SOUND::PLUGINS::ROTARY::build(Effect &effect) {
   for (Whole at = 0; at < ROTORS; ++at)
     ::build(effect.rotors[at], BUILDS[at], effect.rate);
 }
 
-void SOUND::ROTARY::settle(Effect &effect) {
+void SOUND::PLUGINS::ROTARY::settle(Effect &effect) {
   const Float cutoff = effect.rows[CROSSOVER];
   for (Whole stage = 0; stage < ORDER; ++stage) {
     CORE::FILTER::settle(

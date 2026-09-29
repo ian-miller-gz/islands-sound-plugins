@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void play(
   RINGMOD::Effect &effect, AUDIO::PLUGIN::Sample *const *lanes, Whole frame) {
@@ -14,7 +14,7 @@ void play(
 
 }  // namespace
 
-void SOUND::RINGMOD::render(
+void SOUND::PLUGINS::RINGMOD::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

@@ -2,7 +2,7 @@
 #pragma once
 #include "percussion.circuit.hpp"
 
-namespace SOUND::CORE::PERCUSSION::HYBRID {
+namespace SOUND::PLUGINS::CORE::PERCUSSION::HYBRID {
 
 struct Bend {
   Float depth = 0;
@@ -77,7 +77,7 @@ struct Tom {
   ENVELOPE::Gate hit;
   NOISE::White white;
   FILTER::Pole tone;
-  Float paces[HEIGHTS] = {};
+  Float paces[HEIGHT::HEIGHTS] = {};
   Float velocity = 0;
 };
 
@@ -85,6 +85,6 @@ void settle(Tom &tom, Float tune, Float decay, Whole rate);
 void strike(Tom &tom, Whole height, Float velocity);
 auto tick(Tom &tom) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION::HYBRID
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION::HYBRID
 
 #include "percussion.hybrid.hat.hpp"

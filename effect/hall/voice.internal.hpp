@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/reverb/reverb.hpp"
 
-namespace SOUND::HALL {
+namespace SOUND::PLUGINS::HALL {
 
 constexpr Whole MONO = 1;
 constexpr Float MILLISECOND = 0.001f;
@@ -32,4 +32,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::HALL
+}  // namespace SOUND::PLUGINS::HALL

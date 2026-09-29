@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::FLANGER {
+namespace SOUND::PLUGINS::FLANGER {
 
 constexpr Whole FEEDBACK = 0;
 constexpr Whole MANUAL = 1;
@@ -24,4 +24,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::FLANGER
+}  // namespace SOUND::PLUGINS::FLANGER

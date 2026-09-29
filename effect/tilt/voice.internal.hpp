@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::TILT {
+namespace SOUND::PLUGINS::TILT {
 
 constexpr Float HALF = 0.5f;
 constexpr Float UNITY = 1.0f;
@@ -27,4 +27,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::TILT
+}  // namespace SOUND::PLUGINS::TILT

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Tick = auto (*)(MACHINE::Machine &machine) -> Float;
 
@@ -25,14 +25,14 @@ constexpr Tick TICKS[MACHINE::DRUMS] = {
 
 }  // namespace
 
-auto SOUND::MACHINE::mix(Machine &machine) -> Float {
+auto SOUND::PLUGINS::MACHINE::mix(Machine &machine) -> Float {
   Float sum = 0;
   for (Whole drum = 0; drum < DRUMS; ++drum)
     sum += ::TICKS[drum](machine) * machine.rows[place(drum, LEVEL)];
   return CORE::SHAPER::soft(sum);
 }
 
-void SOUND::MACHINE::render(
+void SOUND::PLUGINS::MACHINE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

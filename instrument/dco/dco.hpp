@@ -6,7 +6,7 @@
 #include "../../core/table/table.hpp"
 #include "dco.indices.hpp"
 
-namespace SOUND::DCO {
+namespace SOUND::PLUGINS::DCO {
 
 constexpr Float CENTS = 200;
 constexpr Float SEMITONES = 12;
@@ -60,4 +60,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::DCO
+}  // namespace SOUND::PLUGINS::DCO

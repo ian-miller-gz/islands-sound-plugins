@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto claim(SUBTRACTIVE::Synth &synth) -> SUBTRACTIVE::Note & {
   SUBTRACTIVE::Note *oldest = &synth.notes[0];
@@ -36,7 +36,7 @@ void lift(SUBTRACTIVE::Synth &synth, Whole pitch) {
 
 }  // namespace
 
-void SOUND::SUBTRACTIVE::apply(
+void SOUND::PLUGINS::SUBTRACTIVE::apply(
   Synth &synth, const AUDIO::PLUGIN::Event &event) {
   switch (event.kind) {
     case AUDIO::PLUGIN::Event::NOTE_ON:

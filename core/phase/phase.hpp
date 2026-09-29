@@ -4,7 +4,7 @@
 
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::PHASE {
+namespace SOUND::PLUGINS::CORE::PHASE {
 
 using Wheel = std::uint32_t;
 
@@ -30,4 +30,4 @@ struct Tuning {
 void tune(Tuning &tuning, Whole rate);
 auto stepped(const Tuning &tuning, Whole pitch) -> Wheel;
 
-}  // namespace SOUND::CORE::PHASE
+}  // namespace SOUND::PLUGINS::CORE::PHASE

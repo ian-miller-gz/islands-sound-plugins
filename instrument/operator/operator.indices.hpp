@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::OPERATOR {
+namespace SOUND::PLUGINS::OPERATOR {
 
 constexpr Whole OPERATORS = 6;
 constexpr Whole STAGES = 4;
@@ -35,4 +35,4 @@ constexpr auto field(Whole unit, Whole at) -> Whole {
   return FIRST + unit * FIELDS + at;
 }
 
-}  // namespace SOUND::OPERATOR
+}  // namespace SOUND::PLUGINS::OPERATOR

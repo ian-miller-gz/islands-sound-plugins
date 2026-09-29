@@ -5,7 +5,7 @@
 #include "envelope.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float SLOWEST = 38.0f;
 constexpr Float QUICKEN = 0.894924f;
@@ -49,7 +49,7 @@ auto bounded(Float value) -> Float {
 
 }  // namespace
 
-auto SOUND::CORE::ENVELOPE::seconds(Float rate) -> Float {
+auto SOUND::PLUGINS::CORE::ENVELOPE::seconds(Float rate) -> Float {
   const Float place = ::bounded(rate);
   const Whole whole = Whole(place);
   if (whole + 1 >= RATES) return ::SWEEPS[RATES - 1];
@@ -57,11 +57,12 @@ auto SOUND::CORE::ENVELOPE::seconds(Float rate) -> Float {
   return ::SWEEPS[whole] + (::SWEEPS[whole + 1] - ::SWEEPS[whole]) * part;
 }
 
-auto SOUND::CORE::ENVELOPE::loudness(Float level, Whole curve) -> Float {
+auto SOUND::PLUGINS::CORE::ENVELOPE::loudness(Float level, Whole curve)
+  -> Float {
   return ::LOUDNESS[curve < CURVES ? curve : LINEAR](level);
 }
 
-void SOUND::CORE::ENVELOPE::shape(Segments &segments, Whole rate) {
+void SOUND::PLUGINS::CORE::ENVELOPE::shape(Segments &segments, Whole rate) {
   for (Whole segment = 0; segment < SEGMENTS; ++segment) {
     const Float span = frames(seconds(segments.rates[segment]), rate);
     segments.steps[segment] = FULL / (span <= ::SINGLE ? ::SINGLE : span);
@@ -69,22 +70,22 @@ void SOUND::CORE::ENVELOPE::shape(Segments &segments, Whole rate) {
   }
 }
 
-void SOUND::CORE::ENVELOPE::strike(
+void SOUND::PLUGINS::CORE::ENVELOPE::strike(
   Walk &walk, const Segments &segments, Float velocity) {
   if (walk.segment >= RESTED) walk.level = segments.targets[SEGMENTS - 1];
   walk.segment = 0;
   walk.scale = weigh(velocity, segments.depth);
 }
 
-void SOUND::CORE::ENVELOPE::lift(Walk &walk) {
+void SOUND::PLUGINS::CORE::ENVELOPE::lift(Walk &walk) {
   if (walk.segment < RESTED) walk.segment = SEGMENTS - 1;
 }
 
-auto SOUND::CORE::ENVELOPE::sounding(const Walk &walk) -> Flag {
+auto SOUND::PLUGINS::CORE::ENVELOPE::sounding(const Walk &walk) -> Flag {
   return walk.segment < RESTED;
 }
 
-auto SOUND::CORE::ENVELOPE::tick(Walk &walk, const Segments &segments)
+auto SOUND::PLUGINS::CORE::ENVELOPE::tick(Walk &walk, const Segments &segments)
   -> Float {
   if (walk.segment < RESTED) {
     const Float target = segments.targets[walk.segment];

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<PHASER::Effect, PHASER::SHEET>;
 
@@ -38,12 +38,13 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::AUDIO}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "phaser", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "phaser", .type = "effect", .surface = &surface});
 
 }  // namespace
 
-void SOUND::PHASER::apply(Effect &effect, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::PHASER::apply(
+  Effect &effect, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   effect.rows[event.index] =
@@ -51,7 +52,7 @@ void SOUND::PHASER::apply(Effect &effect, const AUDIO::PLUGIN::Event &event) {
   settle(effect);
 }
 
-void SOUND::PHASER::settle(Effect &effect) {
+void SOUND::PLUGINS::PHASER::settle(Effect &effect) {
   effect.stages = FEWEST + STRIDE * Whole(effect.rows[STAGES]);
   effect.swing = effect.rows[DEPTH] * OCTAVES;
   effect.lfo.hertz = effect.rows[RATE];

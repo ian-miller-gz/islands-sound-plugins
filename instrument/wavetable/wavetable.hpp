@@ -6,7 +6,7 @@
 #include "../../core/table/table.hpp"
 #include "wavetable.indices.hpp"
 
-namespace SOUND::WAVETABLE {
+namespace SOUND::PLUGINS::WAVETABLE {
 
 constexpr Whole TABLES = 16;
 constexpr Whole FRAMES = 64;
@@ -76,4 +76,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::WAVETABLE
+}  // namespace SOUND::PLUGINS::WAVETABLE

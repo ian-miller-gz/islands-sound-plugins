@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<AMPLIFIER::Module, AMPLIFIER::SHEET>;
 
@@ -39,7 +39,10 @@ const AUDIO::PLUGIN::Plug surface = {
      {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "amplifier", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "amplifier",
+   .type = "modular",
+   .voicing = SOUND::PLUGIN::MONO,
+   .surface = &surface});
 
 }  // namespace

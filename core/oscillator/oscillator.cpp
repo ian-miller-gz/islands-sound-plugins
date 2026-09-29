@@ -2,7 +2,7 @@
 #include "oscillator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float UNIT = 1.0f;
 constexpr Float TWICE = 2.0f;
@@ -32,7 +32,7 @@ auto chosen(Whole wave) -> Whole {
 
 }  // namespace
 
-void SOUND::CORE::OSCILLATOR::settle(
+void SOUND::PLUGINS::CORE::OSCILLATOR::settle(
   Oscillator &oscillator, Float hertz, Float width, Whole rate) {
   const Float top = Float(rate) * HALF;
   const Float held = hertz < 0 ? 0 : hertz > top ? top : hertz;
@@ -43,42 +43,44 @@ void SOUND::CORE::OSCILLATOR::settle(
   oscillator.edge = Wheel(wide * PHASE::TURN);
 }
 
-void SOUND::CORE::OSCILLATOR::reset(Oscillator &oscillator, Wheel phase) {
+void SOUND::PLUGINS::CORE::OSCILLATOR::reset(
+  Oscillator &oscillator, Wheel phase) {
   oscillator.phase = phase;
 }
 
-auto SOUND::CORE::OSCILLATOR::shaped(const Oscillator &oscillator, Whole wave)
-  -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::shaped(
+  const Oscillator &oscillator, Whole wave) -> Float {
   return ::SHAPES[::chosen(wave)](oscillator);
 }
 
-auto SOUND::CORE::OSCILLATOR::tick(Oscillator &oscillator, Whole wave)
+auto SOUND::PLUGINS::CORE::OSCILLATOR::tick(Oscillator &oscillator, Whole wave)
   -> Float {
   const Float value = shaped(oscillator, wave);
   oscillator.phase += oscillator.step;
   return value;
 }
 
-auto SOUND::CORE::OSCILLATOR::NAIVE::saw(Wheel phase) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::NAIVE::saw(Wheel phase) -> Float {
   return PHASE::fraction(phase) * TWICE - UNIT;
 }
 
-auto SOUND::CORE::OSCILLATOR::NAIVE::pulse(Wheel phase, Wheel edge) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::NAIVE::pulse(Wheel phase, Wheel edge)
+  -> Float {
   return phase < edge ? UNIT : -UNIT;
 }
 
-auto SOUND::CORE::OSCILLATOR::NAIVE::triangle(Wheel phase) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::NAIVE::triangle(Wheel phase) -> Float {
   const Float centred = PHASE::fraction(phase) - HALF;
   return UNIT - SLOPE * (centred < 0 ? -centred : centred);
 }
 
-auto SOUND::CORE::OSCILLATOR::NAIVE::shaped(Wheel phase, Wheel edge, Whole wave)
-  -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::NAIVE::shaped(
+  Wheel phase, Wheel edge, Whole wave) -> Float {
   return ::NAIVES[::chosen(wave)](phase, edge);
 }
 
-auto SOUND::CORE::OSCILLATOR::NAIVE::tick(Oscillator &oscillator, Whole wave)
-  -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::NAIVE::tick(
+  Oscillator &oscillator, Whole wave) -> Float {
   const Float value = shaped(oscillator.phase, oscillator.edge, wave);
   oscillator.phase += oscillator.step;
   return value;

@@ -8,7 +8,7 @@
 #include "../../core/noise/noise.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::LOFI {
+namespace SOUND::PLUGINS::LOFI {
 
 constexpr Float WOBBLE = 0.5f;
 constexpr Float MARGIN = 0.001f;
@@ -46,4 +46,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::LOFI
+}  // namespace SOUND::PLUGINS::LOFI

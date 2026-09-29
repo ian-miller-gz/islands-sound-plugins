@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::HUMANIZER {
+namespace SOUND::PLUGINS::HUMANIZER {
 
 constexpr Whole VELOCITY = 0;
 constexpr Whole TIMING = 1;
@@ -24,4 +24,4 @@ static_assert(sizeof(ROWS) / sizeof(ROWS[0]) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::HUMANIZER
+}  // namespace SOUND::PLUGINS::HUMANIZER

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 
@@ -42,7 +42,7 @@ void stack(SUPERSAW::Synth &synth) {
 
 }  // namespace
 
-void SOUND::SUPERSAW::settle(Synth &synth) {
+void SOUND::PLUGINS::SUPERSAW::settle(Synth &synth) {
   synth.contour = ::contour(synth.rows, ::CONTOUR, synth.rate);
   synth.door = ::contour(synth.rows, ::LOUDNESS, synth.rate);
   ::stack(synth);

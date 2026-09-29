@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::PARAMETRIC {
+namespace SOUND::PLUGINS::PARAMETRIC {
 
 inline constexpr Whole KINDS[BANDS] = {
   CORE::FILTER::LOWSHELF, CORE::FILTER::PEAK, CORE::FILTER::PEAK,
@@ -32,4 +32,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::PARAMETRIC
+}  // namespace SOUND::PLUGINS::PARAMETRIC

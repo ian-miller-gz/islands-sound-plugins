@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Carrier = auto (*)(const RINGMOD::Effect &effect) -> Float;
 
@@ -27,7 +27,7 @@ static_assert(sizeof(CARRIERS) / sizeof(CARRIERS[0]) == RINGMOD::WAVES);
 
 }  // namespace
 
-void SOUND::RINGMOD::settle(Effect &effect) {
+void SOUND::PLUGINS::RINGMOD::settle(Effect &effect) {
   CORE::OSCILLATOR::settle(
     effect.carrier, effect.rows[FREQUENCY], CORE::OSCILLATOR::SQUARE,
     effect.rate);
@@ -37,13 +37,14 @@ void SOUND::RINGMOD::settle(Effect &effect) {
   effect.wet = effect.rows[MIX];
 }
 
-auto SOUND::RINGMOD::tick(Effect &effect) -> Float {
+auto SOUND::PLUGINS::RINGMOD::tick(Effect &effect) -> Float {
   const Float value = ::CARRIERS[effect.wave](effect);
   effect.carrier.phase += effect.carrier.step;
   return value;
 }
 
-void SOUND::RINGMOD::apply(Effect &effect, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::RINGMOD::apply(
+  Effect &effect, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   effect.rows[event.index] =

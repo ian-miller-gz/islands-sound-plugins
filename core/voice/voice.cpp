@@ -4,7 +4,7 @@
 #include "../modulator/modulator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Whole KINDS = AUDIO::PLUGIN::Event::PROGRAM + 1;
 constexpr Float WIDTH = 2.0f;
@@ -53,32 +53,27 @@ constexpr Handler HANDLERS[KINDS] = {struck,  lifted,  steered,
 
 }  // namespace
 
-void SOUND::CORE::VOICE::settle(Allocator &allocator, Whole rate) {
+void SOUND::PLUGINS::CORE::VOICE::settle(Allocator &allocator, Whole rate) {
   allocator.glide.pole = MODULATOR::pole(allocator.glide.time, rate);
 }
 
-auto SOUND::CORE::VOICE::apply(
+auto SOUND::PLUGINS::CORE::VOICE::apply(
   Allocator &allocator, const AUDIO::PLUGIN::Event &event) -> Whole {
   return event.kind < ::KINDS ? ::HANDLERS[event.kind](allocator, event) : NONE;
 }
 
-auto SOUND::CORE::VOICE::tick(Note &note, const Glide &glide) -> Float {
-  note.current += (Float(note.pitch) - note.current) * glide.pole;
-  return note.current;
-}
-
-auto SOUND::CORE::VOICE::limit(const Allocator &allocator) -> Whole {
+auto SOUND::PLUGINS::CORE::VOICE::limit(const Allocator &allocator) -> Whole {
   const Whole count = allocator.count;
   return count == 0 ? 1 : count > VOICES ? VOICES : count;
 }
 
-auto SOUND::CORE::VOICE::stacked(const Allocator &allocator) -> Whole {
+auto SOUND::PLUGINS::CORE::VOICE::stacked(const Allocator &allocator) -> Whole {
   const Whole unison = allocator.unison;
   const Whole most = limit(allocator);
   return unison == 0 ? 1 : unison > most ? most : unison;
 }
 
-void SOUND::CORE::VOICE::strike(
+void SOUND::PLUGINS::CORE::VOICE::strike(
   Allocator &allocator, Note &note, Whole pitch, Float velocity) {
   const Flag fresh = note.struck == 0 || allocator.glide.slide == LEGATO;
   note.pitch = pitch;
@@ -90,7 +85,7 @@ void SOUND::CORE::VOICE::strike(
   if (fresh) note.current = Float(pitch);
 }
 
-void SOUND::CORE::VOICE::stack(
+void SOUND::PLUGINS::CORE::VOICE::stack(
   const Allocator &allocator, Note &note, Whole position) {
   const Whole stack = stacked(allocator);
   const Float span = Float(stack > 1 ? stack - 1 : 1);

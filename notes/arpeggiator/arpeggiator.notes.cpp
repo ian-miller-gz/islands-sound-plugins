@@ -2,7 +2,7 @@
 #include "arpeggiator.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto gather(ARPEGGIATOR::Arpeggio &arpeggio) -> Whole {
   Whole count = 0;
@@ -42,7 +42,7 @@ void lapse(ARPEGGIATOR::Arpeggio &arpeggio, Whole frame) {
 
 }  // namespace
 
-void SOUND::ARPEGGIATOR::silence(Arpeggio &arpeggio, Whole frame) {
+void SOUND::PLUGINS::ARPEGGIATOR::silence(Arpeggio &arpeggio, Whole frame) {
   if (arpeggio.sounding == CORE::NOTES::SILENT) return;
   CORE::NOTES::put(
     arpeggio.out,
@@ -50,7 +50,7 @@ void SOUND::ARPEGGIATOR::silence(Arpeggio &arpeggio, Whole frame) {
   arpeggio.sounding = CORE::NOTES::SILENT;
 }
 
-void SOUND::ARPEGGIATOR::tick(Arpeggio &arpeggio, Whole frame) {
+void SOUND::PLUGINS::ARPEGGIATOR::tick(Arpeggio &arpeggio, Whole frame) {
   ::lapse(arpeggio, frame);
   CORE::CLOCK::Edge edge;
   if (CORE::CLOCK::advance(arpeggio.clock, 1, &edge, 1) == 0) return;

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 constexpr Float KEYING = 0.005f;
@@ -35,7 +35,7 @@ void voice(ENSEMBLE::Synth &synth) {
 
 }  // namespace
 
-void SOUND::ENSEMBLE::settle(Synth &synth) {
+void SOUND::PLUGINS::ENSEMBLE::settle(Synth &synth) {
   synth.envelope = ::swell(synth.rows, synth.rate);
   synth.ramp = CORE::MODULATOR::delta(KEYING, synth.rate);
   ::tune(synth);

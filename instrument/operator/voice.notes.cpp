@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float HALF = 0.5f;
 
@@ -40,7 +40,8 @@ void visit(OPERATOR::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::OPERATOR::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::OPERATOR::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

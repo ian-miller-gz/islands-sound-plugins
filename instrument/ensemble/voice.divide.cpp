@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole OCTAVE = 12;
 constexpr Whole LOWER = 1;
@@ -31,7 +31,7 @@ void advance(ENSEMBLE::Synth &synth) {
 
 }  // namespace
 
-auto SOUND::ENSEMBLE::divide(Synth &synth) -> Sums {
+auto SOUND::PLUGINS::ENSEMBLE::divide(Synth &synth) -> Sums {
   Sums sums;
   const Flag silent = synth.held == 0 && !CORE::ENVELOPE::sounding(synth.gate);
   for (Whole at = 0; !silent && at < CORE::PHASE::PITCHES; ++at) {

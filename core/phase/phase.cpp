@@ -3,35 +3,36 @@
 
 #include "phase.hpp"
 
-auto SOUND::CORE::PHASE::hertz(Float pitch) -> Float {
+auto SOUND::PLUGINS::CORE::PHASE::hertz(Float pitch) -> Float {
   return CONCERT * std::pow(2.0f, (pitch - ANCHOR) / OCTAVE);
 }
 
-auto SOUND::CORE::PHASE::step(Float hertz, Whole rate) -> Wheel {
+auto SOUND::PLUGINS::CORE::PHASE::step(Float hertz, Whole rate) -> Wheel {
   if (rate == 0) return 0;
   const Float turns = hertz / Float(rate);
   return static_cast<Wheel>(turns * TURN);
 }
 
-auto SOUND::CORE::PHASE::ratio(Float cents) -> Float {
+auto SOUND::PLUGINS::CORE::PHASE::ratio(Float cents) -> Float {
   return std::pow(2.0f, cents / CENTS);
 }
 
-auto SOUND::CORE::PHASE::fraction(Wheel phase) -> Float {
+auto SOUND::PLUGINS::CORE::PHASE::fraction(Wheel phase) -> Float {
   return Float(phase) / TURN;
 }
 
-auto SOUND::CORE::PHASE::ramp(Wheel phase) -> Float {
+auto SOUND::PLUGINS::CORE::PHASE::ramp(Wheel phase) -> Float {
   return Float(static_cast<std::int32_t>(phase)) / HALF;
 }
 
-void SOUND::CORE::PHASE::tune(Tuning &tuning, Whole rate) {
+void SOUND::PLUGINS::CORE::PHASE::tune(Tuning &tuning, Whole rate) {
   tuning.rate = rate;
   tuning.steps.resize(PITCHES);
   for (Whole pitch = 0; pitch < PITCHES; ++pitch)
     tuning.steps[pitch] = step(hertz(Float(pitch)), rate);
 }
 
-auto SOUND::CORE::PHASE::stepped(const Tuning &tuning, Whole pitch) -> Wheel {
+auto SOUND::PLUGINS::CORE::PHASE::stepped(const Tuning &tuning, Whole pitch)
+  -> Wheel {
   return pitch < tuning.steps.size() ? tuning.steps[pitch] : 0;
 }

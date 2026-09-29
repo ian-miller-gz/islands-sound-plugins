@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::VOCODER {
+namespace SOUND::PLUGINS::VOCODER {
 
 constexpr Whole GAIN = 0;
 constexpr Whole WAVE = 1;
@@ -61,4 +61,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::VOCODER
+}  // namespace SOUND::PLUGINS::VOCODER

@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::ENVELOPE {
+namespace SOUND::PLUGINS::CORE::ENVELOPE {
 
 enum Stage : Whole { IDLE, RISING, FALLING, HELD, LEAVING, STAGES };
 
@@ -47,23 +47,23 @@ void choke(Gate &gate);
 auto sounding(const Gate &gate) -> Flag;
 auto tick(Gate &gate, const Envelope &envelope) -> Float;
 
-}  // namespace SOUND::CORE::ENVELOPE
+}  // namespace SOUND::PLUGINS::CORE::ENVELOPE
 
-namespace SOUND::CORE::ENVELOPE::ADSR {
+namespace SOUND::PLUGINS::CORE::ENVELOPE::ADSR {
 auto create(Float attack, Float decay, Float sustain, Float release)
   -> Envelope;
-}  // namespace SOUND::CORE::ENVELOPE::ADSR
+}  // namespace SOUND::PLUGINS::CORE::ENVELOPE::ADSR
 
-namespace SOUND::CORE::ENVELOPE::AD {
+namespace SOUND::PLUGINS::CORE::ENVELOPE::AD {
 auto create(Float attack, Float decay) -> Envelope;
-}  // namespace SOUND::CORE::ENVELOPE::AD
+}  // namespace SOUND::PLUGINS::CORE::ENVELOPE::AD
 
-namespace SOUND::CORE::ENVELOPE::AR {
+namespace SOUND::PLUGINS::CORE::ENVELOPE::AR {
 auto create(Float attack, Float release) -> Envelope;
-}  // namespace SOUND::CORE::ENVELOPE::AR
+}  // namespace SOUND::PLUGINS::CORE::ENVELOPE::AR
 
-namespace SOUND::CORE::ENVELOPE::GATE {
+namespace SOUND::PLUGINS::CORE::ENVELOPE::GATE {
 auto create(Float depth) -> Envelope;
-}  // namespace SOUND::CORE::ENVELOPE::GATE
+}  // namespace SOUND::PLUGINS::CORE::ENVELOPE::GATE
 
 #include "envelope.segments.hpp"

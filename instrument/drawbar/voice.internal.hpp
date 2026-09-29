@@ -10,7 +10,7 @@
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::DRAWBAR {
+namespace SOUND::PLUGINS::DRAWBAR {
 
 constexpr Whole WHEELS = 91;
 
@@ -87,4 +87,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::DRAWBAR
+}  // namespace SOUND::PLUGINS::DRAWBAR

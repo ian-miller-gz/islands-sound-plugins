@@ -9,7 +9,7 @@
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::LADDER {
+namespace SOUND::PLUGINS::LADDER {
 
 enum Shape : Whole {
   TRIANGLE,
@@ -71,4 +71,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::LADDER
+}  // namespace SOUND::PLUGINS::LADDER

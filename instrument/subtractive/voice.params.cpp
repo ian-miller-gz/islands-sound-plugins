@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto quantity(const SUBTRACTIVE::Synth &synth, Whole index) -> Float {
   const SUBTRACTIVE::Envelope &contour = synth.envelopes[SUBTRACTIVE::CONTOUR];
@@ -44,26 +44,28 @@ auto sane(void *instance, Whole index) -> Flag {
 
 }  // namespace
 
-auto SOUND::SUBTRACTIVE::SURFACE::parameters(void *instance) -> Whole {
+auto SOUND::PLUGINS::SUBTRACTIVE::SURFACE::parameters(void *instance) -> Whole {
   return instance == nullptr ? 0 : PARAMETERS;
 }
 
-auto SOUND::SUBTRACTIVE::SURFACE::name(void *instance, Whole index) -> String {
+auto SOUND::PLUGINS::SUBTRACTIVE::SURFACE::name(void *instance, Whole index)
+  -> String {
   return ::sane(instance, index) ? label(index) : String();
 }
 
-auto SOUND::SUBTRACTIVE::SURFACE::reading(void *instance, Whole index)
+auto SOUND::PLUGINS::SUBTRACTIVE::SURFACE::reading(void *instance, Whole index)
   -> String {
   if (!::sane(instance, index)) return {};
   return notation(index, held(instance, index));
 }
 
-auto SOUND::SUBTRACTIVE::SURFACE::held(void *instance, Whole index) -> Float {
+auto SOUND::PLUGINS::SUBTRACTIVE::SURFACE::held(void *instance, Whole index)
+  -> Float {
   if (!::sane(instance, index)) return 0;
   return ::quantity(*static_cast<const Synth *>(instance), index);
 }
 
-auto SOUND::SUBTRACTIVE::SURFACE::control(
+auto SOUND::PLUGINS::SUBTRACTIVE::SURFACE::control(
   void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
   return ::sane(instance, index) && SUBTRACTIVE::control(index, out);
 }

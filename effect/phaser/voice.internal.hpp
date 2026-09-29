@@ -5,7 +5,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::PHASER {
+namespace SOUND::PLUGINS::PHASER {
 
 constexpr Float OCTAVES = 2.0f;
 constexpr Float HALF = 0.5f;
@@ -35,4 +35,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::PHASER
+}  // namespace SOUND::PLUGINS::PHASER

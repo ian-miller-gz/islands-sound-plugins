@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::MULTIBAND {
+namespace SOUND::PLUGINS::MULTIBAND {
 
 constexpr Whole BANDS = 3;
 constexpr Whole CROSSOVERS = BANDS - 1;
@@ -46,4 +46,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::MULTIBAND
+}  // namespace SOUND::PLUGINS::MULTIBAND

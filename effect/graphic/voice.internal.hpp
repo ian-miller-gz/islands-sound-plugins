@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::GRAPHIC {
+namespace SOUND::PLUGINS::GRAPHIC {
 
 constexpr Float OCTAVE = 1.41421356f;
 
@@ -33,4 +33,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::GRAPHIC
+}  // namespace SOUND::PLUGINS::GRAPHIC

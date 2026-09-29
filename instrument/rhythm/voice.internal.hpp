@@ -5,7 +5,7 @@
 #include "../../core/clock/clock.hpp"
 #include "../../core/percussion/percussion.hpp"
 
-namespace SOUND::RHYTHM {
+namespace SOUND::PLUGINS::RHYTHM {
 
 struct Pattern {
   Whole beats = 0;
@@ -41,4 +41,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::RHYTHM
+}  // namespace SOUND::PLUGINS::RHYTHM

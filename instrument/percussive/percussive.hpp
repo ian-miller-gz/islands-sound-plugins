@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::PERCUSSIVE {
+namespace SOUND::PLUGINS::PERCUSSIVE {
 
 constexpr Whole SLOTS = 5;
 
@@ -41,4 +41,4 @@ auto clamped(Whole index, Float value) -> Float;
 auto label(Whole index) -> String;
 auto notation(Whole index, Float value) -> String;
 
-}  // namespace SOUND::PERCUSSIVE
+}  // namespace SOUND::PLUGINS::PERCUSSIVE

@@ -2,7 +2,7 @@
 #include "humanizer.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void schedule(
   HUMANIZER::Humanizer &humanizer, const AUDIO::PLUGIN::Event &event,
@@ -53,7 +53,7 @@ void turn(HUMANIZER::Humanizer &humanizer, const AUDIO::PLUGIN::Event &event) {
 
 }  // namespace
 
-void SOUND::HUMANIZER::send(
+void SOUND::PLUGINS::HUMANIZER::send(
   Humanizer &humanizer, const AUDIO::PLUGIN::Event &event, Whole frame) {
   if (CORE::NOTES::struck(event))
     return CORE::NOTES::strike(
@@ -61,7 +61,7 @@ void SOUND::HUMANIZER::send(
   CORE::NOTES::lift(humanizer.tally, humanizer.out, event.index, frame);
 }
 
-void SOUND::HUMANIZER::apply(
+void SOUND::PLUGINS::HUMANIZER::apply(
   Humanizer &humanizer, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER)
     return ::turn(humanizer, event);

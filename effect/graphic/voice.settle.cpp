@@ -4,11 +4,11 @@
 
 #include "voice.internal.hpp"
 
-void SOUND::GRAPHIC::build(Effect &effect) {
+void SOUND::PLUGINS::GRAPHIC::build(Effect &effect) {
   effect.strips.resize(effect.channels);
 }
 
-void SOUND::GRAPHIC::settle(Effect &effect) {
+void SOUND::PLUGINS::GRAPHIC::settle(Effect &effect) {
   for (Whole band = 0; band < BANDS; ++band) {
     CORE::FILTER::Biquad design;
     CORE::FILTER::settle(
@@ -25,7 +25,7 @@ void SOUND::GRAPHIC::settle(Effect &effect) {
   }
 }
 
-auto SOUND::GRAPHIC::tick(Strip &strip, Float in) -> Float {
+auto SOUND::PLUGINS::GRAPHIC::tick(Strip &strip, Float in) -> Float {
   Float out = in;
   for (auto &band : strip.bands) out = CORE::FILTER::tick(band, out);
   return out;

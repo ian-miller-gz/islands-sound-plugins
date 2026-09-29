@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float SECOND = 1000.0f;
 
@@ -64,7 +64,7 @@ auto picked(const SAMPLER::Player &player, Float value) -> Whole {
 
 }  // namespace
 
-void SOUND::SAMPLER::steer(Player &player, Whole id, Float value) {
+void SOUND::PLUGINS::SAMPLER::steer(Player &player, Whole id, Float value) {
   if (id == STOCK) {
     player.chosen = ::picked(player, value);
     return steer(player, START, player.start);
@@ -87,7 +87,8 @@ void SOUND::SAMPLER::steer(Player &player, Whole id, Float value) {
   }
 }
 
-void SOUND::SAMPLER::apply(Player &player, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::SAMPLER::apply(
+  Player &player, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER)
     return steer(player, event.index, event.value);
   if (event.kind == AUDIO::PLUGIN::Event::PROGRAM)

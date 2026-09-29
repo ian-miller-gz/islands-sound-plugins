@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::DELAY {
+namespace SOUND::PLUGINS::DELAY {
 
 constexpr Whole TIME = 0;
 constexpr Whole FEEDBACK = 1;
@@ -25,4 +25,4 @@ auto clamped(Whole index, Float value) -> Float;
 auto label(Whole index) -> String;
 auto notation(Whole index, Float value) -> String;
 
-}  // namespace SOUND::DELAY
+}  // namespace SOUND::PLUGINS::DELAY

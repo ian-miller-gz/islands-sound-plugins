@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void sweep(PHASER::Effect &effect) {
   const Float octaves = effect.swing * CORE::MODULATOR::tick(effect.lfo);
@@ -26,7 +26,7 @@ auto phased(const PHASER::Effect &effect, PHASER::Channel &strip, Float in)
 
 }  // namespace
 
-void SOUND::PHASER::render(
+void SOUND::PLUGINS::PHASER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

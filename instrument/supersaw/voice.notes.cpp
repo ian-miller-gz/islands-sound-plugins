@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void kept(SUPERSAW::Synth &, Whole) {}
 
@@ -34,7 +34,8 @@ void visit(SUPERSAW::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::SUPERSAW::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::SUPERSAW::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

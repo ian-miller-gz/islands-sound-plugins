@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/dynamics/dynamics.hpp"
 
-namespace SOUND::GATE {
+namespace SOUND::PLUGINS::GATE {
 
 constexpr Float MILLI = 0.001f;
 constexpr Float SENSE = 0.01f;
@@ -31,4 +31,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::GATE
+}  // namespace SOUND::PLUGINS::GATE

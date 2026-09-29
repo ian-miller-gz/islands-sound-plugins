@@ -5,7 +5,7 @@
 #include "cloud.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float PI = std::numbers::pi_v<Float>;
 constexpr Float UNITY = 1.0f;
@@ -32,7 +32,7 @@ auto heard(
 
 }  // namespace
 
-void SOUND::CORE::CLOUD::build(Cloud &cloud, Whole count) {
+void SOUND::PLUGINS::CORE::CLOUD::build(Cloud &cloud, Whole count) {
   cloud.grains.assign(count, Grain{});
   cloud.window.resize(POINTS + 1);
   for (Whole point = 0; point <= POINTS; ++point) {
@@ -41,11 +41,12 @@ void SOUND::CORE::CLOUD::build(Cloud &cloud, Whole count) {
   }
 }
 
-void SOUND::CORE::CLOUD::clear(Cloud &cloud) {
+void SOUND::PLUGINS::CORE::CLOUD::clear(Cloud &cloud) {
   for (Grain &grain : cloud.grains) grain.live = false;
 }
 
-auto SOUND::CORE::CLOUD::start(Cloud &cloud, const Grain &grain) -> Flag {
+auto SOUND::PLUGINS::CORE::CLOUD::start(Cloud &cloud, const Grain &grain)
+  -> Flag {
   if (grain.span < UNITY) return false;
   for (Grain &slot : cloud.grains) {
     if (slot.live) continue;
@@ -57,7 +58,8 @@ auto SOUND::CORE::CLOUD::start(Cloud &cloud, const Grain &grain) -> Flag {
   return false;
 }
 
-auto SOUND::CORE::CLOUD::tick(Cloud &cloud, const LINE::Line &line) -> Float {
+auto SOUND::PLUGINS::CORE::CLOUD::tick(Cloud &cloud, const LINE::Line &line)
+  -> Float {
   Float sum = 0;
   for (Grain &grain : cloud.grains)
     if (grain.live) sum += ::heard(cloud, grain, line);

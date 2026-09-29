@@ -5,7 +5,7 @@
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::CRUSHER {
+namespace SOUND::PLUGINS::CRUSHER {
 
 constexpr Float SWAY = 0.5f;
 constexpr Float UNITY = 1.0f;
@@ -31,4 +31,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::CRUSHER
+}  // namespace SOUND::PLUGINS::CRUSHER

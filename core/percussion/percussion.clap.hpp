@@ -2,7 +2,7 @@
 #pragma once
 #include "percussion.circuit.hpp"
 
-namespace SOUND::CORE::PERCUSSION {
+namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
 constexpr Whole BURSTS = 4;
 
@@ -23,4 +23,4 @@ void settle(Clap &clap, Float spread, Float decay, Float tone, Whole rate);
 void strike(Clap &clap, Float velocity);
 auto tick(Clap &clap) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION

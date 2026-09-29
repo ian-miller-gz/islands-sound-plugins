@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/pitch/pitch.hpp"
 
-namespace SOUND::SHIFTER {
+namespace SOUND::PLUGINS::SHIFTER {
 
 constexpr Float UNITY = 1.0f;
 constexpr Float SEMITONE = 100.0f;
@@ -28,4 +28,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::SHIFTER
+}  // namespace SOUND::PLUGINS::SHIFTER

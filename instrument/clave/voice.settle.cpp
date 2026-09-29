@@ -2,18 +2,19 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
-constexpr CORE::PERCUSSION::Key KEYS[] = {{37, CORE::PERCUSSION::RIM}};
+constexpr CORE::PERCUSSION::Key KEYS[] = {{37, CORE::PERCUSSION::CLICK::RIM}};
 
 }  // namespace
 
-void SOUND::CLAVE::settle(Voice &voice) {
+void SOUND::PLUGINS::CLAVE::settle(Voice &voice) {
   CORE::PERCUSSION::settle(
     voice.clave, voice.rows[TUNE], voice.rows[DECAY], voice.rate);
 }
 
-void SOUND::CLAVE::apply(Voice &voice, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::CLAVE::apply(
+  Voice &voice, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     if (event.index >= PARAMETERS) return;
     voice.rows[event.index] =
@@ -23,6 +24,6 @@ void SOUND::CLAVE::apply(Voice &voice, const AUDIO::PLUGIN::Event &event) {
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
   const Whole click =
-    CORE::PERCUSSION::keyed(KEYS, event.index, CORE::PERCUSSION::CLAVE);
+    CORE::PERCUSSION::keyed(KEYS, event.index, CORE::PERCUSSION::CLICK::CLAVE);
   CORE::PERCUSSION::strike(voice.clave, click, event.value);
 }

@@ -5,7 +5,7 @@
 #include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::CHORUS {
+namespace SOUND::PLUGINS::CHORUS {
 
 constexpr Float CENTRE = 0.015f;
 constexpr Float GLIDE = 0.002f;
@@ -37,4 +37,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::CHORUS
+}  // namespace SOUND::PLUGINS::CHORUS

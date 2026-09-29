@@ -9,7 +9,7 @@
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::ACID {
+namespace SOUND::PLUGINS::ACID {
 
 enum Accent : Whole { PLAIN, STRONG, ACCENTS };
 
@@ -46,4 +46,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::ACID
+}  // namespace SOUND::PLUGINS::ACID

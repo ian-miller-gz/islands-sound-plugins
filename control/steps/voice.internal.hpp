@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/clock/clock.hpp"
 
-namespace SOUND::STEPS {
+namespace SOUND::PLUGINS::STEPS {
 
 constexpr Whole SILENT = Whole(HIGHEST) + 1;
 constexpr Float HALF = 0.5f;
@@ -15,7 +15,7 @@ struct Sequencer {
   CORE::CLOCK::Clock clock;
   Whole sounding = SILENT;
   Whole left = 0;
-  AUDIO::PLUGIN::Event notes[PLUGIN::ROOM] = {};
+  AUDIO::PLUGIN::Event notes[SOUND::PLUGIN::ROOM] = {};
   Whole written = 0;
 };
 
@@ -33,4 +33,4 @@ auto answer(
   void *instance, const AUDIO::PLUGIN::Event *events, Whole count,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole;
 
-}  // namespace SOUND::STEPS
+}  // namespace SOUND::PLUGINS::STEPS

@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
@@ -82,7 +82,7 @@ auto play(WAVETABLE::Synth &synth, Whole at, Float lfo) -> Float {
 
 }  // namespace
 
-auto SOUND::WAVETABLE::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::WAVETABLE::sound(Synth &synth) -> Float {
   const Float lfo = CORE::MODULATOR::tick(synth.lfo);
   Float sum = 0;
   for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at, lfo);

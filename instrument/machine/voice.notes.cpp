@@ -2,12 +2,12 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
-using CORE::PERCUSSION::CLOSED;
-using CORE::PERCUSSION::HIGH;
-using CORE::PERCUSSION::LOW;
-using CORE::PERCUSSION::MID;
-using CORE::PERCUSSION::OPEN;
+using namespace SOUND::PLUGINS;
+using CORE::PERCUSSION::HEIGHT::HIGH;
+using CORE::PERCUSSION::HEIGHT::LOW;
+using CORE::PERCUSSION::HEIGHT::MID;
+using CORE::PERCUSSION::OPENING::CLOSED;
+using CORE::PERCUSSION::OPENING::OPEN;
 
 constexpr Whole WHOLE = 0;
 constexpr Float FULL = 1.0f;
@@ -60,7 +60,7 @@ auto accented(const MACHINE::Machine &machine, Float velocity) -> Float {
 
 }  // namespace
 
-void SOUND::MACHINE::apply(
+void SOUND::PLUGINS::MACHINE::apply(
   Machine &machine, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     if (event.index >= PARAMETERS) return;

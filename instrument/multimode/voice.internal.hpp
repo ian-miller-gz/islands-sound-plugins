@@ -9,7 +9,7 @@
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::MULTIMODE {
+namespace SOUND::PLUGINS::MULTIMODE {
 
 constexpr Whole VOICES = 2;
 constexpr Float REFERENCE = 60;
@@ -56,4 +56,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::MULTIMODE
+}  // namespace SOUND::PLUGINS::MULTIMODE

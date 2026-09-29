@@ -6,7 +6,7 @@
 
 #include "subtractive.hpp"
 
-namespace SOUND::SUBTRACTIVE {
+namespace SOUND::PLUGINS::SUBTRACTIVE {
 
 constexpr Whole CENTS = 25;
 
@@ -65,6 +65,8 @@ auto delta(Float seconds, Whole rate) -> Float;
 
 void shape(Envelope &envelope, Whole rate);
 
+void breathe(const Envelope &envelope, Gate &gate);
+
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 void steer(Synth &synth, Whole id, Float value);
@@ -73,12 +75,12 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::SUBTRACTIVE
+}  // namespace SOUND::PLUGINS::SUBTRACTIVE
 
-namespace SOUND::SUBTRACTIVE::SURFACE {
+namespace SOUND::PLUGINS::SUBTRACTIVE::SURFACE {
 auto parameters(void *instance) -> Whole;
 auto name(void *instance, Whole index) -> String;
 auto reading(void *instance, Whole index) -> String;
 auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::SUBTRACTIVE::SURFACE
+}  // namespace SOUND::PLUGINS::SUBTRACTIVE::SURFACE

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto bounded(Float value, Float ceiling) -> Float {
   return value < -ceiling ? -ceiling : value > ceiling ? ceiling : value;
@@ -29,7 +29,7 @@ void play(
 
 }  // namespace
 
-void SOUND::LIMITER::render(
+void SOUND::PLUGINS::LIMITER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

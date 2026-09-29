@@ -5,7 +5,7 @@
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::AMPLIFIER {
+namespace SOUND::PLUGINS::AMPLIFIER {
 
 struct Module {
   Whole rate = 0;
@@ -25,4 +25,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::AMPLIFIER
+}  // namespace SOUND::PLUGINS::AMPLIFIER

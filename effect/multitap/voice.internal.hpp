@@ -5,7 +5,7 @@
 #include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::MULTITAP {
+namespace SOUND::PLUGINS::MULTITAP {
 
 constexpr Whole MONO = 1;
 constexpr Whole SIDES = 2;
@@ -50,4 +50,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::MULTITAP
+}  // namespace SOUND::PLUGINS::MULTITAP

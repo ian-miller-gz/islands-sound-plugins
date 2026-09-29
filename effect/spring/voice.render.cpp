@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto heard(
   const SPRING::Effect &effect, AUDIO::PLUGIN::Sample *const *lanes,
@@ -39,7 +39,7 @@ void ring(
 
 }  // namespace
 
-void SOUND::SPRING::render(
+void SOUND::PLUGINS::SPRING::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

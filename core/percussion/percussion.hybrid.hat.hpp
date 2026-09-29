@@ -3,15 +3,15 @@
 #include "percussion.circuit.hpp"
 #include "percussion.hat.hpp"
 
-namespace SOUND::CORE::PERCUSSION::HYBRID {
+namespace SOUND::PLUGINS::CORE::PERCUSSION::HYBRID {
 
 struct Hat {
   Vector<Float> loop;
   Float at = 0;
   Float speed = 1;
-  ENVELOPE::Envelope envelopes[OPENINGS];
+  ENVELOPE::Envelope envelopes[OPENING::OPENINGS];
   ENVELOPE::Gate gate;
-  Whole opening = CLOSED;
+  Whole opening = OPENING::CLOSED;
   Float velocity = 0;
 };
 
@@ -20,4 +20,4 @@ void settle(Hat &hat, Float tune, Float closed, Float open, Whole rate);
 void strike(Hat &hat, Whole opening, Float velocity);
 auto tick(Hat &hat) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION::HYBRID
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION::HYBRID

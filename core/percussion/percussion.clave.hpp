@@ -2,9 +2,13 @@
 #pragma once
 #include "percussion.circuit.hpp"
 
-namespace SOUND::CORE::PERCUSSION {
+namespace SOUND::PLUGINS::CORE::PERCUSSION {
+
+namespace CLICK {
 
 enum Click : Whole { CLAVE, RIM, CLICKS };
+
+}  // namespace CLICK
 
 constexpr Whole RIMS = 2;
 
@@ -18,4 +22,4 @@ void settle(Clave &clave, Float tune, Float decay, Whole rate);
 void strike(Clave &clave, Whole click, Float velocity);
 auto tick(Clave &clave) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION

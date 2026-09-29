@@ -3,7 +3,7 @@
 
 #include "voice.internal.hpp"
 
-void SOUND::TREMOLO::settle(Effect &effect) {
+void SOUND::PLUGINS::TREMOLO::settle(Effect &effect) {
   const CORE::MODULATOR::Wave wave = WAVES[Whole(effect.rows[SHAPE])];
   for (Channel &strip : effect.strips) {
     strip.lfo.wave = wave;
@@ -12,7 +12,7 @@ void SOUND::TREMOLO::settle(Effect &effect) {
   }
 }
 
-void SOUND::TREMOLO::place(Effect &effect) {
+void SOUND::PLUGINS::TREMOLO::place(Effect &effect) {
   const Float anchor = CORE::PHASE::fraction(effect.strips.front().lfo.phase);
   const Float offset = effect.rows[PHASE] / DEGREES;
   for (Whole channel = 0; channel < effect.channels; ++channel) {

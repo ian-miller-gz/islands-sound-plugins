@@ -4,7 +4,7 @@
 #include "table.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr STRING::Hot SWITCH[] = {"Off", "On"};
 
@@ -27,22 +27,25 @@ auto snapped(const TABLE::Row &row, Float value) -> Float {
 
 }  // namespace
 
-auto SOUND::CORE::TABLE::found(const Sheet &sheet, Whole index) -> const Row * {
+auto SOUND::PLUGINS::CORE::TABLE::found(const Sheet &sheet, Whole index)
+  -> const Row * {
   return index < sheet.count ? &sheet.rows[index] : nullptr;
 }
 
-auto SOUND::CORE::TABLE::label(const Sheet &sheet, Whole index) -> String {
+auto SOUND::PLUGINS::CORE::TABLE::label(const Sheet &sheet, Whole index)
+  -> String {
   const Row *row = found(sheet, index);
   return row == nullptr ? String() : String(row->name);
 }
 
-auto SOUND::CORE::TABLE::resting(const Sheet &sheet, Whole index) -> Float {
+auto SOUND::PLUGINS::CORE::TABLE::resting(const Sheet &sheet, Whole index)
+  -> Float {
   const Row *row = found(sheet, index);
   return row == nullptr ? 0 : row->resting;
 }
 
-auto SOUND::CORE::TABLE::clamped(const Sheet &sheet, Whole index, Float value)
-  -> Float {
+auto SOUND::PLUGINS::CORE::TABLE::clamped(
+  const Sheet &sheet, Whole index, Float value) -> Float {
   const Row *row = found(sheet, index);
   if (row == nullptr) return value;
   const Float held = value < row->least  ? row->least
@@ -51,8 +54,8 @@ auto SOUND::CORE::TABLE::clamped(const Sheet &sheet, Whole index, Float value)
   return row->steps == 0 ? held : ::snapped(*row, held);
 }
 
-auto SOUND::CORE::TABLE::notation(const Sheet &sheet, Whole index, Float value)
-  -> String {
+auto SOUND::PLUGINS::CORE::TABLE::notation(
+  const Sheet &sheet, Whole index, Float value) -> String {
   const Row *row = found(sheet, index);
   if (row == nullptr) return {};
   const STRING::Hot *named = ::words(*row);
@@ -65,7 +68,7 @@ auto SOUND::CORE::TABLE::notation(const Sheet &sheet, Whole index, Float value)
   return buffer;
 }
 
-auto SOUND::CORE::TABLE::control(
+auto SOUND::PLUGINS::CORE::TABLE::control(
   const Sheet &sheet, Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
   const Row *row = found(sheet, index);
   if (row == nullptr) return false;
@@ -77,7 +80,7 @@ auto SOUND::CORE::TABLE::control(
   return true;
 }
 
-void SOUND::CORE::TABLE::rest(const Sheet &sheet, Float *rows) {
+void SOUND::PLUGINS::CORE::TABLE::rest(const Sheet &sheet, Float *rows) {
   for (Whole index = 0; index < sheet.count; ++index)
     rows[index] = sheet.rows[index].resting;
 }

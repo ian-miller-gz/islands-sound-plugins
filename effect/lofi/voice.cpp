@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<LOFI::Effect, LOFI::SHEET>;
 
@@ -37,6 +37,6 @@ const AUDIO::PLUGIN::Plug surface = {
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
 [[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "lofi", .surface = &surface});
+  SOUND::PLUGIN::offer({.name = "lofi", .type = "effect", .surface = &surface});
 
 }  // namespace

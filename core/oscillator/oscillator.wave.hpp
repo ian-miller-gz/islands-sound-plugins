@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../phase/phase.hpp"
 
-namespace SOUND::CORE::OSCILLATOR {
+namespace SOUND::PLUGINS::CORE::OSCILLATOR {
 
 using PHASE::Wheel;
 
@@ -49,4 +49,4 @@ struct Sync {
 
 auto tick(Sync &sync, const Oscillator &master, Whole wave) -> Float;
 
-}  // namespace SOUND::CORE::OSCILLATOR
+}  // namespace SOUND::PLUGINS::CORE::OSCILLATOR

@@ -4,7 +4,7 @@
 #include "delay.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 struct Row {
   STRING::Hot label;
@@ -30,7 +30,8 @@ auto row(Whole index, Row &out) -> Flag {
 
 }  // namespace
 
-auto SOUND::DELAY::control(Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
+auto SOUND::PLUGINS::DELAY::control(Whole index, AUDIO::PLUGIN::Control &out)
+  -> Flag {
   Row found;
   if (!::row(index, found)) return false;
   out = {
@@ -42,12 +43,12 @@ auto SOUND::DELAY::control(Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
   return true;
 }
 
-auto SOUND::DELAY::resting(Whole index) -> Float {
+auto SOUND::PLUGINS::DELAY::resting(Whole index) -> Float {
   Row found;
   return ::row(index, found) ? found.resting : 0;
 }
 
-auto SOUND::DELAY::clamped(Whole index, Float value) -> Float {
+auto SOUND::PLUGINS::DELAY::clamped(Whole index, Float value) -> Float {
   Row found;
   if (!::row(index, found)) return value;
   return value < found.least  ? found.least
@@ -55,7 +56,7 @@ auto SOUND::DELAY::clamped(Whole index, Float value) -> Float {
                               : value;
 }
 
-auto SOUND::DELAY::notation(Whole index, Float value) -> String {
+auto SOUND::PLUGINS::DELAY::notation(Whole index, Float value) -> String {
   Row found;
   if (!::row(index, found)) return {};
   char text[32];
@@ -63,7 +64,7 @@ auto SOUND::DELAY::notation(Whole index, Float value) -> String {
   return text;
 }
 
-auto SOUND::DELAY::label(Whole index) -> String {
+auto SOUND::PLUGINS::DELAY::label(Whole index) -> String {
   Row found;
   return ::row(index, found) ? String(found.label) : String();
 }

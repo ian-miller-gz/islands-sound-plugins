@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 constexpr Float HALF = 0.5f;
@@ -47,7 +47,7 @@ void hiss(CHIP::Synth &synth) {
 
 }  // namespace
 
-void SOUND::CHIP::settle(Synth &synth) {
+void SOUND::PLUGINS::CHIP::settle(Synth &synth) {
   const Float *rows = synth.rows;
   for (Whole at = 0; at < ENVELOPES; ++at)
     synth.shapes[at] = {

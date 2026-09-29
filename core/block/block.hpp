@@ -4,7 +4,7 @@
 
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::BLOCK {
+namespace SOUND::PLUGINS::CORE::BLOCK {
 
 struct Meter {
   Float level[2] = {0, 0};
@@ -39,4 +39,4 @@ void rest(
   while (cursor.next < count) apply(events[cursor.next++]);
 }
 
-}  // namespace SOUND::CORE::BLOCK
+}  // namespace SOUND::PLUGINS::CORE::BLOCK

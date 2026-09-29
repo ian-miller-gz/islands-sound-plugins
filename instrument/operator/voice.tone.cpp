@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float TURNS = 2;
 constexpr Float DEPTH = TURNS * CORE::OSCILLATOR::TAU;
@@ -69,7 +69,7 @@ auto play(OPERATOR::Synth &synth, Whole at) -> Float {
 
 }  // namespace
 
-auto SOUND::OPERATOR::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::OPERATOR::sound(Synth &synth) -> Float {
   const Float wave = synth.sign * CORE::MODULATOR::tick(synth.lfo);
   if (synth.clock == 0) synth.vibrato = wave * synth.rows[PITCH] / ::CENT;
   const Float swell = synth.rows[AMPLITUDE] * (wave + ::FULL) * ::HALF;

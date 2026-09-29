@@ -8,7 +8,7 @@
 #include "../../core/reverb/reverb.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::CHOIR {
+namespace SOUND::PLUGINS::CHOIR {
 
 constexpr Whole NOTES = 6;
 constexpr Whole SINGERS = 8;
@@ -93,4 +93,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::CHOIR
+}  // namespace SOUND::PLUGINS::CHOIR

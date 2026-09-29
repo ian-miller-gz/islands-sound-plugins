@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::SUBTRACTIVE {
+namespace SOUND::PLUGINS::SUBTRACTIVE {
 
 constexpr Whole VOICES = 8;
 constexpr Whole OSCILLATORS = 2;
@@ -31,4 +31,4 @@ auto clamped(Whole index, Float value) -> Float;
 auto label(Whole index) -> String;
 auto notation(Whole index, Float value) -> String;
 
-}  // namespace SOUND::SUBTRACTIVE
+}  // namespace SOUND::PLUGINS::SUBTRACTIVE

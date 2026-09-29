@@ -6,7 +6,7 @@
 #include "../../core/table/table.hpp"
 #include "supersaw.indices.hpp"
 
-namespace SOUND::SUPERSAW {
+namespace SOUND::PLUGINS::SUPERSAW {
 
 constexpr Float CENTS = 200;
 constexpr Float SEMITONES = 12;
@@ -49,4 +49,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::SUPERSAW
+}  // namespace SOUND::PLUGINS::SUPERSAW

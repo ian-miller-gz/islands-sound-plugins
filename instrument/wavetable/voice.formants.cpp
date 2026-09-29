@@ -7,7 +7,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float UNIT = 1;
 constexpr Float PI = std::numbers::pi_v<Float>;
@@ -45,12 +45,14 @@ auto sinc(Float x) -> Float {
 
 }  // namespace
 
-auto SOUND::WAVETABLE::SPECTRUM::formant(Float place, Float harmonic) -> Float {
+auto SOUND::PLUGINS::WAVETABLE::SPECTRUM::formant(Float place, Float harmonic)
+  -> Float {
   const Float centre = UNIT + place * (REACH - UNIT);
   return FLOOR / harmonic + ::bump(harmonic, centre);
 }
 
-auto SOUND::WAVETABLE::SPECTRUM::vowel(Float place, Float harmonic) -> Float {
+auto SOUND::PLUGINS::WAVETABLE::SPECTRUM::vowel(Float place, Float harmonic)
+  -> Float {
   const Float top = Float(std::size(::VOWELS) - 1);
   const Float held = place * top;
   const Whole low = std::min(Whole(held), Whole(top) - 1);
@@ -63,22 +65,26 @@ auto SOUND::WAVETABLE::SPECTRUM::vowel(Float place, Float harmonic) -> Float {
          SECOND * ::bump(harmonic, second / BASE);
 }
 
-auto SOUND::WAVETABLE::SPECTRUM::comb(Float place, Float harmonic) -> Float {
+auto SOUND::PLUGINS::WAVETABLE::SPECTRUM::comb(Float place, Float harmonic)
+  -> Float {
   const Float period = HOLLOW + place * SPREAD;
   return std::fabs(std::cos(PI * harmonic / period)) / harmonic;
 }
 
-auto SOUND::WAVETABLE::SPECTRUM::sync(Float place, Float harmonic) -> Float {
+auto SOUND::PLUGINS::WAVETABLE::SPECTRUM::sync(Float place, Float harmonic)
+  -> Float {
   return ::sinc(harmonic - (UNIT + place * (SYNCS - UNIT)));
 }
 
-auto SOUND::WAVETABLE::SPECTRUM::prime(Float place, Float harmonic) -> Float {
+auto SOUND::PLUGINS::WAVETABLE::SPECTRUM::prime(Float place, Float harmonic)
+  -> Float {
   const Whole at = Whole(harmonic);
   const Flag found = std::ranges::find(::PRIMES, at) != std::end(::PRIMES);
   return found ? std::pow(harmonic, -(UNIT - place) * TILT) : 0;
 }
 
-auto SOUND::WAVETABLE::SPECTRUM::scatter(Float place, Float harmonic) -> Float {
+auto SOUND::PLUGINS::WAVETABLE::SPECTRUM::scatter(Float place, Float harmonic)
+  -> Float {
   CORE::MODULATOR::Seed seed =
     CORE::MODULATOR::SEED * (Whole(harmonic) * MIXING);
   const Float from = CORE::MODULATOR::draw(seed);
@@ -86,7 +92,7 @@ auto SOUND::WAVETABLE::SPECTRUM::scatter(Float place, Float harmonic) -> Float {
   return (from + (to - from) * place) / std::pow(harmonic, HALF);
 }
 
-auto SOUND::WAVETABLE::SPECTRUM::resonant(Float place, Float harmonic)
+auto SOUND::PLUGINS::WAVETABLE::SPECTRUM::resonant(Float place, Float harmonic)
   -> Float {
   const Float centre = UNIT + place * (REACH - UNIT);
   const Float low = harmonic <= centre ? UNIT : std::exp(centre - harmonic);

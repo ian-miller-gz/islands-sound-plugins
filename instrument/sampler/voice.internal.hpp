@@ -4,7 +4,7 @@
 
 #include "sampler.hpp"
 
-namespace SOUND::SAMPLER {
+namespace SOUND::PLUGINS::SAMPLER {
 
 struct Source {
   String name;
@@ -64,12 +64,12 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::SAMPLER
+}  // namespace SOUND::PLUGINS::SAMPLER
 
-namespace SOUND::SAMPLER::SURFACE {
+namespace SOUND::PLUGINS::SAMPLER::SURFACE {
 auto parameters(void *instance) -> Whole;
 auto name(void *instance, Whole index) -> String;
 auto reading(void *instance, Whole index) -> String;
 auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::SAMPLER::SURFACE
+}  // namespace SOUND::PLUGINS::SAMPLER::SURFACE

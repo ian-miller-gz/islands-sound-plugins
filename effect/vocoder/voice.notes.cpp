@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100.0f;
 constexpr Float FULL = 1.0f;
@@ -63,7 +63,7 @@ auto sounded(
 
 }  // namespace
 
-void SOUND::VOCODER::apply(
+void SOUND::PLUGINS::VOCODER::apply(
   Vocoder &vocoder, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     vocoder.allocator, event,
@@ -73,7 +73,7 @@ void SOUND::VOCODER::apply(
   settle(vocoder);
 }
 
-auto SOUND::VOCODER::play(Vocoder &vocoder) -> Float {
+auto SOUND::PLUGINS::VOCODER::play(Vocoder &vocoder) -> Float {
   const Shape shape = ::SHAPES[vocoder.wave < WAVES ? vocoder.wave : SAW];
   Float sum = 0;
   for (Whole at = 0; at < CARRIERS; ++at) {

@@ -2,7 +2,7 @@
 #include "envelope.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float UP = 1.0f;
 constexpr Float DOWN = -1.0f;
@@ -24,33 +24,33 @@ auto following(const ENVELOPE::Envelope &envelope, Whole stage) -> Whole {
 
 }  // namespace
 
-void SOUND::CORE::ENVELOPE::strike(
+void SOUND::PLUGINS::CORE::ENVELOPE::strike(
   Gate &gate, const Envelope &envelope, Float velocity) {
   if (envelope.trigger != RESUME) gate.level = 0;
   gate.stage = RISING;
   gate.scale = weigh(velocity, envelope.depth);
 }
 
-void SOUND::CORE::ENVELOPE::tie(
+void SOUND::PLUGINS::CORE::ENVELOPE::tie(
   Gate &gate, const Envelope &envelope, Float velocity) {
   if (gate.stage < STAGES && LIVE[gate.stage]) return;
   strike(gate, envelope, velocity);
 }
 
-void SOUND::CORE::ENVELOPE::lift(Gate &gate) {
+void SOUND::PLUGINS::CORE::ENVELOPE::lift(Gate &gate) {
   if (gate.stage != IDLE) gate.stage = LEAVING;
 }
 
-void SOUND::CORE::ENVELOPE::choke(Gate &gate) {
+void SOUND::PLUGINS::CORE::ENVELOPE::choke(Gate &gate) {
   gate.level = 0;
   gate.stage = IDLE;
 }
 
-auto SOUND::CORE::ENVELOPE::sounding(const Gate &gate) -> Flag {
+auto SOUND::PLUGINS::CORE::ENVELOPE::sounding(const Gate &gate) -> Flag {
   return gate.stage != IDLE;
 }
 
-auto SOUND::CORE::ENVELOPE::tick(Gate &gate, const Envelope &envelope)
+auto SOUND::PLUGINS::CORE::ENVELOPE::tick(Gate &gate, const Envelope &envelope)
   -> Float {
   if (gate.stage >= STAGES) gate.stage = IDLE;
   const Slope &slope = envelope.slopes[gate.stage];

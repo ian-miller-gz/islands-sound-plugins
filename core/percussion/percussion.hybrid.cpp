@@ -2,7 +2,7 @@
 #include "percussion.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float ROUND = 1.5f;
@@ -14,16 +14,18 @@ constexpr PHASE::Wheel QUARTER = PHASE::Wheel(PHASE::TURN / QUARTERS);
 
 }  // namespace
 
-auto SOUND::CORE::PERCUSSION::HYBRID::pace(Float hertz, Whole rate) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::pace(Float hertz, Whole rate)
+  -> Float {
   return rate == 0 ? 0 : hertz / Float(rate) * PHASE::TURN;
 }
 
-auto SOUND::CORE::PERCUSSION::HYBRID::rounded(PHASE::Wheel phase) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::rounded(PHASE::Wheel phase)
+  -> Float {
   const Float wave = OSCILLATOR::NAIVE::triangle(phase);
   return wave * (ROUND - CUBE * wave * wave);
 }
 
-void SOUND::CORE::PERCUSSION::HYBRID::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::settle(
   Swept &swept, const Bend &bend, Whole rate) {
   swept.depth = bend.depth;
   swept.knee = bend.knee;
@@ -31,14 +33,15 @@ void SOUND::CORE::PERCUSSION::HYBRID::settle(
   shape(swept.slow, bend.slow, rate);
 }
 
-void SOUND::CORE::PERCUSSION::HYBRID::strike(Swept &swept, Float pace) {
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(
+  Swept &swept, Float pace) {
   swept.pace = pace;
   swept.phase = QUARTER;
   ENVELOPE::strike(swept.head, swept.fast, ONE);
   ENVELOPE::strike(swept.tail, swept.slow, ONE);
 }
 
-auto SOUND::CORE::PERCUSSION::HYBRID::tick(Swept &swept) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::tick(Swept &swept) -> Float {
   const Float head = ENVELOPE::tick(swept.head, swept.fast);
   const Float tail = ENVELOPE::tick(swept.tail, swept.slow);
   const Float bent =

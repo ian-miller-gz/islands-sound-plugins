@@ -7,7 +7,7 @@
 #include "operator.indices.hpp"
 #include "operator.rows.hpp"
 
-namespace SOUND::OPERATOR {
+namespace SOUND::PLUGINS::OPERATOR {
 
 template <Whole... AT>
 inline constexpr CORE::TABLE::Row LISTED[] = {describe(AT)...};
@@ -23,4 +23,4 @@ inline constexpr const CORE::TABLE::Row (&ROWS)[PARAMETERS] =
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::OPERATOR
+}  // namespace SOUND::PLUGINS::OPERATOR

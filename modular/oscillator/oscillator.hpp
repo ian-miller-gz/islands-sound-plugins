@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::OSCILLATOR {
+namespace SOUND::PLUGINS::OSCILLATOR {
 
 constexpr Whole WAVE = 0;
 constexpr Whole WIDTH = 1;
@@ -39,4 +39,4 @@ static_assert(sizeof(ROWS) / sizeof(ROWS[0]) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::OSCILLATOR
+}  // namespace SOUND::PLUGINS::OSCILLATOR

@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::MACHINE {
+namespace SOUND::PLUGINS::MACHINE {
 
 enum Drum : Whole { KICK, SNARE, HAT, CLAP, TOM, DRUMS };
 
@@ -32,4 +32,4 @@ inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 constexpr Whole PARAMETERS = SHEET.count;
 static_assert(PARAMETERS == ACCENT + 1);
 
-}  // namespace SOUND::MACHINE
+}  // namespace SOUND::PLUGINS::MACHINE

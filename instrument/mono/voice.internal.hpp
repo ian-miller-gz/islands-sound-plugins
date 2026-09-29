@@ -10,7 +10,7 @@
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::MONO {
+namespace SOUND::PLUGINS::MONO {
 
 enum Slide : Whole { STILL, AUTOMATIC, GLIDING };
 enum Wave : Whole { TRIANGLE, SQUARE, RANDOM, NOISY };
@@ -60,4 +60,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::MONO
+}  // namespace SOUND::PLUGINS::MONO

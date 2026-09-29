@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float TURN = 6.2831853f;
 constexpr Float PAIR = 2.0f;
@@ -30,13 +30,13 @@ auto corner(const FILTER::Sieve &sieve, Float hertz) -> Float {
 
 }  // namespace
 
-void SOUND::FILTER::bake(Sieve &sieve) {
+void SOUND::PLUGINS::FILTER::bake(Sieve &sieve) {
   sieve.corners.assign(CORNERS + 1, 0);
   for (Whole place = 0; place <= CORNERS; ++place)
     sieve.corners[place] = ::tangent(LOWEST + STEP * Float(place), sieve.rate);
 }
 
-void SOUND::FILTER::settle(Sieve &sieve) {
+void SOUND::PLUGINS::FILTER::settle(Sieve &sieve) {
   sieve.mode = Whole(sieve.rows[MODE]);
   sieve.damping = FLAT - sieve.rows[RESONANCE] * (FLAT - RINGING);
   const Float held = ::corner(sieve, sieve.rows[CUTOFF]);

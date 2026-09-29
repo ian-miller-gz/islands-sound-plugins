@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::SUPERSAW {
+namespace SOUND::PLUGINS::SUPERSAW {
 
 constexpr Whole TUNE = 0;
 constexpr Whole BEND = 1;
@@ -27,4 +27,4 @@ constexpr Whole GLIDE = 19;
 constexpr Whole VOLUME = 20;
 constexpr Whole PARAMETERS = 21;
 
-}  // namespace SOUND::SUPERSAW
+}  // namespace SOUND::PLUGINS::SUPERSAW

@@ -7,7 +7,7 @@
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::ECHO {
+namespace SOUND::PLUGINS::ECHO {
 
 constexpr Float MILLISECOND = 0.001f;
 constexpr Float REACH = 0.002f;
@@ -53,4 +53,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::ECHO
+}  // namespace SOUND::PLUGINS::ECHO

@@ -5,7 +5,7 @@
 #include "../../core/dynamics/dynamics.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::BREATH {
+namespace SOUND::PLUGINS::BREATH {
 
 constexpr Float LIKENESS = 0.5f;
 constexpr Float SENSE = 0.005f;
@@ -35,4 +35,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::BREATH
+}  // namespace SOUND::PLUGINS::BREATH

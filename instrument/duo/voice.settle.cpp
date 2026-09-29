@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 constexpr Float BLOCKED = 10;
@@ -32,7 +32,7 @@ void swing(DUO::Synth &synth) {
 
 }  // namespace
 
-void SOUND::DUO::settle(Synth &synth) {
+void SOUND::PLUGINS::DUO::settle(Synth &synth) {
   const Float *rows = synth.rows;
   ::contour(
     synth.adsr,

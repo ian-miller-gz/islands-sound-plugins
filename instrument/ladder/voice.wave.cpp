@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 using CORE::OSCILLATOR::Oscillator;
 
 constexpr Float HALF = 0.5f;
@@ -45,7 +45,8 @@ constexpr Float WIDTHS[LADDER::SHAPES] = {
 
 }  // namespace
 
-auto SOUND::LADDER::sing(Source &source, Float pitch, Whole rate) -> Float {
+auto SOUND::PLUGINS::LADDER::sing(Source &source, Float pitch, Whole rate)
+  -> Float {
   Oscillator &oscillator = source.oscillator;
   const Float hertz = CORE::PHASE::hertz(pitch + source.offset);
   CORE::OSCILLATOR::settle(oscillator, hertz, ::WIDTHS[source.shape], rate);

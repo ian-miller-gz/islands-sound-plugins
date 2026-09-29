@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 using CORE::DYNAMICS::decibels;
 
 constexpr Float SPAN = 6.0f;
@@ -19,7 +19,7 @@ auto heard(CORE::DYNAMICS::Detector &detector, Float in) -> Float {
 
 }  // namespace
 
-auto SOUND::BUS::shape(Bus &bus, Float in) -> Float {
+auto SOUND::PLUGINS::BUS::shape(Bus &bus, Float in) -> Float {
   const Float fast = ::heard(bus.detectors.fast, in);
   const Float slow = ::heard(bus.detectors.slow, in);
   const Float tail = ::heard(bus.detectors.tail, in);
@@ -29,7 +29,7 @@ auto SOUND::BUS::shape(Bus &bus, Float in) -> Float {
     bus.rows[ATTACK] * onset + bus.rows[SUSTAIN] * ring);
 }
 
-auto SOUND::BUS::squeeze(Bus &bus, Float in) -> Float {
+auto SOUND::PLUGINS::BUS::squeeze(Bus &bus, Float in) -> Float {
   const Float level = ::heard(bus.detectors.glue, in);
   return CORE::DYNAMICS::gain(CORE::DYNAMICS::reduce(bus.computer, level));
 }

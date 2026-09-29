@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
@@ -35,12 +35,13 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::AUDIO}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "filter", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "filter", .type = "effect", .surface = &surface});
 
 }  // namespace
 
-void SOUND::FILTER::apply(Sieve &sieve, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::FILTER::apply(
+  Sieve &sieve, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   sieve.rows[event.index] = clamped(event.index, event.value);

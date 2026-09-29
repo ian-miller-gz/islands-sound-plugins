@@ -6,7 +6,7 @@
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/pitch/pitch.hpp"
 
-namespace SOUND::DOUBLER {
+namespace SOUND::PLUGINS::DOUBLER {
 
 constexpr Whole COPIES = 4;
 constexpr Float WINDOW = 0.04f;
@@ -54,4 +54,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::DOUBLER
+}  // namespace SOUND::PLUGINS::DOUBLER

@@ -7,7 +7,7 @@
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::OPERATOR {
+namespace SOUND::PLUGINS::OPERATOR {
 
 constexpr Whole VOICES = 16;
 constexpr Whole CONTROL = 16;
@@ -60,4 +60,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::OPERATOR
+}  // namespace SOUND::PLUGINS::OPERATOR

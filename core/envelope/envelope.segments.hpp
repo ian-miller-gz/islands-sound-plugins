@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::ENVELOPE {
+namespace SOUND::PLUGINS::CORE::ENVELOPE {
 
 constexpr Whole SEGMENTS = 4;
 constexpr Whole HOLD = 2;
@@ -34,4 +34,4 @@ void lift(Walk &walk);
 auto sounding(const Walk &walk) -> Flag;
 auto tick(Walk &walk, const Segments &segments) -> Float;
 
-}  // namespace SOUND::CORE::ENVELOPE
+}  // namespace SOUND::PLUGINS::CORE::ENVELOPE

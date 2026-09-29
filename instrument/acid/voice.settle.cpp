@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float ATTACK = 0.003f;
 constexpr Float HOLD = 3;
@@ -40,7 +40,7 @@ void glide(ACID::Synth &synth) {
 
 }  // namespace
 
-void SOUND::ACID::settle(Synth &synth) {
+void SOUND::PLUGINS::ACID::settle(Synth &synth) {
   const Float *rows = synth.rows;
   ::contour(synth);
   ::glide(synth);

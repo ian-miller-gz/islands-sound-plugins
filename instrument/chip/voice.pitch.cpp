@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole MOST = 2047;
 
@@ -28,7 +28,7 @@ auto divide(CHIP::Clock &clock, const Timer &timer, Float pitch, Whole rate)
 
 }  // namespace
 
-void SOUND::CHIP::retune(Synth &synth) {
+void SOUND::PLUGINS::CHIP::retune(Synth &synth) {
   const Float *rows = synth.rows;
   const Float offsets[POSITIONS] = {0, rows[FIRST], rows[SECOND]};
   const Float base = Float(synth.allocator.notes[0].pitch) + synth.tune +

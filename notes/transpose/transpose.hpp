@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::TRANSPOSE {
+namespace SOUND::PLUGINS::TRANSPOSE {
 
 constexpr Whole STEPS = 0;
 constexpr Whole PARAMETERS = 1;
@@ -21,6 +21,9 @@ struct Shift {
 
 auto clamped(Float value) -> Float;
 
+auto create(Whole rate, Whole channels) -> void *;
+void destroy(void *instance);
+
 namespace SURFACE {
 auto parameters(void *instance) -> Whole;
 auto name(void *instance, Whole index) -> String;
@@ -29,4 +32,4 @@ auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
 }  // namespace SURFACE
 
-}  // namespace SOUND::TRANSPOSE
+}  // namespace SOUND::PLUGINS::TRANSPOSE

@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float DRIVE = 1;
 constexpr Float EMPHASIS = 0.9f;
@@ -31,7 +31,7 @@ auto filter(ACID::Synth &synth, Float in, Float contour, Float push) -> Float {
 
 }  // namespace
 
-auto SOUND::ACID::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::ACID::sound(Synth &synth) -> Float {
   CORE::VOICE::Note &note = synth.allocator.notes[0];
   const Float contour =
     CORE::ENVELOPE::tick(synth.contour, synth.contours[synth.accent]);

@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::DYNAMICS {
+namespace SOUND::PLUGINS::CORE::DYNAMICS {
 
 enum Kind : Whole { PEAK, RMS, KINDS };
 enum Side : Whole { ABOVE, BELOW, SIDES };
@@ -64,8 +64,8 @@ auto tick(Highpass &highpass, Float in) -> Float;
 void settle(Hold &hold, Whole rate);
 auto tick(Hold &hold, Float in) -> Float;
 
-}  // namespace SOUND::CORE::DYNAMICS
+}  // namespace SOUND::PLUGINS::CORE::DYNAMICS
 
-namespace SOUND::CORE::DYNAMICS::RING {
+namespace SOUND::PLUGINS::CORE::DYNAMICS::RING {
 auto create(Whole capacity) -> Ring;
-}  // namespace SOUND::CORE::DYNAMICS::RING
+}  // namespace SOUND::PLUGINS::CORE::DYNAMICS::RING

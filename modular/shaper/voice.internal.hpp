@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::SHAPER {
+namespace SOUND::PLUGINS::SHAPER {
 
 struct Stage {
   CORE::SHAPER::Oversampler oversampler;
@@ -29,4 +29,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::SHAPER
+}  // namespace SOUND::PLUGINS::SHAPER

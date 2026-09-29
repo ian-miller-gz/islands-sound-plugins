@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-void SOUND::EXPANDER::build(Effect &effect) {
+void SOUND::PLUGINS::EXPANDER::build(Effect &effect) {
   effect.detector.kind = CORE::DYNAMICS::PEAK;
   effect.computer.side = CORE::DYNAMICS::BELOW;
 }
 
-void SOUND::EXPANDER::settle(Effect &effect) {
+void SOUND::PLUGINS::EXPANDER::settle(Effect &effect) {
   effect.detector.attack = effect.rows[ATTACK] * MILLI;
   effect.detector.release = effect.rows[RELEASE] * MILLI;
   CORE::DYNAMICS::settle(effect.detector, effect.rate);

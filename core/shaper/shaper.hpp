@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::SHAPER {
+namespace SOUND::PLUGINS::CORE::SHAPER {
 
 using Curve = auto (*)(Float in) -> Float;
 
@@ -62,4 +62,4 @@ auto tick(Oversampler &oversampler, Float in, Shape &&shape) -> Float {
   return down(oversampler, shaped);
 }
 
-}  // namespace SOUND::CORE::SHAPER
+}  // namespace SOUND::PLUGINS::CORE::SHAPER

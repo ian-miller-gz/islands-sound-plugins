@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::FILTER {
+namespace SOUND::PLUGINS::CORE::FILTER {
 
 constexpr Float STABLE = 0.999f;
 
@@ -37,4 +37,4 @@ void build(Allpass &allpass, Whole frames);
 void settle(Allpass &allpass, Float delay, Float gain);
 auto tick(Allpass &allpass, Float in) -> Float;
 
-}  // namespace SOUND::CORE::FILTER
+}  // namespace SOUND::PLUGINS::CORE::FILTER

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto heard(
   const PINGPONG::Effect &effect, AUDIO::PLUGIN::Sample *const *lanes,
@@ -29,7 +29,7 @@ void place(
 
 }  // namespace
 
-void SOUND::PINGPONG::render(
+void SOUND::PLUGINS::PINGPONG::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

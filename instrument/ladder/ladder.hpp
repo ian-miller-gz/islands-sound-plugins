@@ -6,7 +6,7 @@
 #include "../../core/table/table.hpp"
 #include "ladder.indices.hpp"
 
-namespace SOUND::LADDER {
+namespace SOUND::PLUGINS::LADDER {
 
 constexpr Whole OSCILLATORS = 3;
 constexpr Whole FEET = 5;
@@ -69,4 +69,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::LADDER
+}  // namespace SOUND::PLUGINS::LADDER

@@ -4,41 +4,13 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float SCALE = 1.0f / 2147483648.0f;
 constexpr Float PAIR = 0.5f;
 constexpr Float CEILING = 0.45f;
 
 void denormals() { _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON); }
-
-void breathe(const SUBTRACTIVE::Envelope &envelope, SUBTRACTIVE::Gate &gate) {
-  switch (gate.stage) {
-    case SUBTRACTIVE::RISING:
-      gate.level += envelope.rise;
-      if (gate.level < 1.0f) return;
-      gate.level = 1.0f;
-      gate.stage = SUBTRACTIVE::FALLING;
-      return;
-    case SUBTRACTIVE::FALLING:
-      gate.level -= envelope.fall;
-      if (envelope.fall > 0 && gate.level > envelope.sustain) return;
-      gate.level = envelope.sustain;
-      gate.stage = SUBTRACTIVE::HELD;
-      return;
-    case SUBTRACTIVE::HELD:
-      gate.level = envelope.sustain;
-      return;
-    case SUBTRACTIVE::LEAVING:
-      gate.level -= envelope.drop;
-      if (gate.level > 0) return;
-      gate.level = 0;
-      gate.stage = SUBTRACTIVE::IDLE;
-      return;
-    default:
-      return;
-  }
-}
 
 auto wave(Whole shape, uint32_t phase) -> Float {
   const Float ramp = Float(static_cast<int32_t>(phase)) * SCALE;
@@ -76,7 +48,7 @@ void publish(SUBTRACTIVE::Synth &synth, Float peak) {
 
 }  // namespace
 
-void SOUND::SUBTRACTIVE::render(
+void SOUND::PLUGINS::SUBTRACTIVE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   ::denormals();
@@ -89,7 +61,7 @@ void SOUND::SUBTRACTIVE::render(
     Float sample = 0;
     for (Note &note : synth.notes) {
       for (Whole curve = 0; curve < CURVES; ++curve)
-        ::breathe(synth.envelopes[curve], note.gates[curve]);
+        breathe(synth.envelopes[curve], note.gates[curve]);
       sample += ::sound(synth, note);
     }
     sample *= synth.gain;

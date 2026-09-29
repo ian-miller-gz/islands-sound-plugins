@@ -10,7 +10,7 @@
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::DUO {
+namespace SOUND::PLUGINS::DUO {
 
 constexpr Float REFERENCE = 60;
 
@@ -72,4 +72,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::DUO
+}  // namespace SOUND::PLUGINS::DUO

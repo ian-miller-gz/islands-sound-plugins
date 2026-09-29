@@ -5,7 +5,7 @@
 #include "line.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float TAU = 2.0f * std::numbers::pi_v<Float>;
 constexpr Float NYQUIST = 0.5f;
@@ -25,7 +25,7 @@ auto pole(Float cutoff, Whole rate) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::LINE::settle(
+void SOUND::PLUGINS::CORE::LINE::settle(
   Sweep &sweep, Float centre, Float depth, Float glide, Whole rate) {
   sweep.centre = centre * Float(rate);
   sweep.depth = depth * Float(rate);
@@ -33,38 +33,39 @@ void SOUND::CORE::LINE::settle(
   if (sweep.delay < NEAREST) sweep.delay = sweep.centre;
 }
 
-auto SOUND::CORE::LINE::read(const Line &line, Sweep &sweep, Float modulation)
-  -> Float {
+auto SOUND::PLUGINS::CORE::LINE::read(
+  const Line &line, Sweep &sweep, Float modulation) -> Float {
   const Float target = sweep.centre + sweep.depth * modulation;
   sweep.delay += (target - sweep.delay) * sweep.glide;
   return read(line, sweep.delay);
 }
 
-void SOUND::CORE::LINE::settle(
+void SOUND::PLUGINS::CORE::LINE::settle(
   Loop &loop, Float feedback, Float cutoff, Whole rate) {
   loop.feedback = feedback;
   loop.pole = ::pole(cutoff, rate);
 }
 
-auto SOUND::CORE::LINE::damp(Loop &loop, Float value) -> Float {
+auto SOUND::PLUGINS::CORE::LINE::damp(Loop &loop, Float value) -> Float {
   loop.held = value + (loop.held - value) * loop.pole;
   return loop.held;
 }
 
-auto SOUND::CORE::LINE::tick(Line &line, Float in, Float delay) -> Float {
+auto SOUND::PLUGINS::CORE::LINE::tick(Line &line, Float in, Float delay)
+  -> Float {
   const Float out = read(line, delay);
   write(line, in);
   return out;
 }
 
-auto SOUND::CORE::LINE::tick(Line &line, Loop &loop, Float in, Float delay)
-  -> Float {
+auto SOUND::PLUGINS::CORE::LINE::tick(
+  Line &line, Loop &loop, Float in, Float delay) -> Float {
   const Float out = read(line, delay);
   write(line, in + loop.feedback * damp(loop, out));
   return out;
 }
 
-auto SOUND::CORE::LINE::tick(
+auto SOUND::PLUGINS::CORE::LINE::tick(
   Line &line, Loop &loop, Float in, Sweep &sweep, Float modulation) -> Float {
   const Float out = read(line, sweep, modulation);
   write(line, in + loop.feedback * damp(loop, out));

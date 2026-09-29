@@ -5,7 +5,7 @@
 #include "../../../plugin.hpp"
 #include "../phase/phase.hpp"
 
-namespace SOUND::CORE::NOISE {
+namespace SOUND::PLUGINS::CORE::NOISE {
 
 using Register = std::uint32_t;
 
@@ -65,4 +65,4 @@ void settle(Burst &burst, Float seconds, Float hertz, Whole rate);
 void strike(Burst &burst, Float level);
 auto tick(Burst &burst) -> Float;
 
-}  // namespace SOUND::CORE::NOISE
+}  // namespace SOUND::PLUGINS::CORE::NOISE

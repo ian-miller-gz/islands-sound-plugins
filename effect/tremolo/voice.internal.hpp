@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::TREMOLO {
+namespace SOUND::PLUGINS::TREMOLO {
 
 constexpr Float SMOOTHING = 0.002f;
 constexpr Float DEGREES = 360.0f;
@@ -36,4 +36,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::TREMOLO
+}  // namespace SOUND::PLUGINS::TREMOLO

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float UNITY = 1.0f;
 
@@ -24,7 +24,7 @@ auto pour(
 
 }  // namespace
 
-void SOUND::FORMANT::render(
+void SOUND::PLUGINS::FORMANT::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

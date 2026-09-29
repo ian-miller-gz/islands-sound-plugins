@@ -5,7 +5,7 @@
 #include "../../core/dynamics/dynamics.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::MULTIBAND {
+namespace SOUND::PLUGINS::MULTIBAND {
 
 constexpr Whole ORDER = 2;
 constexpr Whole LOW = 0;
@@ -52,4 +52,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::MULTIBAND
+}  // namespace SOUND::PLUGINS::MULTIBAND

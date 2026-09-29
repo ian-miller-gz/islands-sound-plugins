@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto frames(Float milliseconds, Whole rate) -> Float {
   return milliseconds * MULTITAP::MILLISECOND * Float(rate);
@@ -18,7 +18,7 @@ void place(MULTITAP::Tap &tap, Float level, Float pan) {
 
 }  // namespace
 
-void SOUND::MULTITAP::build(Effect &effect) {
+void SOUND::PLUGINS::MULTITAP::build(Effect &effect) {
   CORE::LINE::build(
     effect.line, Whole(std::ceil(::frames(LONGEST, effect.rate))) + 1);
   for (Whole at = 0; at < TAPS; ++at) {
@@ -30,7 +30,7 @@ void SOUND::MULTITAP::build(Effect &effect) {
   }
 }
 
-void SOUND::MULTITAP::settle(Effect &effect) {
+void SOUND::PLUGINS::MULTITAP::settle(Effect &effect) {
   effect.last = 0;
   for (Whole at = 0; at < TAPS; ++at) {
     Tap &tap = effect.taps[at];

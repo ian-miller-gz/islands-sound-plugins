@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto jittered(CRUSHER::Effect &effect) -> Float {
   const Float drawn = CORE::MODULATOR::draw(effect.seed);
@@ -24,7 +24,7 @@ void play(
 
 }  // namespace
 
-void SOUND::CRUSHER::render(
+void SOUND::PLUGINS::CRUSHER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

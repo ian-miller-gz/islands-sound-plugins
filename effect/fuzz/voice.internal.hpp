@@ -6,7 +6,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::FUZZ {
+namespace SOUND::PLUGINS::FUZZ {
 
 constexpr Float FLOOR = 0.00316f;
 constexpr Float OPENING = 0.001f;
@@ -48,4 +48,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::FUZZ
+}  // namespace SOUND::PLUGINS::FUZZ

@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
@@ -53,7 +53,7 @@ auto lean(Float pan) -> Float { return pan > 0 ? FULL - pan : FULL; }
 
 }  // namespace
 
-auto SOUND::SUPERSAW::sound(Synth &synth) -> Pair {
+auto SOUND::PLUGINS::SUPERSAW::sound(Synth &synth) -> Pair {
   Pair pair;
   for (Whole at = 0; at < VOICES; ++at) {
     const Float out = ::play(synth, at);

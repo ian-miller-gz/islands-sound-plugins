@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void kept(LADDER::Synth &, const CORE::VOICE::Note &) {}
 
@@ -27,7 +27,8 @@ void visit(LADDER::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::LADDER::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::LADDER::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

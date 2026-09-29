@@ -6,7 +6,7 @@
 #include "../../core/noise/noise.hpp"
 #include "../../core/notes/notes.hpp"
 
-namespace SOUND::ARPEGGIATOR {
+namespace SOUND::PLUGINS::ARPEGGIATOR {
 
 constexpr Float STRAIGHT = 0.0f;
 
@@ -20,7 +20,7 @@ struct Arpeggio {
   Whole held = 0;
   Whole sounding = CORE::NOTES::SILENT;
   Whole left = 0;
-  AUDIO::PLUGIN::Event notes[PLUGIN::ROOM] = {};
+  AUDIO::PLUGIN::Event notes[SOUND::PLUGIN::ROOM] = {};
   CORE::NOTES::Out out;
 };
 
@@ -38,4 +38,4 @@ auto answer(
   void *instance, const AUDIO::PLUGIN::Event *events, Whole count,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole;
 
-}  // namespace SOUND::ARPEGGIATOR
+}  // namespace SOUND::PLUGINS::ARPEGGIATOR

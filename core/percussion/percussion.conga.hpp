@@ -2,7 +2,7 @@
 #pragma once
 #include "percussion.circuit.hpp"
 
-namespace SOUND::CORE::PERCUSSION {
+namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
 struct Conga {
   Sweep sweep;
@@ -10,7 +10,7 @@ struct Conga {
   ENVELOPE::Gate click;
   NOISE::White white;
   FILTER::Pole crisp;
-  Float bases[HEIGHTS] = {};
+  Float bases[HEIGHT::HEIGHTS] = {};
   Float open = 0;
   Float muted = 0;
   Float bend = 0;
@@ -22,4 +22,4 @@ void settle(Conga &conga, Float tune, Float decay, Float bend, Whole rate);
 void strike(Conga &conga, Whole height, Float velocity);
 auto tick(Conga &conga) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION

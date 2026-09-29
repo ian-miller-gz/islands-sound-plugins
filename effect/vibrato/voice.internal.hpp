@@ -5,7 +5,7 @@
 #include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::VIBRATO {
+namespace SOUND::PLUGINS::VIBRATO {
 
 constexpr Float MARGIN = 0.001f;
 constexpr Float GLIDE = 0.002f;
@@ -34,4 +34,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::VIBRATO
+}  // namespace SOUND::PLUGINS::VIBRATO

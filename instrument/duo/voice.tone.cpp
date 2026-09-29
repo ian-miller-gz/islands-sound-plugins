@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float DRONE = -60;
 constexpr Float HALF = 0.5f;
@@ -39,7 +39,7 @@ void quiet(DUO::Synth &synth) {
 
 }  // namespace
 
-auto SOUND::DUO::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::DUO::sound(Synth &synth) -> Float {
   const Float *rows = synth.rows;
   const Float noise = ::noise(synth);
   const Float lfo = ::swing(synth);

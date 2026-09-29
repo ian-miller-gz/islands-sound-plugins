@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::FADER {
+namespace SOUND::PLUGINS::FADER {
 
 constexpr Whole GAIN = 0;
 constexpr Whole PAN = 1;
@@ -28,4 +28,4 @@ auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
 }  // namespace SURFACE
 
-}  // namespace SOUND::FADER
+}  // namespace SOUND::PLUGINS::FADER

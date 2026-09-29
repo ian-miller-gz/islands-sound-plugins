@@ -2,7 +2,7 @@
 #pragma once
 #include "../line/line.hpp"
 
-namespace SOUND::CORE::REVERB {
+namespace SOUND::PLUGINS::CORE::REVERB {
 
 constexpr Whole FOUR = 4;
 constexpr Whole EIGHT = 8;
@@ -95,4 +95,4 @@ auto tick(Network &network, Float in) -> Stereo;
 auto tick(Reflections &reflections, Float in) -> Stereo;
 auto tick(Plate &plate, Float in) -> Stereo;
 
-}  // namespace SOUND::CORE::REVERB
+}  // namespace SOUND::PLUGINS::CORE::REVERB

@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::WAVETABLE {
+namespace SOUND::PLUGINS::WAVETABLE {
 
 constexpr Whole TUNE = 0;
 constexpr Whole BEND = 1;
@@ -35,4 +35,4 @@ constexpr Whole GLIDE = 27;
 constexpr Whole VOLUME = 28;
 constexpr Whole PARAMETERS = 29;
 
-}  // namespace SOUND::WAVETABLE
+}  // namespace SOUND::PLUGINS::WAVETABLE

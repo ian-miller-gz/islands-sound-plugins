@@ -2,22 +2,23 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr CORE::PERCUSSION::Key KEYS[] = {
-  {41, CORE::PERCUSSION::LOW},  {43, CORE::PERCUSSION::LOW},
-  {45, CORE::PERCUSSION::MID},  {47, CORE::PERCUSSION::MID},
-  {48, CORE::PERCUSSION::HIGH}, {50, CORE::PERCUSSION::HIGH}};
+  {41, CORE::PERCUSSION::HEIGHT::LOW},  {43, CORE::PERCUSSION::HEIGHT::LOW},
+  {45, CORE::PERCUSSION::HEIGHT::MID},  {47, CORE::PERCUSSION::HEIGHT::MID},
+  {48, CORE::PERCUSSION::HEIGHT::HIGH}, {50, CORE::PERCUSSION::HEIGHT::HIGH}};
 
 }  // namespace
 
-void SOUND::TOM::settle(Voice &voice) {
+void SOUND::PLUGINS::TOM::settle(Voice &voice) {
   CORE::PERCUSSION::settle(
     voice.tom, voice.rows[TUNE], voice.rows[DECAY], voice.rows[BEND],
     voice.rows[TONE], voice.rate);
 }
 
-void SOUND::TOM::apply(Voice &voice, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::TOM::apply(
+  Voice &voice, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     if (event.index >= PARAMETERS) return;
     voice.rows[event.index] =
@@ -27,6 +28,6 @@ void SOUND::TOM::apply(Voice &voice, const AUDIO::PLUGIN::Event &event) {
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
   const Whole height =
-    CORE::PERCUSSION::keyed(KEYS, event.index, CORE::PERCUSSION::MID);
+    CORE::PERCUSSION::keyed(KEYS, event.index, CORE::PERCUSSION::HEIGHT::MID);
   CORE::PERCUSSION::strike(voice.tom, height, event.value);
 }

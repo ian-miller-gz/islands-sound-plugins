@@ -2,9 +2,9 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
-constexpr Float ACCENTED = 100.0f / PLUGIN::FULL;
+constexpr Float ACCENTED = 100.0f / SOUND::PLUGIN::FULL;
 
 void kept(ACID::Synth &, const CORE::VOICE::Note &) {}
 
@@ -31,7 +31,8 @@ void visit(ACID::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::ACID::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::ACID::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

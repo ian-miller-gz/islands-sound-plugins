@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float PERIODS = 1;
 constexpr Float HALF = 0.5f;
@@ -34,7 +34,8 @@ void visit(PLUCK::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::PLUCK::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::PLUCK::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

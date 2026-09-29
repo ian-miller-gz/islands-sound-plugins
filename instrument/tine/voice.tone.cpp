@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float FULL = 1;
 constexpr Float HALF = 0.5f;
@@ -34,13 +34,14 @@ auto play(TINE::Synth &synth, Whole at) -> Float {
 
 }  // namespace
 
-auto SOUND::TINE::pick(const Synth &synth, Float displacement) -> Float {
+auto SOUND::PLUGINS::TINE::pick(const Synth &synth, Float displacement)
+  -> Float {
   const Float bias = synth.rows[VOICING];
   const Float driven = synth.drive * displacement + bias;
   return (CORE::SHAPER::soft(driven) - CORE::SHAPER::soft(bias)) / synth.drive;
 }
 
-auto SOUND::TINE::sound(Synth &synth) -> Pair {
+auto SOUND::PLUGINS::TINE::sound(Synth &synth) -> Pair {
   Float sum = 0;
   for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at);
   sum *= MIX;

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto quantity(const SAMPLER::Player &player, Whole index) -> Float {
   if (index == SAMPLER::GAIN) return player.gain;
@@ -29,15 +29,17 @@ void chooser(const SAMPLER::Player &player, AUDIO::PLUGIN::Control &out) {
 
 }  // namespace
 
-auto SOUND::SAMPLER::SURFACE::parameters(void *instance) -> Whole {
+auto SOUND::PLUGINS::SAMPLER::SURFACE::parameters(void *instance) -> Whole {
   return instance == nullptr ? 0 : PARAMETERS;
 }
 
-auto SOUND::SAMPLER::SURFACE::name(void *instance, Whole index) -> String {
+auto SOUND::PLUGINS::SAMPLER::SURFACE::name(void *instance, Whole index)
+  -> String {
   return ::sane(instance, index) ? label(index) : String();
 }
 
-auto SOUND::SAMPLER::SURFACE::reading(void *instance, Whole index) -> String {
+auto SOUND::PLUGINS::SAMPLER::SURFACE::reading(void *instance, Whole index)
+  -> String {
   if (!::sane(instance, index)) return {};
   if (index != STOCK) return notation(index, held(instance, index));
   const auto &player = *static_cast<const Player *>(instance);
@@ -46,12 +48,13 @@ auto SOUND::SAMPLER::SURFACE::reading(void *instance, Whole index) -> String {
            : String("none");
 }
 
-auto SOUND::SAMPLER::SURFACE::held(void *instance, Whole index) -> Float {
+auto SOUND::PLUGINS::SAMPLER::SURFACE::held(void *instance, Whole index)
+  -> Float {
   if (!::sane(instance, index)) return 0;
   return ::quantity(*static_cast<const Player *>(instance), index);
 }
 
-auto SOUND::SAMPLER::SURFACE::control(
+auto SOUND::PLUGINS::SAMPLER::SURFACE::control(
   void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
   if (!::sane(instance, index) || !SAMPLER::control(index, out)) return false;
   const auto &player = *static_cast<const Player *>(instance);

@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::MULTIMODE {
+namespace SOUND::PLUGINS::MULTIMODE {
 
 constexpr Whole TUNE = 0;
 constexpr Whole BEND = 1;
@@ -39,4 +39,4 @@ constexpr Whole SPREAD = 31;
 constexpr Whole VOLUME = 32;
 constexpr Whole PARAMETERS = 33;
 
-}  // namespace SOUND::MULTIMODE
+}  // namespace SOUND::PLUGINS::MULTIMODE

@@ -2,13 +2,13 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float HALF = 0.5f;
 
 }  // namespace
 
-void SOUND::DEESSER::build(Deesser &deesser) {
+void SOUND::PLUGINS::DEESSER::build(Deesser &deesser) {
   deesser.filters.resize(deesser.channels);
   deesser.bands.assign(deesser.channels, 0);
   deesser.detector.kind = CORE::DYNAMICS::PEAK;
@@ -16,7 +16,7 @@ void SOUND::DEESSER::build(Deesser &deesser) {
   deesser.computer.knee = KNEE;
 }
 
-void SOUND::DEESSER::settle(Deesser &deesser) {
+void SOUND::PLUGINS::DEESSER::settle(Deesser &deesser) {
   for (CORE::FILTER::Biquad &filter : deesser.filters)
     CORE::FILTER::settle(
       filter, CORE::FILTER::HIGH, deesser.rows[FREQUENCY], CORE::FILTER::FLAT,
@@ -31,7 +31,7 @@ void SOUND::DEESSER::settle(Deesser &deesser) {
   deesser.listen = deesser.rows[LISTEN] >= ::HALF;
 }
 
-void SOUND::DEESSER::apply(
+void SOUND::PLUGINS::DEESSER::apply(
   Deesser &deesser, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
@@ -40,7 +40,7 @@ void SOUND::DEESSER::apply(
   settle(deesser);
 }
 
-auto SOUND::DEESSER::reduced(Deesser &deesser, Float band) -> Float {
+auto SOUND::PLUGINS::DEESSER::reduced(Deesser &deesser, Float band) -> Float {
   const Float level = CORE::DYNAMICS::tick(deesser.detector, band);
   const Float heard = CORE::DYNAMICS::decibels(level);
   const Float cut = CORE::DYNAMICS::reduce(deesser.computer, heard);

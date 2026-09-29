@@ -6,7 +6,7 @@
 #include "../../core/noise/noise.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::WHISPER {
+namespace SOUND::PLUGINS::WHISPER {
 
 constexpr Whole VOICES = 8;
 constexpr Float LOUDNESS = 8.0f;
@@ -49,4 +49,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::WHISPER
+}  // namespace SOUND::PLUGINS::WHISPER

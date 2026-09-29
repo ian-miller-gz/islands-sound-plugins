@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole KINDS[RESONATOR::MODES] = {
   CORE::FILTER::LOW, CORE::FILTER::BAND, CORE::FILTER::HIGH,
@@ -17,13 +17,13 @@ auto kind(const RESONATOR::Module &module) -> Whole {
 
 }  // namespace
 
-void SOUND::RESONATOR::settle(Module &module) {
+void SOUND::PLUGINS::RESONATOR::settle(Module &module) {
   module.lfo.hertz = module.rows[RATE];
   CORE::MODULATOR::settle(module.lfo, module.rate);
   module.countdown = 0;
 }
 
-void SOUND::RESONATOR::sweep(Module &module, Float swing) {
+void SOUND::PLUGINS::RESONATOR::sweep(Module &module, Float swing) {
   const Float *rows = module.rows;
   const Float hertz = rows[CUTOFF] * std::exp2(swing * rows[DEPTH]);
   const Whole chosen = ::kind(module);
@@ -31,7 +31,7 @@ void SOUND::RESONATOR::sweep(Module &module, Float swing) {
     CORE::FILTER::settle(filter, chosen, hertz, rows[EMPHASIS], module.rate);
 }
 
-void SOUND::RESONATOR::apply(
+void SOUND::PLUGINS::RESONATOR::apply(
   Module &module, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;

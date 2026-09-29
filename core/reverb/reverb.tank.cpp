@@ -5,7 +5,7 @@
 #include "reverb.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole LEFT = 0;
 constexpr Whole RIGHT = 1;
@@ -64,7 +64,7 @@ void run(CORE::REVERB::Half &half, Float in, Float offset, Float decay) {
 
 }  // namespace
 
-auto SOUND::CORE::REVERB::tick(Plate &plate, Float in) -> Stereo {
+auto SOUND::PLUGINS::CORE::REVERB::tick(Plate &plate, Float in) -> Stereo {
   Float diffused = LINE::damp(plate.band, in);
   for (Allpass &diffuser : plate.diffusers) diffused = tick(diffuser, diffused);
   const Float offsets[SIDES] = {

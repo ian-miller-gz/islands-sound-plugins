@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1.0f;
@@ -39,7 +39,7 @@ void space(CHOIR::Choir &choir) {
 
 }  // namespace
 
-void SOUND::CHOIR::build(Choir &choir) {
+void SOUND::PLUGINS::CHOIR::build(Choir &choir) {
   CORE::GLOTTIS::build(choir.table);
   choir.allocator.count = NOTES;
   Whole at = 0;

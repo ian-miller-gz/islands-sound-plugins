@@ -4,7 +4,7 @@
 #include "sampler.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr STRING::Hot SWITCHES[] = {"Off", "On"};
 
@@ -37,11 +37,12 @@ auto snapped(const Row &found, Float value) -> Float {
 
 }  // namespace
 
-auto SOUND::SAMPLER::label(Whole index) -> String {
+auto SOUND::PLUGINS::SAMPLER::label(Whole index) -> String {
   return index < PARAMETERS ? String(ROWS[index].name) : String();
 }
 
-auto SOUND::SAMPLER::control(Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
+auto SOUND::PLUGINS::SAMPLER::control(Whole index, AUDIO::PLUGIN::Control &out)
+  -> Flag {
   if (index >= PARAMETERS) return false;
   const Row &found = ROWS[index];
   Vector<String> positions;
@@ -51,11 +52,11 @@ auto SOUND::SAMPLER::control(Whole index, AUDIO::PLUGIN::Control &out) -> Flag {
   return true;
 }
 
-auto SOUND::SAMPLER::resting(Whole index) -> Float {
+auto SOUND::PLUGINS::SAMPLER::resting(Whole index) -> Float {
   return index < PARAMETERS ? ROWS[index].resting : 0;
 }
 
-auto SOUND::SAMPLER::clamped(Whole index, Float value) -> Float {
+auto SOUND::PLUGINS::SAMPLER::clamped(Whole index, Float value) -> Float {
   if (index >= PARAMETERS) return value;
   const Row &found = ROWS[index];
   if (found.most <= found.least) return value < 0 ? 0 : value;
@@ -65,7 +66,7 @@ auto SOUND::SAMPLER::clamped(Whole index, Float value) -> Float {
   return found.steps == 0 ? held : ::snapped(found, held);
 }
 
-auto SOUND::SAMPLER::notation(Whole index, Float value) -> String {
+auto SOUND::PLUGINS::SAMPLER::notation(Whole index, Float value) -> String {
   if (index >= PARAMETERS) return {};
   const Row &found = ROWS[index];
   if (found.steps != 0) return String(SWITCHES[Whole(clamped(index, value))]);

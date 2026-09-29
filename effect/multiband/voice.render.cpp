@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto cascade(CORE::FILTER::Biquad *stages, Float in) -> Float {
   for (Whole stage = 0; stage < MULTIBAND::ORDER; ++stage)
@@ -41,7 +41,7 @@ void play(
 
 }  // namespace
 
-void SOUND::MULTIBAND::divide(Strip &strip, Float in) {
+void SOUND::PLUGINS::MULTIBAND::divide(Strip &strip, Float in) {
   Split &first = strip.splits[FIRST];
   Split &last = strip.splits[LAST];
   const Float low = ::cascade(first.lows, in);
@@ -52,7 +52,7 @@ void SOUND::MULTIBAND::divide(Strip &strip, Float in) {
   strip.parts[HIGH] = ::cascade(last.highs, rest);
 }
 
-void SOUND::MULTIBAND::render(
+void SOUND::PLUGINS::MULTIBAND::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

@@ -10,7 +10,7 @@
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 
-namespace SOUND::ENSEMBLE {
+namespace SOUND::PLUGINS::ENSEMBLE {
 
 using Counter = std::uint64_t;
 
@@ -93,4 +93,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::ENSEMBLE
+}  // namespace SOUND::PLUGINS::ENSEMBLE

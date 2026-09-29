@@ -5,7 +5,7 @@
 #include "../../core/dynamics/dynamics.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::DEESSER {
+namespace SOUND::PLUGINS::DEESSER {
 
 constexpr Float KNEE = 3.0f;
 constexpr Float MILLI = 1000.0f;
@@ -32,4 +32,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::DEESSER
+}  // namespace SOUND::PLUGINS::DEESSER

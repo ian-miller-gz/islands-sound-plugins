@@ -4,7 +4,7 @@
 #include "../noise/noise.hpp"
 #include "../phase/phase.hpp"
 
-namespace SOUND::CORE::NOTES {
+namespace SOUND::PLUGINS::CORE::NOTES {
 
 constexpr Whole KEYS = PHASE::PITCHES;
 constexpr Whole HIGHEST = KEYS - 1;
@@ -34,4 +34,4 @@ void lift(Tally &tally, Out &out, Whole pitch, Whole offset);
 void sow(NOISE::White &white, Float seed);
 auto draw(NOISE::White &white) -> Float;
 
-}  // namespace SOUND::CORE::NOTES
+}  // namespace SOUND::PLUGINS::CORE::NOTES

@@ -2,7 +2,7 @@
 #include "chord.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto chosen(const CHORD::Chord &chord, Whole index, Whole count) -> Whole {
   const Whole place = Whole(chord.rows[index]);
@@ -31,7 +31,8 @@ void widen(const CHORD::Chord &chord, Whole count, Whole *pitches) {
 
 }  // namespace
 
-void SOUND::CHORD::voice(const Chord &chord, Whole key, Whole *pitches) {
+void SOUND::PLUGINS::CHORD::voice(
+  const Chord &chord, Whole key, Whole *pitches) {
   for (Whole at = 0; at < VOICES; ++at) pitches[at] = CORE::NOTES::SILENT;
   const Shape &shape = SHAPES[::chosen(chord, KIND, KINDS)];
   const Whole inversion = ::chosen(chord, INVERSION, INVERSIONS);

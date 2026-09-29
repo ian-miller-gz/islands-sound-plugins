@@ -2,14 +2,14 @@
 #include "voice.internal.hpp"
 #include "../../core/clock/clock.hpp"
 
-void SOUND::AUTOPAN::build(Effect &effect) {
+void SOUND::PLUGINS::AUTOPAN::build(Effect &effect) {
   effect.smoother.time = SMOOTHING;
   CORE::MODULATOR::settle(effect.smoother, effect.rate);
   CORE::MODULATOR::jump(effect.smoother, 0);
   CORE::MODULATOR::reset(effect.lfo);
 }
 
-void SOUND::AUTOPAN::settle(Effect &effect) {
+void SOUND::PLUGINS::AUTOPAN::settle(Effect &effect) {
   const Float *rows = effect.rows;
   const Float beats = BEATS[Whole(rows[DIVISION])];
   effect.lfo.wave = WAVES[Whole(rows[SHAPE])];

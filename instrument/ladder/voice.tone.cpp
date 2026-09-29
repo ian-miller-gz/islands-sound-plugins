@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float VIBRATO = 2;
 constexpr Float WOBBLE = 2;
@@ -36,7 +36,7 @@ auto mixed(LADDER::Synth &synth, Float bent, Float wheel, Float noise)
 
 }  // namespace
 
-auto SOUND::LADDER::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::LADDER::sound(Synth &synth) -> Float {
   CORE::VOICE::Note &note = synth.allocator.notes[0];
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide) + synth.tune;
   const Float bent = key + synth.rows[BEND];

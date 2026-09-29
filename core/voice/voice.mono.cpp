@@ -2,7 +2,7 @@
 #include "voice.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 auto last(const VOICE::Allocator &allocator) -> Whole {
   Whole chosen = VOICE::NONE;
@@ -48,13 +48,13 @@ void sing(
 
 }  // namespace
 
-auto SOUND::CORE::VOICE::MONOPHONY::choose(const Allocator &allocator)
+auto SOUND::PLUGINS::CORE::VOICE::MONOPHONY::choose(const Allocator &allocator)
   -> Whole {
   const Whole priority = allocator.priority;
   return ::CHOOSERS[priority < PRIORITIES ? priority : LAST](allocator);
 }
 
-void SOUND::CORE::VOICE::MONOPHONY::strike(
+void SOUND::PLUGINS::CORE::VOICE::MONOPHONY::strike(
   Allocator &allocator, Whole pitch, Float velocity) {
   const Flag legato = allocator.legato && choose(allocator) != NONE;
   allocator.keys[pitch] = ++allocator.clock;
@@ -64,7 +64,8 @@ void SOUND::CORE::VOICE::MONOPHONY::strike(
   ::sing(allocator, chosen, velocity, legato);
 }
 
-void SOUND::CORE::VOICE::MONOPHONY::lift(Allocator &allocator, Whole pitch) {
+void SOUND::PLUGINS::CORE::VOICE::MONOPHONY::lift(
+  Allocator &allocator, Whole pitch) {
   allocator.keys[pitch] = 0;
   const Whole chosen = choose(allocator);
   const Note &lead = allocator.notes[0];
@@ -79,4 +80,10 @@ void SOUND::CORE::VOICE::MONOPHONY::lift(Allocator &allocator, Whole pitch) {
   }
   if (chosen == lead.pitch && lead.held) return;
   ::sing(allocator, chosen, lead.velocity, allocator.legato);
+}
+
+auto SOUND::PLUGINS::CORE::VOICE::tick(Note &note, const Glide &glide)
+  -> Float {
+  note.current += (Float(note.pitch) - note.current) * glide.pole;
+  return note.current;
 }

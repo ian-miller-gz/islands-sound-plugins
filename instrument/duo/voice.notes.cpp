@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void kept(DUO::Synth &, const CORE::VOICE::Note &) {}
 
@@ -34,16 +34,17 @@ void visit(
 
 }  // namespace
 
-void SOUND::DUO::strike(Synth &synth, Float velocity) {
+void SOUND::PLUGINS::DUO::strike(Synth &synth, Float velocity) {
   for (Contour *contour : {&synth.adsr, &synth.ar})
     CORE::ENVELOPE::strike(contour->gate, contour->envelope, velocity);
 }
 
-void SOUND::DUO::sample(Synth &synth) {
+void SOUND::PLUGINS::DUO::sample(Synth &synth) {
   if (synth.rows[CLOCK] > 0) synth.held = synth.input;
 }
 
-void SOUND::DUO::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::DUO::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   CORE::VOICE::apply(
     synth.high, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(HIGHS, synth, note); });

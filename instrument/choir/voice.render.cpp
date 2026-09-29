@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float HALF = 0.5f;
 
@@ -29,7 +29,7 @@ auto voiced(CHOIR::Choir &choir) -> CHOIR::Stereo {
 
 }  // namespace
 
-void SOUND::CHOIR::render(
+void SOUND::PLUGINS::CHOIR::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

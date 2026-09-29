@@ -6,8 +6,8 @@
 #include "surfaces.internal.hpp"
 
 namespace {
-using namespace SOUND;
-using namespace SOUND::SURFACES;
+using namespace SOUND::PLUGINS;
+using namespace SOUND::PLUGINS::SURFACES;
 
 auto taken(const String &device, Whole fallback) -> Whole {
   for (const AUDIO::INPUT::Device &row : AUDIO::INPUT::GET::devices())
@@ -25,8 +25,8 @@ auto given(const String &device, Whole fallback) -> Whole {
 
 }  // namespace
 
-auto SOUND::SURFACES::hear(void *instance, const String &device, Whole lane)
-  -> Flag {
+auto SOUND::PLUGINS::SURFACES::hear(
+  void *instance, const String &device, Whole lane) -> Flag {
   if (instance == nullptr || device.empty()) return false;
   auto &input = *static_cast<Input *>(instance);
   input.lanes = ::taken(device, input.channels);
@@ -36,8 +36,8 @@ auto SOUND::SURFACES::hear(void *instance, const String &device, Whole lane)
   input.scratch.assign(::ROOM * input.lanes, 0);
   return true;
 }
-auto SOUND::SURFACES::sound(void *instance, const String &device, Whole lane)
-  -> Flag {
+auto SOUND::PLUGINS::SURFACES::sound(
+  void *instance, const String &device, Whole lane) -> Flag {
   if (instance == nullptr || device.empty()) return false;
   auto &output = *static_cast<Output *>(instance);
   output.lanes = ::given(device, output.channels);
@@ -47,8 +47,8 @@ auto SOUND::SURFACES::sound(void *instance, const String &device, Whole lane)
   output.scratch.reserve(::ROOM * output.lanes);
   return true;
 }
-auto SOUND::SURFACES::speak(void *instance, const String &device, Whole)
-  -> Flag {
+auto SOUND::PLUGINS::SURFACES::speak(
+  void *instance, const String &device, Whole) -> Flag {
   if (instance == nullptr || device.empty()) return false;
   auto &out = *static_cast<Midiout *>(instance);
   out.output = MIDI::OUTPUT::create(device);

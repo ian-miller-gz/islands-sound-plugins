@@ -5,7 +5,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void denormals() { _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON); }
 
@@ -43,7 +43,7 @@ void publish(COMPRESSOR::Press &press, Float peak) {
 
 }  // namespace
 
-void SOUND::COMPRESSOR::render(
+void SOUND::PLUGINS::COMPRESSOR::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   ::denormals();

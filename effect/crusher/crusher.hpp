@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::CRUSHER {
+namespace SOUND::PLUGINS::CRUSHER {
 
 constexpr Whole BITS = 0;
 constexpr Whole RATE = 1;
@@ -20,4 +20,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::CRUSHER
+}  // namespace SOUND::PLUGINS::CRUSHER

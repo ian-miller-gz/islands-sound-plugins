@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::SLEW {
+namespace SOUND::PLUGINS::SLEW {
 
 struct Module {
   Whole rate = 0;
@@ -21,4 +21,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::SLEW
+}  // namespace SOUND::PLUGINS::SLEW

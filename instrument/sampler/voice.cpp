@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole NOTES = 128;
 constexpr Float SEMITONES = 12;
@@ -57,12 +57,15 @@ const AUDIO::PLUGIN::Plug surface = {
     {AUDIO::PLUGIN::Port::AUDIO, "signal"},
     {AUDIO::PLUGIN::Port::DATA, "material", "sample"}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "sampler", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "sampler",
+   .type = "instrument",
+   .voicing = SOUND::PLUGIN::POLY,
+   .surface = &surface});
 
 }  // namespace
 
-auto SOUND::SAMPLER::delta(Float seconds, Whole rate) -> Float {
+auto SOUND::PLUGINS::SAMPLER::delta(Float seconds, Whole rate) -> Float {
   const Float frames = seconds * Float(rate);
   return frames <= 1.0f ? 1.0f : 1.0f / frames;
 }

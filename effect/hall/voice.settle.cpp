@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto frames(Float milliseconds, Whole rate) -> Float {
   return milliseconds * HALL::MILLISECOND * Float(rate);
@@ -17,14 +17,14 @@ auto cutoff(Float damp) -> Float {
 
 }  // namespace
 
-void SOUND::HALL::build(Effect &effect) {
+void SOUND::PLUGINS::HALL::build(Effect &effect) {
   const Float longest = CORE::TABLE::found(SHEET, PREDELAY)->most;
   CORE::REVERB::build(
     effect.predelay, Whole(std::ceil(::frames(longest, effect.rate))) + 1);
   CORE::REVERB::build(effect.network, CORE::REVERB::EIGHT, effect.rate);
 }
 
-void SOUND::HALL::settle(Effect &effect) {
+void SOUND::PLUGINS::HALL::settle(Effect &effect) {
   CORE::REVERB::settle(
     effect.predelay, ::frames(effect.rows[PREDELAY], effect.rate));
   CORE::REVERB::settle(

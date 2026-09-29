@@ -5,7 +5,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float MOTOR = 20;
 constexpr Float TEETH = 2;
@@ -53,7 +53,7 @@ void sound(DRAWBAR::Organ &organ, Integer pitch, Integer harmonic) {
 
 }  // namespace
 
-void SOUND::DRAWBAR::tune(Organ &organ) {
+void SOUND::PLUGINS::DRAWBAR::tune(Organ &organ) {
   const Float cents = CORE::PHASE::ratio(organ.rows[TUNE]);
   for (Whole wheel = 0; wheel < WHEELS; ++wheel) {
     const Gear &gear = ::GEARS[wheel % Whole(::OCTAVE)];
@@ -63,7 +63,7 @@ void SOUND::DRAWBAR::tune(Organ &organ) {
   }
 }
 
-void SOUND::DRAWBAR::pull(Organ &organ) {
+void SOUND::PLUGINS::DRAWBAR::pull(Organ &organ) {
   const Flag percussive = organ.rows[PERCUSSION] > 0;
   for (Whole bar = 0; bar < BARS; ++bar)
     organ.gains[bar] = ::gain(organ.rows[bar]);

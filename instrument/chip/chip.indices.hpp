@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CHIP {
+namespace SOUND::PLUGINS::CHIP {
 
 constexpr Whole DUTY1 = 0;
 constexpr Whole LEVEL1 = 1;
@@ -28,4 +28,4 @@ constexpr Whole BEND = 20;
 constexpr Whole VOLUME = 21;
 constexpr Whole PARAMETERS = 22;
 
-}  // namespace SOUND::CHIP
+}  // namespace SOUND::PLUGINS::CHIP

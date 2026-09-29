@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto seconds(Float tension) -> Float {
   return SPRING::LONGEST *
@@ -17,13 +17,13 @@ auto chirp(Float tension) -> Float {
 
 }  // namespace
 
-void SOUND::SPRING::build(Effect &effect) {
+void SOUND::PLUGINS::SPRING::build(Effect &effect) {
   for (Whole side = 0; side < CORE::REVERB::SIDES; ++side)
     build(effect.springs[side], LONGEST * LENGTHS[side], effect.rate);
   CORE::FILTER::settle(effect.cut, CORE::FILTER::HIGH, CUT, effect.rate);
 }
 
-void SOUND::SPRING::settle(Effect &effect) {
+void SOUND::PLUGINS::SPRING::settle(Effect &effect) {
   const Float tension = effect.rows[TENSION];
   for (Whole side = 0; side < CORE::REVERB::SIDES; ++side)
     settle(

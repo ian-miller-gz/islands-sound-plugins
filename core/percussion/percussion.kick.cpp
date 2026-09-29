@@ -2,7 +2,7 @@
 #include "percussion.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float BEND = 1.5f;
@@ -13,7 +13,7 @@ constexpr Float DRIVE = 8.0f;
 
 }  // namespace
 
-void SOUND::CORE::PERCUSSION::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Kick &kick, Float tune, Float decay, Float attack, Float drive, Float tone,
   Whole rate) {
   settle(kick.body, tune, decay, rate);
@@ -26,14 +26,14 @@ void SOUND::CORE::PERCUSSION::settle(
   kick.drive = ONE + drive * DRIVE;
 }
 
-void SOUND::CORE::PERCUSSION::strike(Kick &kick, Float velocity) {
+void SOUND::PLUGINS::CORE::PERCUSSION::strike(Kick &kick, Float velocity) {
   kick.velocity = struck(velocity);
   ENVELOPE::strike(kick.bend, kick.sweep, kick.velocity);
   ENVELOPE::strike(kick.click, kick.snap, kick.velocity);
   strike(kick.body, kick.velocity);
 }
 
-auto SOUND::CORE::PERCUSSION::tick(Kick &kick) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Kick &kick) -> Float {
   const Float sweep = ENVELOPE::tick(kick.bend, kick.sweep);
   kick.body.turn = kick.base * (ONE + BEND * sweep);
   const Float body = tick(kick.body);

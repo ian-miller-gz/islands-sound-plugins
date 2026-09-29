@@ -5,7 +5,7 @@
 #include "reverb.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float RATE = 29761.0f;
 constexpr Float TAU = 2.0f * std::numbers::pi_v<Float>;
@@ -57,7 +57,7 @@ auto scaled(Float pole, Float scale) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::REVERB::build(Plate &plate, Whole rate) {
+void SOUND::PLUGINS::CORE::REVERB::build(Plate &plate, Whole rate) {
   plate.rate = rate;
   plate.scale = Float(rate) / RATE;
   for (Whole at = 0; at < DIFFUSERS; ++at)
@@ -69,7 +69,7 @@ void SOUND::CORE::REVERB::build(Plate &plate, Whole rate) {
   plate.phase = 0;
 }
 
-void SOUND::CORE::REVERB::settle(
+void SOUND::PLUGINS::CORE::REVERB::settle(
   Plate &plate, Float decay, Float damping, Float bandwidth, Float diffusion) {
   plate.decay = decay;
   plate.band.pole = ::scaled(UNITY - bandwidth, plate.scale);

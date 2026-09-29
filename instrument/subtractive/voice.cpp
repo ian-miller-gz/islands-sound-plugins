@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float TAU = 6.2831853f;
 constexpr Whole NOTES = 128;
@@ -57,17 +57,20 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "subtractive", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "subtractive",
+   .type = "instrument",
+   .voicing = SOUND::PLUGIN::POLY,
+   .surface = &surface});
 
 }  // namespace
 
-auto SOUND::SUBTRACTIVE::delta(Float span, Whole rate) -> Float {
+auto SOUND::PLUGINS::SUBTRACTIVE::delta(Float span, Whole rate) -> Float {
   const Float frames = span * Float(rate);
   return frames <= 1.0f ? 1.0f : 1.0f / frames;
 }
 
-void SOUND::SUBTRACTIVE::shape(Envelope &envelope, Whole rate) {
+void SOUND::PLUGINS::SUBTRACTIVE::shape(Envelope &envelope, Whole rate) {
   envelope.rise = delta(envelope.attack, rate);
   envelope.fall = delta(envelope.decay, rate) * (1.0f - envelope.sustain);
   envelope.drop = delta(envelope.release, rate);

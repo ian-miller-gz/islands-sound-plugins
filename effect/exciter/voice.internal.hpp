@@ -5,7 +5,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::EXCITER {
+namespace SOUND::PLUGINS::EXCITER {
 
 constexpr Float UNITY = 1.0f;
 constexpr Float DECIBELS = 20.0f;
@@ -36,4 +36,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::EXCITER
+}  // namespace SOUND::PLUGINS::EXCITER

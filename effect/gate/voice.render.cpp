@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto keyed(
   GATE::Effect &effect, AUDIO::PLUGIN::Sample *const *lanes,
@@ -31,7 +31,7 @@ void play(
 
 }  // namespace
 
-void SOUND::GATE::render(
+void SOUND::PLUGINS::GATE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-void SOUND::CHORUS::settle(Effect &effect) {
+void SOUND::PLUGINS::CHORUS::settle(Effect &effect) {
   effect.voices = FEWEST + Whole(effect.rows[VOICES]);
   effect.dry = UNITY - effect.rows[MIX];
   effect.wet = effect.rows[MIX] / Float(effect.voices);
@@ -16,7 +16,7 @@ void SOUND::CHORUS::settle(Effect &effect) {
     }
 }
 
-void SOUND::CHORUS::place(Effect &effect) {
+void SOUND::PLUGINS::CHORUS::place(Effect &effect) {
   const Float gap = UNITY / Float(effect.voices);
   const Float offset = effect.rows[SPREAD] * gap / Float(effect.channels);
   for (Whole channel = 0; channel < effect.channels; ++channel)

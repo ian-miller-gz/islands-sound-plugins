@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float FULL = 1.0f;
 constexpr Float OPEN = 0.6f;
@@ -40,7 +40,7 @@ void envelope(CHOIR::Choir &choir) {
 
 }  // namespace
 
-void SOUND::CHOIR::settle(Choir &choir) {
+void SOUND::PLUGINS::CHOIR::settle(Choir &choir) {
   const Float *rows = choir.rows;
   choir.gain = rows[GAIN];
   choir.scatter = rows[SCATTER] * Float(choir.rate);

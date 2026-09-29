@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto heard(
   const ROOM::Effect &effect, AUDIO::PLUGIN::Sample *const *lanes,
@@ -38,7 +38,7 @@ auto sound(ROOM::Effect &effect, Float in) -> CORE::REVERB::Stereo {
 
 }  // namespace
 
-void SOUND::ROOM::render(
+void SOUND::PLUGINS::ROOM::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

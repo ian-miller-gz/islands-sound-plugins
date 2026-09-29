@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Integer REACH = 6;
 constexpr Integer KEYS = Integer(TUNER::KEYS);
@@ -39,7 +39,7 @@ auto pitched(Float hertz) -> Float {
 
 }  // namespace
 
-void SOUND::TUNER::follow(Tuner &tuner, Float sample) {
+void SOUND::PLUGINS::TUNER::follow(Tuner &tuner, Float sample) {
   if (!CORE::PITCH::feed(tuner.detector, &sample, 1)) return;
   const CORE::PITCH::Estimate &estimate = tuner.detector.estimate;
   if (estimate.confidence < VOICED || estimate.hertz <= 0) {

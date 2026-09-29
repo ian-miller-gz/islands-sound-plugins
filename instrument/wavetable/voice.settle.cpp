@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 
@@ -40,7 +40,7 @@ void swing(WAVETABLE::Synth &synth) {
 
 }  // namespace
 
-void SOUND::WAVETABLE::settle(Synth &synth) {
+void SOUND::PLUGINS::WAVETABLE::settle(Synth &synth) {
   const Float *rows = synth.rows;
   synth.contour = ::contour(rows, ::CONTOUR, 0, synth.rate);
   synth.door = ::contour(rows, ::LOUDNESS, rows[VELOCITY], synth.rate);

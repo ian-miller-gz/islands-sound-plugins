@@ -4,7 +4,7 @@
 #include "pitch.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole NARROWEST = 2;
 constexpr Whole PAIR = 2;
@@ -20,7 +20,7 @@ void take(CORE::PITCH::Detector &detector, Float sample) {
 
 }  // namespace
 
-void SOUND::CORE::PITCH::build(
+void SOUND::PLUGINS::CORE::PITCH::build(
   Detector &detector, Whole rate, Float lowest, Float highest, Whole hop) {
   const Whole lags = ::lagged(rate, lowest);
   const Whole least = ::lagged(rate, highest);
@@ -38,7 +38,7 @@ void SOUND::CORE::PITCH::build(
   detector.estimate = {};
 }
 
-auto SOUND::CORE::PITCH::feed(
+auto SOUND::PLUGINS::CORE::PITCH::feed(
   Detector &detector, const Float *samples, Whole frames) -> Flag {
   if (detector.span == 0) return false;
   Flag refreshed = false;

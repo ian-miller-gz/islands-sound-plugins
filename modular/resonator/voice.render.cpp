@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void step(RESONATOR::Module &module) {
   const Float swing = CORE::MODULATOR::tick(module.lfo);
@@ -15,7 +15,7 @@ void step(RESONATOR::Module &module) {
 
 }  // namespace
 
-void SOUND::RESONATOR::render(
+void SOUND::PLUGINS::RESONATOR::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

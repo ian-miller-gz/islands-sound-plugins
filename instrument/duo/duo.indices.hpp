@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::DUO {
+namespace SOUND::PLUGINS::DUO {
 
 constexpr Whole TUNE = 0;
 constexpr Whole BEND = 1;
@@ -48,4 +48,4 @@ constexpr Whole REPEAT = 40;
 constexpr Whole VOLUME = 41;
 constexpr Whole PARAMETERS = 42;
 
-}  // namespace SOUND::DUO
+}  // namespace SOUND::PLUGINS::DUO

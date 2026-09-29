@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void open(CORE::DYNAMICS::Detector &gate, Whole rate) {
   gate.kind = CORE::DYNAMICS::PEAK;
@@ -15,7 +15,7 @@ void open(CORE::DYNAMICS::Detector &gate, Whole rate) {
 
 }  // namespace
 
-void SOUND::FUZZ::build(Effect &effect) {
+void SOUND::PLUGINS::FUZZ::build(Effect &effect) {
   effect.strips.resize(effect.channels);
   for (auto &strip : effect.strips) {
     ::open(strip.gate, effect.rate);
@@ -25,7 +25,7 @@ void SOUND::FUZZ::build(Effect &effect) {
   }
 }
 
-void SOUND::FUZZ::settle(Effect &effect) {
+void SOUND::PLUGINS::FUZZ::settle(Effect &effect) {
   effect.gain = GENTLEST * std::pow(HOTTEST / GENTLEST, effect.rows[FUZZ]);
   effect.bias = effect.rows[BIAS];
   effect.rest = CORE::SHAPER::fold(effect.bias);

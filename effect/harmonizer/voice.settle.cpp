@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float UNITY = 1.0f;
 constexpr Float HALF = 0.5f;
@@ -22,7 +22,7 @@ void struck(HARMONIZER::Harmonizer &harmonizer, CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::HARMONIZER::build(Harmonizer &harmonizer) {
+void SOUND::PLUGINS::HARMONIZER::build(Harmonizer &harmonizer) {
   CORE::PITCH::build(
     harmonizer.detector, harmonizer.rate, LOWEST, TOPMOST, HOP);
   harmonizer.allocator.count = VOICES;
@@ -34,7 +34,7 @@ void SOUND::HARMONIZER::build(Harmonizer &harmonizer) {
   }
 }
 
-void SOUND::HARMONIZER::settle(Harmonizer &harmonizer) {
+void SOUND::PLUGINS::HARMONIZER::settle(Harmonizer &harmonizer) {
   const Float *rows = harmonizer.rows;
   harmonizer.keep = rows[FORMANT] >= ::HALF;
   for (Whole at = 0; at < VOICES; ++at) {
@@ -45,7 +45,7 @@ void SOUND::HARMONIZER::settle(Harmonizer &harmonizer) {
   }
 }
 
-void SOUND::HARMONIZER::apply(
+void SOUND::PLUGINS::HARMONIZER::apply(
   Harmonizer &harmonizer, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     harmonizer.allocator, event,

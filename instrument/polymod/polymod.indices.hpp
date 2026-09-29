@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::POLYMOD {
+namespace SOUND::PLUGINS::POLYMOD {
 
 constexpr Whole TUNE = 0;
 constexpr Whole BEND = 1;
@@ -51,4 +51,4 @@ constexpr Whole HOLD = 43;
 constexpr Whole VOLUME = 44;
 constexpr Whole PARAMETERS = 45;
 
-}  // namespace SOUND::POLYMOD
+}  // namespace SOUND::PLUGINS::POLYMOD

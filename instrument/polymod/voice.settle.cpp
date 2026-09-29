@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 constexpr Float BLOCKED = 10;
@@ -44,7 +44,7 @@ void swing(POLYMOD::Synth &synth) {
 
 }  // namespace
 
-void SOUND::POLYMOD::settle(Synth &synth) {
+void SOUND::PLUGINS::POLYMOD::settle(Synth &synth) {
   const Float *rows = synth.rows;
   const Flag released = rows[RELEASE] > 0;
   synth.contour = ::contour(rows + ATTACK1, released, synth.rate);

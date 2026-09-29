@@ -4,7 +4,7 @@
 #include "filter.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float TWO = 2.0f;
@@ -74,7 +74,7 @@ static_assert(sizeof(DESIGNS) / sizeof(DESIGNS[0]) == FILTER::KINDS);
 
 }  // namespace
 
-void SOUND::CORE::FILTER::settle(
+void SOUND::PLUGINS::CORE::FILTER::settle(
   Biquad &biquad, Whole kind, Float cutoff, Float q, Float gain, Whole rate) {
   const Float omega = TURN * bounded(cutoff, rate) / Float(rate);
   const Float width = q < NARROWEST ? NARROWEST : q;
@@ -89,7 +89,7 @@ void SOUND::CORE::FILTER::settle(
   biquad.backs[1] = terms.backs[2] * scale;
 }
 
-auto SOUND::CORE::FILTER::tick(Biquad &biquad, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::FILTER::tick(Biquad &biquad, Float in) -> Float {
   const Float out = biquad.feeds[0] * in + biquad.states[0];
   biquad.states[0] =
     biquad.feeds[1] * in - biquad.backs[0] * out + biquad.states[1];

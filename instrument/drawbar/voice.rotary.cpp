@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float MILLISECOND = 0.001f;
 constexpr Float SPAN = 4;
@@ -51,7 +51,7 @@ auto spin(DRAWBAR::Rotor &rotor, const DRAWBAR::Organ &organ, Float in)
 
 }  // namespace
 
-void SOUND::DRAWBAR::build(Rotary &rotary, Whole rate) {
+void SOUND::PLUGINS::DRAWBAR::build(Rotary &rotary, Whole rate) {
   ::build(rotary.horn, ::HORN, rate);
   ::build(rotary.drum, ::DRUM, rate);
   CORE::FILTER::settle(
@@ -60,14 +60,14 @@ void SOUND::DRAWBAR::build(Rotary &rotary, Whole rate) {
     rotary.high, CORE::FILTER::HIGH, CROSSOVER, CORE::FILTER::FLAT, 0, rate);
 }
 
-void SOUND::DRAWBAR::settle(Rotary &rotary, Whole mode, Whole) {
+void SOUND::PLUGINS::DRAWBAR::settle(Rotary &rotary, Whole mode, Whole) {
   const Flag fast = mode > Whole(SLOW);
   rotary.spinning = mode != STOPPED;
   rotary.horn.target = fast ? ::HORN.fast : ::HORN.slow;
   rotary.drum.target = fast ? ::DRUM.fast : ::DRUM.slow;
 }
 
-auto SOUND::DRAWBAR::tick(Rotary &rotary, const Organ &organ, Float in)
+auto SOUND::PLUGINS::DRAWBAR::tick(Rotary &rotary, const Organ &organ, Float in)
   -> Pair {
   if (!rotary.spinning) return {in, in};
   const Pair horn =

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<BUS::Bus, BUS::SHEET>;
 
@@ -35,6 +35,6 @@ const AUDIO::PLUGIN::Plug surface = {
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
 [[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "bus", .surface = &surface});
+  SOUND::PLUGIN::offer({.name = "bus", .type = "effect", .surface = &surface});
 
 }  // namespace

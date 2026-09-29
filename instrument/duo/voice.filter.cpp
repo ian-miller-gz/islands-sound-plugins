@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float DRIVE = 1;
@@ -29,7 +29,7 @@ static_assert(std::size(PASSES) == std::size(DUO::SLOPES));
 
 }  // namespace
 
-auto SOUND::DUO::filter(
+auto SOUND::PLUGINS::DUO::filter(
   Synth &synth, Float in, Float key, Float lfo, Float random,
   Float contour) -> Float {
   const Float *rows = synth.rows;

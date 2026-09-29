@@ -4,7 +4,7 @@
 #include "../modulator/modulator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float TAU = 6.2831853f;
@@ -28,7 +28,7 @@ auto spike(PERCUSSION::Pad &pad) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::PERCUSSION::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Pad &pad, const Voicing &voicing, Whole rate) {
   const HYBRID::Bend bend = {
     .depth = voicing.bend * ::DEPTH,
@@ -46,14 +46,14 @@ void SOUND::CORE::PERCUSSION::settle(
   pad.width = Whole(::WIDTH * Float(rate));
 }
 
-void SOUND::CORE::PERCUSSION::strike(Pad &pad, Float velocity) {
+void SOUND::PLUGINS::CORE::PERCUSSION::strike(Pad &pad, Float velocity) {
   pad.velocity = struck(velocity);
   HYBRID::strike(pad.tone, pad.pace);
   ENVELOPE::strike(pad.gate, pad.decay, ONE);
   pad.left = pad.width;
 }
 
-auto SOUND::CORE::PERCUSSION::tick(Pad &pad) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Pad &pad) -> Float {
   if (!ENVELOPE::sounding(pad.gate)) return 0;
   const Float level = ENVELOPE::tick(pad.gate, pad.decay);
   const Float pole = pad.floor + (pad.top - pad.floor) * level;

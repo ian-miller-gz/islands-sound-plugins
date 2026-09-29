@@ -3,7 +3,7 @@
 #include "../line/line.hpp"
 #include "../phase/phase.hpp"
 
-namespace SOUND::CORE::PITCH {
+namespace SOUND::PLUGINS::CORE::PITCH {
 
 constexpr Float THRESHOLD = 0.15f;
 constexpr Whole POINTS = 1024;
@@ -58,4 +58,4 @@ void settle(
   Formant &formant, Float pitch, Float shift, Float seconds, Whole rate);
 auto tick(Formant &formant, Float in) -> Float;
 
-}  // namespace SOUND::CORE::PITCH
+}  // namespace SOUND::PLUGINS::CORE::PITCH

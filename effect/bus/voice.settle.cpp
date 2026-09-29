@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 using CORE::DYNAMICS::Detector;
 
 constexpr Float QUICK = 0.0005f;
@@ -19,7 +19,7 @@ constexpr Float HALF = 0.5f;
 
 }  // namespace
 
-void SOUND::BUS::build(Bus &bus) {
+void SOUND::PLUGINS::BUS::build(Bus &bus) {
   Detectors &detectors = bus.detectors;
   detectors.fast = Detector{.attack = ::QUICK, .release = ::LET};
   detectors.slow = Detector{.attack = ::SLOW, .release = ::LET};
@@ -32,7 +32,7 @@ void SOUND::BUS::build(Bus &bus) {
   bus.tapes.assign(bus.channels, {});
 }
 
-void SOUND::BUS::settle(Bus &bus) {
+void SOUND::PLUGINS::BUS::settle(Bus &bus) {
   bus.computer.threshold = bus.rows[THRESHOLD];
   bus.computer.ratio = bus.rows[RATIO];
   bus.computer.knee = ::KNEE;
@@ -45,7 +45,7 @@ void SOUND::BUS::settle(Bus &bus) {
   bus.trim = CORE::DYNAMICS::gain(bus.rows[OUTPUT] - bus.rows[TILT] * ::HALF);
 }
 
-void SOUND::BUS::apply(Bus &bus, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::BUS::apply(Bus &bus, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   bus.rows[event.index] = CORE::TABLE::clamped(SHEET, event.index, event.value);

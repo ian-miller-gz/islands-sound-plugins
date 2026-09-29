@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::SAMPLER {
+namespace SOUND::PLUGINS::SAMPLER {
 
 constexpr Whole VOICES = 8;
 
@@ -22,4 +22,4 @@ auto clamped(Whole index, Float value) -> Float;
 auto label(Whole index) -> String;
 auto notation(Whole index, Float value) -> String;
 
-}  // namespace SOUND::SAMPLER
+}  // namespace SOUND::PLUGINS::SAMPLER

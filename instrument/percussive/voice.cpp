@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float TAU = 6.2831853f;
 constexpr Float WHEEL = 4294967296.0f;
@@ -46,12 +46,15 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "percussive", .surface = &surface});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "percussive",
+   .type = "instrument",
+   .voicing = SOUND::PLUGIN::POLY,
+   .surface = &surface});
 
 }  // namespace
 
-auto SOUND::PERCUSSIVE::delta(Float span, Whole rate) -> Float {
+auto SOUND::PLUGINS::PERCUSSIVE::delta(Float span, Whole rate) -> Float {
   const Float frames = span * Float(rate);
   return frames <= 1.0f ? 1.0f : 1.0f / frames;
 }

@@ -6,7 +6,7 @@
 #include "../../core/pitch/pitch.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::HARMONIZER {
+namespace SOUND::PLUGINS::HARMONIZER {
 
 constexpr Float LOWEST = 70.0f;
 constexpr Float TOPMOST = 1000.0f;
@@ -52,4 +52,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::HARMONIZER
+}  // namespace SOUND::PLUGINS::HARMONIZER

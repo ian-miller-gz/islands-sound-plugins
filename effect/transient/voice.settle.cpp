@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void pace(
   CORE::DYNAMICS::Detector &detector, Float attack, Float release, Whole rate) {
@@ -14,9 +14,9 @@ void pace(
 
 }  // namespace
 
-void SOUND::TRANSIENT::build(Effect &effect) {
+void SOUND::PLUGINS::TRANSIENT::build(Effect &effect) {
   ::pace(effect.quick, QUICK::ATTACK, QUICK::RELEASE, effect.rate);
   ::pace(effect.slow, SLOW::ATTACK, SLOW::RELEASE, effect.rate);
 }
 
-void SOUND::TRANSIENT::settle(Effect &) {}
+void SOUND::PLUGINS::TRANSIENT::settle(Effect &) {}

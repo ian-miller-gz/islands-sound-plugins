@@ -2,7 +2,7 @@
 #include "noise.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Whole LEFT = 13;
 constexpr Whole RIGHT = 17;
@@ -26,27 +26,27 @@ constexpr Float BLUE = 1.7f;
 
 }  // namespace
 
-void SOUND::CORE::NOISE::seed(White &white, Register state) {
+void SOUND::PLUGINS::CORE::NOISE::seed(White &white, Register state) {
   white.state = state == 0 ? SEED : state;
 }
 
-void SOUND::CORE::NOISE::seed(Pink &pink, Register state) {
+void SOUND::PLUGINS::CORE::NOISE::seed(Pink &pink, Register state) {
   seed(pink.white, state);
 }
 
-void SOUND::CORE::NOISE::seed(Brown &brown, Register state) {
+void SOUND::PLUGINS::CORE::NOISE::seed(Brown &brown, Register state) {
   seed(brown.white, state);
 }
 
-void SOUND::CORE::NOISE::seed(Blue &blue, Register state) {
+void SOUND::PLUGINS::CORE::NOISE::seed(Blue &blue, Register state) {
   seed(blue.pink, state);
 }
 
-void SOUND::CORE::NOISE::seed(Burst &burst, Register state) {
+void SOUND::PLUGINS::CORE::NOISE::seed(Burst &burst, Register state) {
   seed(burst.white, state);
 }
 
-auto SOUND::CORE::NOISE::tick(White &white) -> Float {
+auto SOUND::PLUGINS::CORE::NOISE::tick(White &white) -> Float {
   Register state = white.state;
   state ^= state << ::LEFT;
   state ^= state >> ::RIGHT;
@@ -55,7 +55,7 @@ auto SOUND::CORE::NOISE::tick(White &white) -> Float {
   return Float(static_cast<std::int32_t>(state)) / PHASE::HALF;
 }
 
-auto SOUND::CORE::NOISE::tick(Pink &pink) -> Float {
+auto SOUND::PLUGINS::CORE::NOISE::tick(Pink &pink) -> Float {
   const Float white = tick(pink.white);
   Float sum = pink.last + white * ::DIRECT;
   for (Whole pole = 0; pole < POLES; ++pole) {
@@ -66,12 +66,12 @@ auto SOUND::CORE::NOISE::tick(Pink &pink) -> Float {
   return sum * ::PINK;
 }
 
-auto SOUND::CORE::NOISE::tick(Brown &brown) -> Float {
+auto SOUND::PLUGINS::CORE::NOISE::tick(Brown &brown) -> Float {
   brown.level = (brown.level + ::STEP * tick(brown.white)) / ::LEAK;
   return brown.level * ::BROWN;
 }
 
-auto SOUND::CORE::NOISE::tick(Blue &blue) -> Float {
+auto SOUND::PLUGINS::CORE::NOISE::tick(Blue &blue) -> Float {
   const Float pink = tick(blue.pink);
   const Float value = (pink - blue.last) * ::BLUE;
   blue.last = pink;

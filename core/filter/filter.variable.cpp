@@ -2,7 +2,7 @@
 #include "filter.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float TWO = 2.0f;
@@ -22,7 +22,7 @@ constexpr Whole MODES = sizeof(MIXES) / sizeof(MIXES[0]);
 
 }  // namespace
 
-void SOUND::CORE::FILTER::settle(
+void SOUND::PLUGINS::CORE::FILTER::settle(
   Variable &variable, Whole kind, Float cutoff, Float emphasis, Whole rate) {
   const Float g = warped(cutoff, rate);
   const Float k = SMOOTH - bounded(emphasis) * (SMOOTH - RINGING);
@@ -36,7 +36,7 @@ void SOUND::CORE::FILTER::settle(
   variable.mix[2] = mix.low;
 }
 
-auto SOUND::CORE::FILTER::split(Variable &variable, Float in) -> Taps {
+auto SOUND::PLUGINS::CORE::FILTER::split(Variable &variable, Float in) -> Taps {
   const Float *weights = variable.weights;
   Float *states = variable.states;
   const Float lead = in - states[1];
@@ -48,7 +48,7 @@ auto SOUND::CORE::FILTER::split(Variable &variable, Float in) -> Taps {
   return {low, band, high, low + high};
 }
 
-auto SOUND::CORE::FILTER::tick(Variable &variable, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::FILTER::tick(Variable &variable, Float in) -> Float {
   const Taps taps = split(variable, in);
   const Float *mix = variable.mix;
   return mix[0] * in + mix[1] * taps.band + mix[2] * taps.low;

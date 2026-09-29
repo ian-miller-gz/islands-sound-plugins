@@ -4,7 +4,7 @@
 #include "modulator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float TAU = 6.2831853f;
 constexpr Float DOUBLE = 2.0f;
@@ -42,13 +42,13 @@ auto placed(Float start) -> PHASE::Wheel {
 
 }  // namespace
 
-void SOUND::CORE::MODULATOR::reset(Lfo &lfo) {
+void SOUND::PLUGINS::CORE::MODULATOR::reset(Lfo &lfo) {
   lfo.phase = ::placed(lfo.start);
   lfo.faded = 0;
   lfo.held = draw(lfo.seed);
 }
 
-auto SOUND::CORE::MODULATOR::tick(Lfo &lfo) -> Float {
+auto SOUND::PLUGINS::CORE::MODULATOR::tick(Lfo &lfo) -> Float {
   lfo.faded += lfo.rise;
   if (lfo.faded > FULL) lfo.faded = FULL;
   lfo.value += (lfo.held - lfo.value) * lfo.glide;

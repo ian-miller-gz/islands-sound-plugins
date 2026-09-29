@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
@@ -56,8 +56,8 @@ auto gain(Float pan) -> Float { return pan > 0 ? FULL - pan : FULL; }
 
 }  // namespace
 
-auto SOUND::MULTIMODE::sweep(Synth &synth, Voice &voice, Float in, Float cutoff)
-  -> Float {
+auto SOUND::PLUGINS::MULTIMODE::sweep(
+  Synth &synth, Voice &voice, Float in, Float cutoff) -> Float {
   const Float *rows = synth.rows;
   CORE::FILTER::settle(
     voice.variable, CORE::FILTER::LOW, cutoff, rows[RESONANCE] * PEAK,
@@ -67,7 +67,7 @@ auto SOUND::MULTIMODE::sweep(Synth &synth, Voice &voice, Float in, Float cutoff)
   return taps.low + (taps.high - taps.low) * rows[MODE];
 }
 
-auto SOUND::MULTIMODE::sound(Synth &synth) -> Pair {
+auto SOUND::PLUGINS::MULTIMODE::sound(Synth &synth) -> Pair {
   const Float lfo = CORE::MODULATOR::tick(synth.lfo);
   const Float spread = synth.rows[SPREAD];
   Pair pair;

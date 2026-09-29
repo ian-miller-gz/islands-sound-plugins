@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 using AUDIO::PLUGIN::Event;
 
 void kept(POLYMOD::Synth &, Whole) {}
@@ -60,7 +60,8 @@ void release(POLYMOD::Synth &synth) {
 
 }  // namespace
 
-void SOUND::POLYMOD::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::POLYMOD::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   if (::deferred(synth, event)) return;
   const Whole row = ::route(synth, event);
   if (row >= PARAMETERS) return;

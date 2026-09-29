@@ -2,7 +2,7 @@
 #include "transpose.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto placed(const TRANSPOSE::Shift &shift, Whole pitch) -> Whole {
   const Integer moved =
@@ -70,22 +70,11 @@ auto answer(
   return written;
 }
 
-auto create(Whole rate, Whole channels) -> void * {
-  if (rate == 0 || channels == 0) return nullptr;
-  auto *shift = new TRANSPOSE::Shift{};
-  shift->sounding.assign(TRANSPOSE::HIGHEST + 1, TRANSPOSE::SILENT);
-  return shift;
-}
-
-void destroy(void *instance) {
-  delete static_cast<TRANSPOSE::Shift *>(instance);
-}
-
 const AUDIO::PLUGIN::Plug surface = {
-  .create = create,
+  .create = TRANSPOSE::create,
   .render = nullptr,
   .meter = nullptr,
-  .destroy = destroy,
+  .destroy = TRANSPOSE::destroy,
   .parameters = TRANSPOSE::SURFACE::parameters,
   .name = TRANSPOSE::SURFACE::name,
   .reading = TRANSPOSE::SURFACE::reading,
@@ -94,7 +83,10 @@ const AUDIO::PLUGIN::Plug surface = {
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::NOTES}}};
 
-[[maybe_unused]] const Flag offered =
-  PLUGIN::offer({.name = "transpose", .surface = &surface, .answer = answer});
+[[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
+  {.name = "transpose",
+   .type = "notes",
+   .surface = &surface,
+   .answer = answer});
 
 }  // namespace

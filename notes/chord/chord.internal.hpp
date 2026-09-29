@@ -3,7 +3,7 @@
 #include "chord.hpp"
 #include "../../core/notes/notes.hpp"
 
-namespace SOUND::CHORD {
+namespace SOUND::PLUGINS::CHORD {
 
 struct Chord {
   Float rows[PARAMETERS] = {};
@@ -19,4 +19,4 @@ auto answer(
   void *instance, const AUDIO::PLUGIN::Event *events, Whole count,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole;
 
-}  // namespace SOUND::CHORD
+}  // namespace SOUND::PLUGINS::CHORD

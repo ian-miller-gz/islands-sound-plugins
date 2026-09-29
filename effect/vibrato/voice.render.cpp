@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto bent(VIBRATO::Channel &strip, Float in, Float wave) -> Float {
   const Float out = CORE::LINE::read(strip.line, strip.sweep, wave);
@@ -12,7 +12,7 @@ auto bent(VIBRATO::Channel &strip, Float in, Float wave) -> Float {
 
 }  // namespace
 
-void SOUND::VIBRATO::render(
+void SOUND::PLUGINS::VIBRATO::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

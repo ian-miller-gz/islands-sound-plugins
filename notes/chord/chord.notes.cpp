@@ -2,7 +2,7 @@
 #include "chord.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void lift(CHORD::Chord &chord, Whole key, Whole offset, CORE::NOTES::Out &out) {
   for (Whole &pitch : chord.voicings[key]) {
@@ -31,7 +31,7 @@ void turn(CHORD::Chord &chord, const AUDIO::PLUGIN::Event &event) {
 
 }  // namespace
 
-void SOUND::CHORD::apply(
+void SOUND::PLUGINS::CHORD::apply(
   Chord &chord, const AUDIO::PLUGIN::Event &event, CORE::NOTES::Out &out) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER)
     return ::turn(chord, event);

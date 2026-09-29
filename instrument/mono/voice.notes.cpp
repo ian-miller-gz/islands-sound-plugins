@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void kept(MONO::Synth &, const CORE::VOICE::Note &) {}
 
@@ -27,11 +27,12 @@ void visit(MONO::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::MONO::strike(Contour &contour, Float velocity) {
+void SOUND::PLUGINS::MONO::strike(Contour &contour, Float velocity) {
   CORE::ENVELOPE::strike(contour.gate, contour.envelope, velocity);
 }
 
-void SOUND::MONO::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::MONO::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

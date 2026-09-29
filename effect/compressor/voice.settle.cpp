@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float WHOLE = 1.0f;
 constexpr Float SECOND = 1000.0f;
@@ -24,7 +24,7 @@ auto level(const COMPRESSOR::Press &press, Float decibels) -> Float {
 
 }  // namespace
 
-void SOUND::COMPRESSOR::bake(Press &press) {
+void SOUND::PLUGINS::COMPRESSOR::bake(Press &press) {
   press.levels.assign(DECIBELS + 1, 0);
   const Whole unity = Whole(FULL - QUIETEST);
   press.levels[unity] = WHOLE;
@@ -34,7 +34,7 @@ void SOUND::COMPRESSOR::bake(Press &press) {
     press.levels[place + 1] = press.levels[place] * DECIBEL;
 }
 
-void SOUND::COMPRESSOR::settle(Press &press) {
+void SOUND::PLUGINS::COMPRESSOR::settle(Press &press) {
   press.threshold = ::level(press, press.rows[THRESHOLD]);
   press.makeup = ::level(press, press.rows[MAKEUP]);
   press.rising = ::stepped(press.rate, press.rows[ATTACK]);

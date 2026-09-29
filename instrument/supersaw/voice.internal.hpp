@@ -8,7 +8,7 @@
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::SUPERSAW {
+namespace SOUND::PLUGINS::SUPERSAW {
 
 constexpr Whole VOICES = 8;
 constexpr Whole CONTROL = 16;
@@ -54,4 +54,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::SUPERSAW
+}  // namespace SOUND::PLUGINS::SUPERSAW

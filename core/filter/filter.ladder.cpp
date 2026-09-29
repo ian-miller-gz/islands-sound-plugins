@@ -2,14 +2,14 @@
 #include "filter.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float FEEDBACK = 4.2f;
 
 }  // namespace
 
-void SOUND::CORE::FILTER::settle(
+void SOUND::PLUGINS::CORE::FILTER::settle(
   Ladder &ladder, Float cutoff, Float emphasis, Float drive, Whole rate) {
   for (Pole &pole : ladder.poles) settle(pole, LOW, cutoff, rate);
   const Float gain = ladder.poles[0].gain;
@@ -24,7 +24,7 @@ void SOUND::CORE::FILTER::settle(
   ladder.drive = drive;
 }
 
-auto SOUND::CORE::FILTER::tick(Ladder &ladder, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::FILTER::tick(Ladder &ladder, Float in) -> Float {
   Float sum = 0;
   for (Whole at = 0; at < POLES; ++at)
     sum += ladder.weights[at] * ladder.poles[at].state;

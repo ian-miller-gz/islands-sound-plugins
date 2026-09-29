@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 using CORE::PERCUSSION::strike;
 
 constexpr Whole WHOLE = 0;
@@ -18,13 +18,13 @@ constexpr Pad PADS[] = {
   {36, RHYTHM::KICK, WHOLE},
   {38, RHYTHM::SNARE, WHOLE},
   {40, RHYTHM::SNARE, WHOLE},
-  {42, RHYTHM::HAT, CORE::PERCUSSION::CLOSED},
-  {44, RHYTHM::HAT, CORE::PERCUSSION::CLOSED},
-  {46, RHYTHM::HAT, CORE::PERCUSSION::OPEN},
-  {49, RHYTHM::CYMBAL, CORE::PERCUSSION::CRASH},
-  {51, RHYTHM::CYMBAL, CORE::PERCUSSION::RIDE},
-  {57, RHYTHM::CYMBAL, CORE::PERCUSSION::CRASH},
-  {59, RHYTHM::CYMBAL, CORE::PERCUSSION::RIDE}};
+  {42, RHYTHM::HAT, CORE::PERCUSSION::OPENING::CLOSED},
+  {44, RHYTHM::HAT, CORE::PERCUSSION::OPENING::CLOSED},
+  {46, RHYTHM::HAT, CORE::PERCUSSION::OPENING::OPEN},
+  {49, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::CRASH},
+  {51, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::RIDE},
+  {57, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::CRASH},
+  {59, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::RIDE}};
 
 using Strike = void (*)(RHYTHM::Box &box, Whole part, Float velocity);
 
@@ -52,11 +52,13 @@ void run(RHYTHM::Box &box) {
 
 }  // namespace
 
-void SOUND::RHYTHM::strike(Box &box, Whole voice, Whole part, Float velocity) {
+void SOUND::PLUGINS::RHYTHM::strike(
+  Box &box, Whole voice, Whole part, Float velocity) {
   if (voice < VOICES) ::STRIKES[voice](box, part, velocity);
 }
 
-void SOUND::RHYTHM::apply(Box &box, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::RHYTHM::apply(
+  Box &box, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     if (event.index >= PARAMETERS) return;
     box.rows[event.index] =

@@ -2,22 +2,23 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto opening(Whole pitch) -> Whole {
-  return pitch == HAT::PITCH::OPEN ? CORE::PERCUSSION::OPEN
-                                   : CORE::PERCUSSION::CLOSED;
+  return pitch == HAT::PITCH::OPEN ? CORE::PERCUSSION::OPENING::OPEN
+                                   : CORE::PERCUSSION::OPENING::CLOSED;
 }
 
 }  // namespace
 
-void SOUND::HAT::settle(Voice &voice) {
+void SOUND::PLUGINS::HAT::settle(Voice &voice) {
   CORE::PERCUSSION::settle(
     voice.hat, voice.rows[TUNE], voice.rows[CLOSED], voice.rows[OPEN],
     voice.rows[TONE], voice.rate);
 }
 
-void SOUND::HAT::apply(Voice &voice, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::HAT::apply(
+  Voice &voice, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     if (event.index >= PARAMETERS) return;
     voice.rows[event.index] =

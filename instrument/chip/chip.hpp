@@ -6,7 +6,7 @@
 #include "../../core/table/table.hpp"
 #include "chip.indices.hpp"
 
-namespace SOUND::CHIP {
+namespace SOUND::PLUGINS::CHIP {
 
 constexpr Float LOUDEST = 15;
 constexpr Whole LOUDNESSES = 15;
@@ -56,4 +56,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::CHIP
+}  // namespace SOUND::PLUGINS::CHIP

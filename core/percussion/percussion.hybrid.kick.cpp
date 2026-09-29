@@ -2,7 +2,7 @@
 #include "percussion.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr PERCUSSION::HYBRID::Bend DROP = {
   .depth = 5.0f, .fast = 0.004f, .knee = 0.8f, .slow = 0.07f};
@@ -20,7 +20,7 @@ auto spike(PERCUSSION::HYBRID::Kick &kick) -> Float {
 
 }  // namespace
 
-void SOUND::CORE::PERCUSSION::HYBRID::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::settle(
   Kick &kick, Float tune, Float decay, Float attack, Whole rate) {
   settle(kick.body, DROP, rate);
   kick.pace = pace(tune, rate);
@@ -31,7 +31,8 @@ void SOUND::CORE::PERCUSSION::HYBRID::settle(
   kick.attack = attack;
 }
 
-void SOUND::CORE::PERCUSSION::HYBRID::strike(Kick &kick, Float velocity) {
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(
+  Kick &kick, Float velocity) {
   kick.velocity = struck(velocity);
   strike(kick.body, kick.pace);
   ENVELOPE::strike(kick.gate, kick.decay, kick.velocity);
@@ -39,7 +40,7 @@ void SOUND::CORE::PERCUSSION::HYBRID::strike(Kick &kick, Float velocity) {
   kick.left = kick.width;
 }
 
-auto SOUND::CORE::PERCUSSION::HYBRID::tick(Kick &kick) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::tick(Kick &kick) -> Float {
   if (!ENVELOPE::sounding(kick.gate)) return 0;
   const Float body = tick(kick.body) * ENVELOPE::tick(kick.gate, kick.decay);
   const Float snap = ENVELOPE::tick(kick.click, kick.snap);

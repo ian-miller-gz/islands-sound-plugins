@@ -6,7 +6,7 @@
 
 #include "additive.hpp"
 
-namespace SOUND::ADDITIVE {
+namespace SOUND::PLUGINS::ADDITIVE {
 
 constexpr Whole TABLE = 4096;
 constexpr Whole TURN = 20;
@@ -54,12 +54,12 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::ADDITIVE
+}  // namespace SOUND::PLUGINS::ADDITIVE
 
-namespace SOUND::ADDITIVE::SURFACE {
+namespace SOUND::PLUGINS::ADDITIVE::SURFACE {
 auto parameters(void *instance) -> Whole;
 auto name(void *instance, Whole index) -> String;
 auto reading(void *instance, Whole index) -> String;
 auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::ADDITIVE::SURFACE
+}  // namespace SOUND::PLUGINS::ADDITIVE::SURFACE

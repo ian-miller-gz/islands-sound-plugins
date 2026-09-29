@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Change = void (*)(CHOIR::Choir &, CORE::VOICE::Note &, CHOIR::Part &);
 
@@ -36,7 +36,8 @@ void voice(CHOIR::Choir &choir, CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::CHOIR::apply(Choir &choir, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::CHOIR::apply(
+  Choir &choir, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     choir.allocator, event,
     [&choir](CORE::VOICE::Note &note) { ::voice(choir, note); });

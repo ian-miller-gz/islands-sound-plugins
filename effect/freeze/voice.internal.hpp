@@ -5,7 +5,7 @@
 #include "../../core/cloud/cloud.hpp"
 #include "../../core/modulator/modulator.hpp"
 
-namespace SOUND::FREEZE {
+namespace SOUND::PLUGINS::FREEZE {
 
 constexpr Whole GRAINS = 4;
 constexpr Float OVERLAP = 2.0f;
@@ -47,4 +47,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::FREEZE
+}  // namespace SOUND::PLUGINS::FREEZE

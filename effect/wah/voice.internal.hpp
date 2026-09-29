@@ -5,7 +5,7 @@
 #include "../../core/dynamics/dynamics.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::WAH {
+namespace SOUND::PLUGINS::WAH {
 
 constexpr Float HEEL = 350;
 constexpr Float MILLI = 0.001f;
@@ -34,4 +34,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::WAH
+}  // namespace SOUND::PLUGINS::WAH

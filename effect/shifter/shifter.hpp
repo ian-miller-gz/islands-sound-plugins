@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::SHIFTER {
+namespace SOUND::PLUGINS::SHIFTER {
 
 constexpr Whole SHIFT = 0;
 constexpr Whole FINE = 1;
@@ -23,4 +23,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::SHIFTER
+}  // namespace SOUND::PLUGINS::SHIFTER

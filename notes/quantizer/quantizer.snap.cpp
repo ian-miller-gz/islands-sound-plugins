@@ -2,7 +2,7 @@
 #include "quantizer.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole REACH = QUANTIZER::DEGREES / 2;
 
@@ -21,7 +21,7 @@ auto member(const Flag *members, Whole root, Integer pitch) -> Flag {
 
 }  // namespace
 
-auto SOUND::QUANTIZER::snapped(const Quantizer &quantizer, Whole pitch)
+auto SOUND::PLUGINS::QUANTIZER::snapped(const Quantizer &quantizer, Whole pitch)
   -> Whole {
   const Flag *members = MEMBERS[::chosen(quantizer, SCALE, SCALES)];
   const Whole root = ::chosen(quantizer, ROOT, DEGREES);

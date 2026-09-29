@@ -6,7 +6,7 @@
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::VOWEL {
+namespace SOUND::PLUGINS::VOWEL {
 
 constexpr Whole VOICES = 8;
 constexpr Float SPAN = 400.0f;
@@ -42,4 +42,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::VOWEL
+}  // namespace SOUND::PLUGINS::VOWEL

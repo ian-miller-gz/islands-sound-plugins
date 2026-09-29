@@ -2,7 +2,7 @@
 #pragma once
 #include "../phase/phase.hpp"
 
-namespace SOUND::CORE::MODULATOR {
+namespace SOUND::PLUGINS::CORE::MODULATOR {
 
 enum Wave : Whole { SINE, TRIANGLE, SAW, SQUARE, SAMPLE, RANDOM, WAVES };
 
@@ -59,4 +59,4 @@ void settle(Smoother &smoother, Whole rate);
 void jump(Smoother &smoother, Float value);
 auto tick(Smoother &smoother, Float target) -> Float;
 
-}  // namespace SOUND::CORE::MODULATOR
+}  // namespace SOUND::PLUGINS::CORE::MODULATOR

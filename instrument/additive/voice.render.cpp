@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void denormals() { _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON); }
 
@@ -57,7 +57,7 @@ void publish(ADDITIVE::Synth &synth, Float peak) {
 
 }  // namespace
 
-void SOUND::ADDITIVE::render(
+void SOUND::PLUGINS::ADDITIVE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   ::denormals();

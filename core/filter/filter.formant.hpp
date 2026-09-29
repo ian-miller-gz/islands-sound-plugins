@@ -2,7 +2,7 @@
 #pragma once
 #include "filter.linear.hpp"
 
-namespace SOUND::CORE::FILTER {
+namespace SOUND::PLUGINS::CORE::FILTER {
 
 enum Vowel : Whole { A, E, I, O, U, VOWELS };
 
@@ -16,4 +16,4 @@ struct Formant {
 void settle(Formant &formant, Float vowel, Float shift, Whole rate);
 auto tick(Formant &formant, Float in) -> Float;
 
-}  // namespace SOUND::CORE::FILTER
+}  // namespace SOUND::PLUGINS::CORE::FILTER

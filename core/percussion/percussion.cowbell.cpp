@@ -2,7 +2,7 @@
 #include "percussion.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float SEMITONE = 100.0f;
 constexpr Whole PAIR = 4;
@@ -17,7 +17,7 @@ constexpr Float GAIN = 3.0f;
 
 }  // namespace
 
-void SOUND::CORE::PERCUSSION::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Cowbell &cowbell, Float tune, Float decay, Whole rate) {
   const Float ratio = PHASE::ratio(tune * SEMITONE);
   settle(cowbell.metal, METALLIC + PAIR, BELLS, ratio, rate);
@@ -26,13 +26,14 @@ void SOUND::CORE::PERCUSSION::settle(
   shape(cowbell.tail, decay, rate);
 }
 
-void SOUND::CORE::PERCUSSION::strike(Cowbell &cowbell, Float velocity) {
+void SOUND::PLUGINS::CORE::PERCUSSION::strike(
+  Cowbell &cowbell, Float velocity) {
   cowbell.velocity = struck(velocity);
   ENVELOPE::strike(cowbell.hit, cowbell.clank, cowbell.velocity);
   ENVELOPE::strike(cowbell.ring, cowbell.tail, cowbell.velocity);
 }
 
-auto SOUND::CORE::PERCUSSION::tick(Cowbell &cowbell) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Cowbell &cowbell) -> Float {
   if (!ENVELOPE::sounding(cowbell.ring)) return 0;
   const Float tone = FILTER::tick(cowbell.band, tick(cowbell.metal));
   const Float sharp = ENVELOPE::tick(cowbell.hit, cowbell.clank) * SHARP;

@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::LINE {
+namespace SOUND::PLUGINS::CORE::LINE {
 
 constexpr Whole GUARD = 4;
 constexpr Float NEAREST = 1.0f;
@@ -57,4 +57,4 @@ auto tick(Line &line, Loop &loop, Float in, Float delay) -> Float;
 auto tick(Line &line, Loop &loop, Float in, Sweep &sweep, Float modulation)
   -> Float;
 
-}  // namespace SOUND::CORE::LINE
+}  // namespace SOUND::PLUGINS::CORE::LINE

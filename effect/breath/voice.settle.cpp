@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float UNITY = 1.0f;
 
@@ -15,7 +15,7 @@ void sense(CORE::DYNAMICS::Detector &detector, Whole rate) {
 
 }  // namespace
 
-void SOUND::BREATH::build(Breath &breath) {
+void SOUND::PLUGINS::BREATH::build(Breath &breath) {
   breath.filters.resize(breath.channels);
   breath.bands.assign(breath.channels, 0);
   ::sense(breath.whole, breath.rate);
@@ -24,7 +24,7 @@ void SOUND::BREATH::build(Breath &breath) {
   breath.gate.level = ::UNITY;
 }
 
-void SOUND::BREATH::settle(Breath &breath) {
+void SOUND::PLUGINS::BREATH::settle(Breath &breath) {
   for (CORE::FILTER::Biquad &filter : breath.filters)
     CORE::FILTER::settle(
       filter, CORE::FILTER::HIGH, breath.rows[FREQUENCY], CORE::FILTER::FLAT, 0,
@@ -36,7 +36,8 @@ void SOUND::BREATH::settle(Breath &breath) {
   breath.floor = CORE::DYNAMICS::gain(-breath.rows[REDUCTION]);
 }
 
-void SOUND::BREATH::apply(Breath &breath, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::BREATH::apply(
+  Breath &breath, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
   if (event.index >= PARAMETERS) return;
   breath.rows[event.index] =
@@ -44,7 +45,8 @@ void SOUND::BREATH::apply(Breath &breath, const AUDIO::PLUGIN::Event &event) {
   settle(breath);
 }
 
-auto SOUND::BREATH::gated(Breath &breath, Float in, Float high) -> Float {
+auto SOUND::PLUGINS::BREATH::gated(Breath &breath, Float in, Float high)
+  -> Float {
   const Float whole = CORE::DYNAMICS::tick(breath.whole, in);
   const Float band = CORE::DYNAMICS::tick(breath.band, high);
   const Flag noisy = band >= whole * LIKENESS;

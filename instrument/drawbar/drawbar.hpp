@@ -6,7 +6,7 @@
 #include "../../core/table/table.hpp"
 #include "drawbar.indices.hpp"
 
-namespace SOUND::DRAWBAR {
+namespace SOUND::PLUGINS::DRAWBAR {
 
 constexpr Float PULLED = 8;
 constexpr Whole DEGREE = 8;
@@ -54,4 +54,4 @@ static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::DRAWBAR
+}  // namespace SOUND::PLUGINS::DRAWBAR

@@ -8,7 +8,7 @@
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::WAVETABLE {
+namespace SOUND::PLUGINS::WAVETABLE {
 
 constexpr Whole VOICES = 8;
 constexpr Whole SOURCES = 2;
@@ -57,9 +57,9 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::WAVETABLE
+}  // namespace SOUND::PLUGINS::WAVETABLE
 
-namespace SOUND::WAVETABLE::SPECTRUM {
+namespace SOUND::PLUGINS::WAVETABLE::SPECTRUM {
 auto sine(Float place, Float harmonic) -> Float;
 auto harmonic(Float place, Float harmonic) -> Float;
 auto saw(Float place, Float harmonic) -> Float;
@@ -76,4 +76,4 @@ auto sync(Float place, Float harmonic) -> Float;
 auto prime(Float place, Float harmonic) -> Float;
 auto scatter(Float place, Float harmonic) -> Float;
 auto resonant(Float place, Float harmonic) -> Float;
-}  // namespace SOUND::WAVETABLE::SPECTRUM
+}  // namespace SOUND::PLUGINS::WAVETABLE::SPECTRUM

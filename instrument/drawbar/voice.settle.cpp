@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float ONSET = 0.001f;
 constexpr Float FAST = 0.2f;
@@ -28,7 +28,7 @@ auto accent(const Float *rows) -> Float {
 
 }  // namespace
 
-void SOUND::DRAWBAR::settle(Organ &organ) {
+void SOUND::PLUGINS::DRAWBAR::settle(Organ &organ) {
   const Float *rows = organ.rows;
   organ.percussion = ::percussion(rows, organ.rate);
   organ.accent = ::accent(rows);

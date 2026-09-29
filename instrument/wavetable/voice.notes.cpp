@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void kept(WAVETABLE::Synth &, Whole) {}
 
@@ -32,7 +32,8 @@ void visit(WAVETABLE::Synth &synth, const CORE::VOICE::Note &note) {
 
 }  // namespace
 
-void SOUND::WAVETABLE::apply(Synth &synth, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::WAVETABLE::apply(
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   const Whole row = CORE::VOICE::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });

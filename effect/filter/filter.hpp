@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::FILTER {
+namespace SOUND::PLUGINS::FILTER {
 
 constexpr Whole RATE = 48000;
 
@@ -29,4 +29,4 @@ auto clamped(Whole index, Float value) -> Float;
 auto label(Whole index) -> String;
 auto notation(Whole index, Float value) -> String;
 
-}  // namespace SOUND::FILTER
+}  // namespace SOUND::PLUGINS::FILTER

@@ -8,7 +8,7 @@
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
-namespace SOUND::PLUCK {
+namespace SOUND::PLUGINS::PLUCK {
 
 constexpr Whole VOICES = 16;
 constexpr Whole BODIES = 2;
@@ -53,4 +53,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::PLUCK
+}  // namespace SOUND::PLUGINS::PLUCK

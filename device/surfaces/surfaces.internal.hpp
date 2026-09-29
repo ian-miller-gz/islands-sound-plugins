@@ -6,7 +6,7 @@
 
 #include "surfaces.hpp"
 
-namespace SOUND::SURFACES {
+namespace SOUND::PLUGINS::SURFACES {
 
 constexpr Float PEAK = 127.0f;
 constexpr Float FULL = 32768.0f;
@@ -46,4 +46,4 @@ auto hear(void *instance, const String &device, Whole lane) -> Flag;
 auto sound(void *instance, const String &device, Whole lane) -> Flag;
 auto speak(void *instance, const String &device, Whole lane) -> Flag;
 
-}  // namespace SOUND::SURFACES
+}  // namespace SOUND::PLUGINS::SURFACES

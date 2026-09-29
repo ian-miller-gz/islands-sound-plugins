@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto delay(ECHO::Effect &effect) -> Float {
   const Float wobble = CORE::MODULATOR::tick(effect.wow);
@@ -24,7 +24,7 @@ void play(
 
 }  // namespace
 
-void SOUND::ECHO::render(
+void SOUND::PLUGINS::ECHO::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

@@ -2,7 +2,7 @@
 #include "arpeggiator.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto beats(const ARPEGGIATOR::Arpeggio &arpeggio) -> Float {
   const Whole division = Whole(arpeggio.rows[ARPEGGIATOR::DIVISION]);
@@ -40,13 +40,13 @@ void turn(ARPEGGIATOR::Arpeggio &arpeggio, const AUDIO::PLUGIN::Event &event) {
 
 }  // namespace
 
-void SOUND::ARPEGGIATOR::settle(Arpeggio &arpeggio) {
+void SOUND::PLUGINS::ARPEGGIATOR::settle(Arpeggio &arpeggio) {
   CORE::CLOCK::settle(
     arpeggio.clock, arpeggio.rows[TEMPO], ::beats(arpeggio), STRAIGHT,
     arpeggio.rate);
 }
 
-void SOUND::ARPEGGIATOR::apply(
+void SOUND::PLUGINS::ARPEGGIATOR::apply(
   Arpeggio &arpeggio, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER)
     return ::turn(arpeggio, event);

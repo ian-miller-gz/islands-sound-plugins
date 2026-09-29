@@ -2,7 +2,7 @@
 #include "oscillator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float CURVE[] = {
   10028.7312891634f,   -50818.8652045924f, 111363.4808729368f,
@@ -34,19 +34,19 @@ auto unit(Float value) -> Float {
 
 }  // namespace
 
-auto SOUND::CORE::OSCILLATOR::spread(Float detune) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::spread(Float detune) -> Float {
   return ::horner(::CURVE, ::unit(detune));
 }
 
-auto SOUND::CORE::OSCILLATOR::centre(Float mix) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::centre(Float mix) -> Float {
   return ::horner(::MIDDLE, ::unit(mix));
 }
 
-auto SOUND::CORE::OSCILLATOR::side(Float mix) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::side(Float mix) -> Float {
   return ::horner(::SIDES, ::unit(mix));
 }
 
-void SOUND::CORE::OSCILLATOR::settle(
+void SOUND::PLUGINS::CORE::OSCILLATOR::settle(
   Super &super, Float hertz, Float detune, Float mix, Whole rate) {
   const Float amount = spread(detune);
   for (Whole saw = 0; saw < SAWS; ++saw) {
@@ -57,7 +57,7 @@ void SOUND::CORE::OSCILLATOR::settle(
   super.side = side(mix);
 }
 
-void SOUND::CORE::OSCILLATOR::scatter(Super &super, Wheel seed) {
+void SOUND::PLUGINS::CORE::OSCILLATOR::scatter(Super &super, Wheel seed) {
   Wheel phase = seed;
   for (Oscillator &saw : super.saws) {
     phase += ::GOLDEN;
@@ -65,7 +65,7 @@ void SOUND::CORE::OSCILLATOR::scatter(Super &super, Wheel seed) {
   }
 }
 
-auto SOUND::CORE::OSCILLATOR::tick(Super &super) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::tick(Super &super) -> Float {
   Float sides = 0;
   for (Whole saw = 0; saw < SAWS; ++saw)
     if (saw != MIDDLE) sides += tick(super.saws[saw], SAW);

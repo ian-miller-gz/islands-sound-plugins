@@ -4,7 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/filter/filter.hpp"
 
-namespace SOUND::WIDENER {
+namespace SOUND::PLUGINS::WIDENER {
 
 constexpr Whole ORDER = 2;
 constexpr Whole SIDES = 2;
@@ -35,4 +35,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::WIDENER
+}  // namespace SOUND::PLUGINS::WIDENER

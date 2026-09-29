@@ -6,7 +6,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/shaper/shaper.hpp"
 
-namespace SOUND::BUS {
+namespace SOUND::PLUGINS::BUS {
 
 struct Detectors {
   CORE::DYNAMICS::Detector fast;
@@ -39,4 +39,4 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::BUS
+}  // namespace SOUND::PLUGINS::BUS

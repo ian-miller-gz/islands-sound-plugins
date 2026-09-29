@@ -4,7 +4,7 @@
 
 #include "filter.hpp"
 
-namespace SOUND::FILTER {
+namespace SOUND::PLUGINS::FILTER {
 
 constexpr Whole CORNERS = 64;
 constexpr Float STEP = (HIGHEST - LOWEST) / Float(CORNERS);
@@ -39,12 +39,12 @@ void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::FILTER
+}  // namespace SOUND::PLUGINS::FILTER
 
-namespace SOUND::FILTER::SURFACE {
+namespace SOUND::PLUGINS::FILTER::SURFACE {
 auto parameters(void *instance) -> Whole;
 auto name(void *instance, Whole index) -> String;
 auto reading(void *instance, Whole index) -> String;
 auto held(void *instance, Whole index) -> Float;
 auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::FILTER::SURFACE
+}  // namespace SOUND::PLUGINS::FILTER::SURFACE

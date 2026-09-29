@@ -2,7 +2,7 @@
 #pragma once
 #include "percussion.circuit.hpp"
 
-namespace SOUND::CORE::PERCUSSION {
+namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
 struct Tom {
   Sweep sweep;
@@ -10,7 +10,7 @@ struct Tom {
   ENVELOPE::Gate hit;
   NOISE::White white;
   FILTER::Pole tone;
-  Float bases[HEIGHTS] = {};
+  Float bases[HEIGHT::HEIGHTS] = {};
   Float velocity = 0;
 };
 
@@ -19,4 +19,4 @@ void settle(
 void strike(Tom &tom, Whole height, Float velocity);
 auto tick(Tom &tom) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION

@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::CHORD {
+namespace SOUND::PLUGINS::CHORD {
 
 constexpr Whole KIND = 0;
 constexpr Whole INVERSION = 1;
@@ -51,4 +51,4 @@ static_assert(sizeof(ROWS) / sizeof(ROWS[0]) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 
-}  // namespace SOUND::CHORD
+}  // namespace SOUND::PLUGINS::CHORD

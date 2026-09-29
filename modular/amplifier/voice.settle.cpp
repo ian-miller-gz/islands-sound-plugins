@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole CHANGES = CORE::VOICE::LIFTED + 1;
 
@@ -26,7 +26,7 @@ constexpr Change CHANGED[CHANGES] = {kept, struck, tied, lifted};
 
 }  // namespace
 
-void SOUND::AMPLIFIER::seat(Module &module) {
+void SOUND::PLUGINS::AMPLIFIER::seat(Module &module) {
   CORE::VOICE::Allocator &allocator = module.allocator;
   allocator.count = 1;
   allocator.mode = CORE::VOICE::MONO;
@@ -37,7 +37,7 @@ void SOUND::AMPLIFIER::seat(Module &module) {
   module.envelope.trigger = CORE::ENVELOPE::RESUME;
 }
 
-void SOUND::AMPLIFIER::settle(Module &module) {
+void SOUND::PLUGINS::AMPLIFIER::settle(Module &module) {
   CORE::ENVELOPE::Envelope &envelope = module.envelope;
   envelope.attack = module.rows[ATTACK];
   envelope.decay = module.rows[DECAY];
@@ -47,7 +47,7 @@ void SOUND::AMPLIFIER::settle(Module &module) {
   CORE::ENVELOPE::shape(envelope, module.rate);
 }
 
-void SOUND::AMPLIFIER::apply(
+void SOUND::PLUGINS::AMPLIFIER::apply(
   Module &module, const AUDIO::PLUGIN::Event &event) {
   const auto visit = [&module](const CORE::VOICE::Note &note) {
     if (note.change < CHANGES) CHANGED[note.change](module, note);

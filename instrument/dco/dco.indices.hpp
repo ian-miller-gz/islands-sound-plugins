@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::DCO {
+namespace SOUND::PLUGINS::DCO {
 
 constexpr Whole TUNE = 0;
 constexpr Whole BEND = 1;
@@ -32,4 +32,4 @@ constexpr Whole CHORUS = 24;
 constexpr Whole VOLUME = 25;
 constexpr Whole PARAMETERS = 26;
 
-}  // namespace SOUND::DCO
+}  // namespace SOUND::PLUGINS::DCO

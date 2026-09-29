@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 using Tick = auto (*)(KIT::Kit &kit) -> Float;
 
@@ -19,14 +19,14 @@ constexpr Tick TICKS[KIT::DRUMS] = {
 
 }  // namespace
 
-auto SOUND::KIT::mix(Kit &kit) -> Float {
+auto SOUND::PLUGINS::KIT::mix(Kit &kit) -> Float {
   Float sum = 0;
   for (Whole drum = 0; drum < DRUMS; ++drum)
     sum += ::TICKS[drum](kit) * kit.rows[place(drum, LEVEL)];
   return CORE::SHAPER::soft(sum);
 }
 
-void SOUND::KIT::render(
+void SOUND::PLUGINS::KIT::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

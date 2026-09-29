@@ -4,7 +4,7 @@
 #include "dynamics.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float TEN = 10.0f;
 constexpr Float TWENTY = 20.0f;
@@ -23,23 +23,23 @@ auto factor(const DYNAMICS::Computer &computer) -> Float {
 
 }  // namespace
 
-auto SOUND::CORE::DYNAMICS::gain(Float decibels) -> Float {
+auto SOUND::PLUGINS::CORE::DYNAMICS::gain(Float decibels) -> Float {
   if (decibels <= SILENCE) return 0;
   return std::pow(::TEN, decibels / ::TWENTY);
 }
 
-auto SOUND::CORE::DYNAMICS::decibels(Float gain) -> Float {
+auto SOUND::PLUGINS::CORE::DYNAMICS::decibels(Float gain) -> Float {
   const Float size = gain < 0 ? -gain : gain;
   if (size <= ::QUIET) return SILENCE;
   return ::TWENTY * std::log10(size);
 }
 
-void SOUND::CORE::DYNAMICS::settle(Computer &computer) {
+void SOUND::PLUGINS::CORE::DYNAMICS::settle(Computer &computer) {
   computer.factor = ::factor(computer);
 }
 
-auto SOUND::CORE::DYNAMICS::reduce(const Computer &computer, Float decibels)
-  -> Float {
+auto SOUND::PLUGINS::CORE::DYNAMICS::reduce(
+  const Computer &computer, Float decibels) -> Float {
   const Float over = decibels - computer.threshold;
   const Float depth = computer.side == BELOW ? -over : over;
   const Float half = computer.knee * ::HALF;

@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::PLATE {
+namespace SOUND::PLUGINS::PLATE {
 
 constexpr Whole DECAY = 0;
 constexpr Whole DAMP = 1;
@@ -22,4 +22,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);
 
-}  // namespace SOUND::PLATE
+}  // namespace SOUND::PLUGINS::PLATE

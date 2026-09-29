@@ -2,7 +2,7 @@
 #include "percussion.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float LENGTH = 0.12f;
 constexpr Float SEAM = 0.01f;
@@ -56,7 +56,7 @@ void seal(Vector<Float> &loop, Whole length) {
 
 }  // namespace
 
-void SOUND::CORE::PERCUSSION::HYBRID::build(Hat &hat, Whole rate) {
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::build(Hat &hat, Whole rate) {
   const Whole length = Whole(LENGTH * Float(rate));
   const Whole seam = Whole(SEAM * Float(rate));
   if (length < SHORTEST) return;
@@ -65,22 +65,22 @@ void SOUND::CORE::PERCUSSION::HYBRID::build(Hat &hat, Whole rate) {
   ::seal(hat.loop, length);
 }
 
-void SOUND::CORE::PERCUSSION::HYBRID::settle(
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::settle(
   Hat &hat, Float tune, Float closed, Float open, Whole rate) {
   hat.speed = PHASE::ratio(tune * SEMITONE);
-  shape(hat.envelopes[CLOSED], closed, rate);
-  shape(hat.envelopes[OPEN], open, rate);
+  shape(hat.envelopes[OPENING::CLOSED], closed, rate);
+  shape(hat.envelopes[OPENING::OPEN], open, rate);
 }
 
-void SOUND::CORE::PERCUSSION::HYBRID::strike(
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(
   Hat &hat, Whole opening, Float velocity) {
-  hat.opening = opening < OPENINGS ? opening : CLOSED;
+  hat.opening = opening < OPENING::OPENINGS ? opening : OPENING::CLOSED;
   hat.velocity = struck(velocity);
   hat.at = 0;
   ENVELOPE::strike(hat.gate, hat.envelopes[hat.opening], hat.velocity);
 }
 
-auto SOUND::CORE::PERCUSSION::HYBRID::tick(Hat &hat) -> Float {
+auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::tick(Hat &hat) -> Float {
   const Whole length = hat.loop.size();
   if (length == 0 || !ENVELOPE::sounding(hat.gate)) return 0;
   const Whole at = Whole(hat.at);

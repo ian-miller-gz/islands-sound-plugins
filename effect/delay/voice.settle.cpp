@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float WHOLE = 1.0f;
 constexpr Float SECOND = 1000.0f;
@@ -15,13 +15,13 @@ auto spanned(Whole rate, Float milliseconds) -> Whole {
 
 }  // namespace
 
-void SOUND::DELAY::stretch(Trail &trail) {
+void SOUND::PLUGINS::DELAY::stretch(Trail &trail) {
   trail.slots = ::spanned(trail.rate, LONGEST) + SHORTEST;
   trail.lanes.assign(trail.channels, Lane{});
   for (auto &lane : trail.lanes) lane.ring.assign(trail.slots, 0);
 }
 
-void SOUND::DELAY::settle(Trail &trail) {
+void SOUND::PLUGINS::DELAY::settle(Trail &trail) {
   const Whole reach = trail.slots - SHORTEST;
   const Whole asked = ::spanned(trail.rate, trail.rows[TIME]);
   trail.spacing = asked > reach ? reach : asked;

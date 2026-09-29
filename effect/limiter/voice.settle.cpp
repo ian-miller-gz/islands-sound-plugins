@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-void SOUND::LIMITER::build(Effect &effect) {
+void SOUND::PLUGINS::LIMITER::build(Effect &effect) {
   const Whole ahead = Whole(AHEAD * Float(effect.rate));
   effect.rings.clear();
   for (Whole channel = 0; channel < effect.channels; ++channel) {
@@ -14,7 +14,7 @@ void SOUND::LIMITER::build(Effect &effect) {
   effect.detector.attack = AHEAD * RAMP;
 }
 
-void SOUND::LIMITER::settle(Effect &effect) {
+void SOUND::PLUGINS::LIMITER::settle(Effect &effect) {
   effect.detector.release = effect.rows[RELEASE] * MILLI;
   CORE::DYNAMICS::settle(effect.detector, effect.rate);
   effect.ceiling = CORE::DYNAMICS::gain(effect.rows[CEILING]);

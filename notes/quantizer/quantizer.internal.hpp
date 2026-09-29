@@ -3,7 +3,7 @@
 #include "quantizer.hpp"
 #include "../../core/notes/notes.hpp"
 
-namespace SOUND::QUANTIZER {
+namespace SOUND::PLUGINS::QUANTIZER {
 
 struct Quantizer {
   Float rows[PARAMETERS] = {};
@@ -20,4 +20,4 @@ auto answer(
   void *instance, const AUDIO::PLUGIN::Event *events, Whole count,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole;
 
-}  // namespace SOUND::QUANTIZER
+}  // namespace SOUND::PLUGINS::QUANTIZER

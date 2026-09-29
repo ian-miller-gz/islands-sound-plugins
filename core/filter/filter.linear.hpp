@@ -2,7 +2,7 @@
 #pragma once
 #include "../../../plugin.hpp"
 
-namespace SOUND::CORE::FILTER {
+namespace SOUND::PLUGINS::CORE::FILTER {
 
 enum Kind : Whole { LOW, HIGH, BAND, NOTCH, PEAK, LOWSHELF, HIGHSHELF, KINDS };
 
@@ -57,4 +57,4 @@ void settle(
 auto split(Variable &variable, Float in) -> Taps;
 auto tick(Variable &variable, Float in) -> Float;
 
-}  // namespace SOUND::CORE::FILTER
+}  // namespace SOUND::PLUGINS::CORE::FILTER

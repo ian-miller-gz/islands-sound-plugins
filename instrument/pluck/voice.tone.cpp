@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float SILENT = 0.0001f;
 
@@ -25,7 +25,7 @@ auto play(PLUCK::Synth &synth, Whole at) -> Float {
 
 }  // namespace
 
-auto SOUND::PLUCK::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::PLUCK::sound(Synth &synth) -> Float {
   Float sum = 0;
   for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at);
   for (CORE::FILTER::Biquad &body : synth.bodies)

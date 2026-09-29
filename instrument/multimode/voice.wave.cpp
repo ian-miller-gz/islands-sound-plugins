@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 using CORE::OSCILLATOR::Oscillator;
 using CORE::OSCILLATOR::Sync;
 
@@ -20,7 +20,7 @@ auto slave(Sync &sync, const Oscillator &master, Whole wave, Flag synced)
 
 }  // namespace
 
-auto SOUND::MULTIMODE::sing(
+auto SOUND::PLUGINS::MULTIMODE::sing(
   Synth &synth, Voice &voice, Float pitch, Float width) -> Float {
   const Float *rows = synth.rows;
   const Float hertz = CORE::PHASE::hertz(pitch + rows[FREQUENCY1]);

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Whole MONO = 1;
 constexpr Whole SIDES = 2;
@@ -14,7 +14,7 @@ auto side(const TINE::Pair &pair, Whole channels, Whole channel) -> Float {
 
 }  // namespace
 
-void SOUND::TINE::render(
+void SOUND::PLUGINS::TINE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void wait(CHOIR::Choir &choir, CHOIR::Singer &singer, Float velocity) {
   if (singer.wait > 0) {
@@ -40,7 +40,7 @@ auto part(CHOIR::Choir &choir, CORE::VOICE::Note &note, CHOIR::Part &part)
 
 }  // namespace
 
-auto SOUND::CHOIR::sing(Choir &choir) -> Stereo {
+auto SOUND::PLUGINS::CHOIR::sing(Choir &choir) -> Stereo {
   Stereo sum;
   for (Whole at = 0; at < NOTES; ++at) {
     CORE::VOICE::Note &note = choir.allocator.notes[at];

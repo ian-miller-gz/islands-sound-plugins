@@ -2,12 +2,12 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 void emit(
   STEPS::Sequencer &sequencer, Whole kind, Whole frame, Whole pitch,
   Float velocity) {
-  if (sequencer.written >= PLUGIN::ROOM) return;
+  if (sequencer.written >= SOUND::PLUGIN::ROOM) return;
   sequencer.notes[sequencer.written++] = {kind, frame, pitch, velocity};
 }
 
@@ -31,14 +31,14 @@ void lapse(STEPS::Sequencer &sequencer, Whole frame) {
 
 }  // namespace
 
-void SOUND::STEPS::silence(Sequencer &sequencer, Whole frame) {
+void SOUND::PLUGINS::STEPS::silence(Sequencer &sequencer, Whole frame) {
   if (sequencer.sounding == SILENT) return;
   ::emit(
     sequencer, AUDIO::PLUGIN::Event::NOTE_OFF, frame, sequencer.sounding, 0);
   sequencer.sounding = SILENT;
 }
 
-void SOUND::STEPS::tick(Sequencer &sequencer, Whole frame) {
+void SOUND::PLUGINS::STEPS::tick(Sequencer &sequencer, Whole frame) {
   ::lapse(sequencer, frame);
   CORE::CLOCK::Edge edge;
   if (CORE::CLOCK::advance(sequencer.clock, 1, &edge, 1) == 0) return;
@@ -46,7 +46,7 @@ void SOUND::STEPS::tick(Sequencer &sequencer, Whole frame) {
   ::strike(sequencer, frame, edge.step % LENGTH, span);
 }
 
-auto SOUND::STEPS::answer(
+auto SOUND::PLUGINS::STEPS::answer(
   void *instance, const AUDIO::PLUGIN::Event *, Whole,
   AUDIO::PLUGIN::Event *out, Whole room) -> Whole {
   auto &sequencer = *static_cast<Sequencer *>(instance);

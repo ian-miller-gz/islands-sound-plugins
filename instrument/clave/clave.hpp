@@ -3,7 +3,7 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 
-namespace SOUND::CLAVE {
+namespace SOUND::PLUGINS::CLAVE {
 
 constexpr Whole TUNE = 0;
 constexpr Whole DECAY = 1;
@@ -16,4 +16,4 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 constexpr Whole PARAMETERS = SHEET.count;
 
-}  // namespace SOUND::CLAVE
+}  // namespace SOUND::PLUGINS::CLAVE

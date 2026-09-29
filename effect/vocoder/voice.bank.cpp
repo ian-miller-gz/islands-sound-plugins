@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float THRESHOLD = 0.5f;
 constexpr Float FLOOR = 0.001f;
@@ -19,8 +19,8 @@ auto hissed(VOCODER::Hiss &hiss, Float in) -> Float {
 
 }  // namespace
 
-auto SOUND::VOCODER::vocode(Vocoder &vocoder, Float modulator, Float carrier)
-  -> Float {
+auto SOUND::PLUGINS::VOCODER::vocode(
+  Vocoder &vocoder, Float modulator, Float carrier) -> Float {
   const Float weight =
     ::hissed(vocoder.hiss, modulator) * vocoder.rows[UNVOICED];
   const Float noise = CORE::NOISE::tick(vocoder.hiss.white);

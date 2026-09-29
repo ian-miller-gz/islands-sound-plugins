@@ -2,7 +2,7 @@
 #include "filter.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float LEAST = 0.01f;
@@ -49,7 +49,7 @@ static_assert(sizeof(FLOWS) / sizeof(FLOWS[0]) == SIDES);
 
 }  // namespace
 
-void SOUND::CORE::FILTER::settle(
+void SOUND::PLUGINS::CORE::FILTER::settle(
   Sallen &sallen, Whole kind, Float cutoff, Float emphasis, Float drive,
   Whole rate) {
   sallen.kind = kind < SIDES ? kind : LOW;
@@ -61,6 +61,6 @@ void SOUND::CORE::FILTER::settle(
   sallen.drive = drive;
 }
 
-auto SOUND::CORE::FILTER::tick(Sallen &sallen, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::FILTER::tick(Sallen &sallen, Float in) -> Float {
   return FLOWS[sallen.kind](sallen, sallen.drive * in);
 }

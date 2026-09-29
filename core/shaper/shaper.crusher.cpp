@@ -4,7 +4,7 @@
 #include "shaper.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float ONE = 1.0f;
 constexpr Float TWO = 2.0f;
@@ -14,7 +14,7 @@ constexpr Float MOST = 24.0f;
 
 }  // namespace
 
-void SOUND::CORE::SHAPER::settle(
+void SOUND::PLUGINS::CORE::SHAPER::settle(
   Crusher &crusher, Float bits, Float hertz, Whole rate) {
   const Float depth = bits < FEWEST ? FEWEST : bits > MOST ? MOST : bits;
   const Float stride = hertz / Float(rate);
@@ -22,7 +22,7 @@ void SOUND::CORE::SHAPER::settle(
   crusher.stride = stride < 0 ? 0 : stride > ONE ? ONE : stride;
 }
 
-auto SOUND::CORE::SHAPER::tick(Crusher &crusher, Float in) -> Float {
+auto SOUND::PLUGINS::CORE::SHAPER::tick(Crusher &crusher, Float in) -> Float {
   crusher.phase += crusher.stride;
   if (crusher.phase < ONE) return crusher.held;
   crusher.phase -= ONE;

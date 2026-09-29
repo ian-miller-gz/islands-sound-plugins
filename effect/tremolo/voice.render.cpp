@@ -2,7 +2,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 auto swayed(const TREMOLO::Effect &effect, TREMOLO::Channel &strip) -> Float {
   const Float wave = CORE::MODULATOR::tick(strip.lfo);
@@ -13,7 +13,7 @@ auto swayed(const TREMOLO::Effect &effect, TREMOLO::Channel &strip) -> Float {
 
 }  // namespace
 
-void SOUND::TREMOLO::render(
+void SOUND::PLUGINS::TREMOLO::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();

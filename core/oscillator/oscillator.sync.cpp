@@ -2,7 +2,7 @@
 #include "oscillator.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float UNIT = 1.0f;
 constexpr Float HALF = 0.5f;
@@ -15,7 +15,7 @@ auto jump(const OSCILLATOR::Oscillator &slave, OSCILLATOR::Wheel at, Whole wave)
 
 }  // namespace
 
-auto SOUND::CORE::OSCILLATOR::tick(
+auto SOUND::PLUGINS::CORE::OSCILLATOR::tick(
   Sync &sync, const Oscillator &master, Whole wave) -> Float {
   Oscillator &slave = sync.slave;
   Float value = shaped(slave, wave) + sync.pending;

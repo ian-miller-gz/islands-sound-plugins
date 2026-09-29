@@ -2,7 +2,7 @@
 #pragma once
 #include "percussion.hybrid.hpp"
 
-namespace SOUND::CORE::PERCUSSION {
+namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
 struct Pad {
   HYBRID::Swept tone;
@@ -33,4 +33,4 @@ void settle(Pad &pad, const Voicing &voicing, Whole rate);
 void strike(Pad &pad, Float velocity);
 auto tick(Pad &pad) -> Float;
 
-}  // namespace SOUND::CORE::PERCUSSION
+}  // namespace SOUND::PLUGINS::CORE::PERCUSSION

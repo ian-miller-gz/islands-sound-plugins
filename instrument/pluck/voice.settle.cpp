@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 constexpr Float FULL = 1;
@@ -43,7 +43,7 @@ void resonate(PLUCK::Synth &synth) {
 
 }  // namespace
 
-void SOUND::PLUCK::build(Synth &synth) {
+void SOUND::PLUGINS::PLUCK::build(Synth &synth) {
   const Float longest = Float(synth.rate) / CORE::PHASE::hertz(DEEPEST);
   for (Voice &voice : synth.voices) {
     CORE::LINE::build(voice.string, Whole(longest) + SPARE);
@@ -51,7 +51,7 @@ void SOUND::PLUCK::build(Synth &synth) {
   }
 }
 
-void SOUND::PLUCK::tune(Synth &synth, Whole at) {
+void SOUND::PLUGINS::PLUCK::tune(Synth &synth, Whole at) {
   Voice &voice = synth.voices[at];
   const Float *rows = synth.rows;
   const Float hertz =
@@ -66,7 +66,7 @@ void SOUND::PLUCK::tune(Synth &synth, Whole at) {
   voice.feedbacks[DAMPED] = ::decay(rows[RELEASE], hertz);
 }
 
-void SOUND::PLUCK::settle(Synth &synth) {
+void SOUND::PLUGINS::PLUCK::settle(Synth &synth) {
   synth.tune = synth.rows[TUNE] / CENT;
   synth.fall = std::exp(-FULL / (FADING * Float(synth.rate)));
   ::resonate(synth);

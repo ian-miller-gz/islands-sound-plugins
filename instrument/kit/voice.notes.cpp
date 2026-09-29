@@ -2,17 +2,17 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
-using CORE::PERCUSSION::CLAVE;
-using CORE::PERCUSSION::CLOSED;
-using CORE::PERCUSSION::CRASH;
-using CORE::PERCUSSION::HIGH;
-using CORE::PERCUSSION::LOW;
-using CORE::PERCUSSION::MID;
-using CORE::PERCUSSION::OPEN;
-using CORE::PERCUSSION::RIDE;
-using CORE::PERCUSSION::RIM;
+using namespace SOUND::PLUGINS;
 using CORE::PERCUSSION::strike;
+using CORE::PERCUSSION::CLICK::CLAVE;
+using CORE::PERCUSSION::CLICK::RIM;
+using CORE::PERCUSSION::HEIGHT::HIGH;
+using CORE::PERCUSSION::HEIGHT::LOW;
+using CORE::PERCUSSION::HEIGHT::MID;
+using CORE::PERCUSSION::OPENING::CLOSED;
+using CORE::PERCUSSION::OPENING::OPEN;
+using CORE::PERCUSSION::PLATE::CRASH;
+using CORE::PERCUSSION::PLATE::RIDE;
 
 constexpr Whole WHOLE = 0;
 constexpr Float FULL = 1.0f;
@@ -71,7 +71,7 @@ auto accented(const KIT::Kit &kit, Float velocity) -> Float {
 
 }  // namespace
 
-void SOUND::KIT::apply(Kit &kit, const AUDIO::PLUGIN::Event &event) {
+void SOUND::PLUGINS::KIT::apply(Kit &kit, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER) {
     if (event.index >= PARAMETERS) return;
     kit.rows[event.index] =

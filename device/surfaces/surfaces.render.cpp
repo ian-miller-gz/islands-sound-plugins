@@ -6,11 +6,11 @@
 #include "surfaces.internal.hpp"
 
 namespace {
-using namespace SOUND;
-using namespace SOUND::SURFACES;
+using namespace SOUND::PLUGINS;
+using namespace SOUND::PLUGINS::SURFACES;
 }  // namespace
 
-void SOUND::SURFACES::heard(
+void SOUND::PLUGINS::SURFACES::heard(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *, Whole) {
   auto &input = *static_cast<Input *>(instance);
@@ -27,7 +27,7 @@ void SOUND::SURFACES::heard(
     }
 }
 
-void SOUND::SURFACES::sounded(
+void SOUND::PLUGINS::SURFACES::sounded(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *, Whole) {
   auto &output = *static_cast<Output *>(instance);
@@ -45,7 +45,7 @@ void SOUND::SURFACES::sounded(
   AUDIO::OUTPUT::feed(output.stream, output.scratch);
 }
 
-void SOUND::SURFACES::spoken(
+void SOUND::PLUGINS::SURFACES::spoken(
   void *instance, AUDIO::PLUGIN::Sample *const *, Whole,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   auto &out = *static_cast<Midiout *>(instance);

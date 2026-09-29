@@ -2,7 +2,7 @@
 #include "voice.hpp"
 
 namespace {
-using namespace SOUND::CORE;
+using namespace SOUND::PLUGINS::CORE;
 
 auto older(const VOICE::Note &note, const VOICE::Note &victim) -> Flag {
   return note.struck < victim.struck;
@@ -39,7 +39,7 @@ auto claim(VOICE::Allocator &allocator, Whole pitch) -> VOICE::Note & {
 
 }  // namespace
 
-void SOUND::CORE::VOICE::POLYPHONY::strike(
+void SOUND::PLUGINS::CORE::VOICE::POLYPHONY::strike(
   Allocator &allocator, Whole pitch, Float velocity) {
   ++allocator.clock;
   for (Whole position = 0; position < stacked(allocator); ++position) {
@@ -49,7 +49,8 @@ void SOUND::CORE::VOICE::POLYPHONY::strike(
   }
 }
 
-void SOUND::CORE::VOICE::POLYPHONY::lift(Allocator &allocator, Whole pitch) {
+void SOUND::PLUGINS::CORE::VOICE::POLYPHONY::lift(
+  Allocator &allocator, Whole pitch) {
   for (Note &note : allocator.notes) {
     if (!note.held || note.pitch != pitch) continue;
     note.held = false;

@@ -4,7 +4,7 @@
 #include "voice.internal.hpp"
 
 namespace {
-using namespace SOUND;
+using namespace SOUND::PLUGINS;
 
 constexpr Float ONSET = 0.001f;
 constexpr Float MIDDLE = 60;
@@ -34,7 +34,7 @@ void swing(TINE::Synth &synth) {
 
 }  // namespace
 
-void SOUND::TINE::shape(Synth &synth, Whole at) {
+void SOUND::PLUGINS::TINE::shape(Synth &synth, Whole at) {
   const Float *rows = synth.rows;
   const Float key = Float(synth.allocator.notes[at].pitch);
   const Float decay = rows[DECAY] * std::exp2(TRACK * (MIDDLE - key) / OCTAVE);
@@ -46,7 +46,7 @@ void SOUND::TINE::shape(Synth &synth, Whole at) {
   CORE::ENVELOPE::shape(envelope, synth.rate);
 }
 
-void SOUND::TINE::tune(Synth &synth, Whole at) {
+void SOUND::PLUGINS::TINE::tune(Synth &synth, Whole at) {
   const Float *rows = synth.rows;
   const Float key = Float(synth.allocator.notes[at].pitch);
   const Float hertz = CORE::PHASE::hertz(key + rows[TUNE] / CENT + rows[BEND]);
@@ -58,7 +58,7 @@ void SOUND::TINE::tune(Synth &synth, Whole at) {
   voice.chime = bell < CEILING * Float(synth.rate) ? 1 : 0;
 }
 
-void SOUND::TINE::settle(Synth &synth) {
+void SOUND::PLUGINS::TINE::settle(Synth &synth) {
   const Float *rows = synth.rows;
   synth.strike = ::fading(rows[STRIKE], rows[VELOCITY], synth.rate);
   synth.ring = ::fading(rows[RING], rows[VELOCITY], synth.rate);
