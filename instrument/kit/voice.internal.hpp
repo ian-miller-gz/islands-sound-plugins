@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+#pragma once
+#include "kit.hpp"
+#include "../../core/block/block.hpp"
+#include "../../core/percussion/percussion.hpp"
+
+namespace SOUND::KIT {
+
+struct Kit {
+  Whole rate = 0;
+  Whole channels = 0;
+  Float rows[PARAMETERS] = {};
+  CORE::PERCUSSION::Kick kick;
+  CORE::PERCUSSION::Snare snare;
+  CORE::PERCUSSION::Hat hat;
+  CORE::PERCUSSION::Clap clap;
+  CORE::PERCUSSION::Tom tom;
+  CORE::PERCUSSION::Cymbal cymbal;
+  CORE::PERCUSSION::Cowbell cowbell;
+  CORE::PERCUSSION::Clave clave;
+  CORE::PERCUSSION::Conga conga;
+  CORE::BLOCK::Meter meter;
+};
+
+void settle(Kit &kit, Whole drum);
+void settle(Kit &kit);
+
+void apply(Kit &kit, const AUDIO::PLUGIN::Event &event);
+
+auto mix(Kit &kit) -> Float;
+
+void render(
+  void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
+  const AUDIO::PLUGIN::Event *events, Whole count);
+
+}  // namespace SOUND::KIT
