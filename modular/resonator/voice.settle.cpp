@@ -23,12 +23,13 @@ void SOUND::PLUGINS::RESONATOR::settle(Module &module) {
   module.countdown = 0;
 }
 
-void SOUND::PLUGINS::RESONATOR::sweep(Module &module, Float swing) {
+void SOUND::PLUGINS::RESONATOR::sweep(
+  Module &module, Whole channel, Float octaves) {
   const Float *rows = module.rows;
-  const Float hertz = rows[CUTOFF] * std::exp2(swing * rows[DEPTH]);
-  const Whole chosen = ::kind(module);
-  for (CORE::FILTER::Variable &filter : module.filters)
-    CORE::FILTER::settle(filter, chosen, hertz, rows[EMPHASIS], module.rate);
+  const Float hertz = rows[CUTOFF] * std::exp2(octaves);
+  CORE::FILTER::settle(
+    module.filters[channel], ::kind(module), hertz, rows[EMPHASIS],
+    module.rate);
 }
 
 void SOUND::PLUGINS::RESONATOR::apply(

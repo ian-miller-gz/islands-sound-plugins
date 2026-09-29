@@ -4,22 +4,26 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-void gate(
-  const AMPLIFIER::Module &module, AUDIO::PLUGIN::Sample *const *lanes,
+auto side(Whole channel) -> Whole {
+  return channel < MIXER::STEREO ? channel : 0;
+}
+
+void mix(
+  const MIXER::Module &module, AUDIO::PLUGIN::Sample *const *lanes,
   Whole frame) {
-  const Float *rows = module.rows;
   const Whole channels = module.channels;
   for (Whole channel = 0; channel < channels; ++channel) {
-    const Float cv = lanes[AMPLIFIER::CV * channels + channel][frame];
-    const Float opened = rows[AMPLIFIER::OFFSET] + rows[AMPLIFIER::DEPTH] * cv;
-    const Float gain = (opened < 0 ? 0 : opened) * rows[AMPLIFIER::GAIN];
-    lanes[channel][frame] *= gain;
+    const Whole at = ::side(channel);
+    Float sum = 0;
+    for (Whole in = 0; in < MIXER::INS; ++in)
+      sum += lanes[in * channels + channel][frame] * module.weights[in][at];
+    lanes[channel][frame] = sum;
   }
 }
 
 }  // namespace
 
-void SOUND::PLUGINS::AMPLIFIER::render(
+void SOUND::PLUGINS::MIXER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
   CORE::BLOCK::denormals();
@@ -31,7 +35,7 @@ void SOUND::PLUGINS::AMPLIFIER::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
-    ::gate(module, lanes, frame);
+    ::mix(module, lanes, frame);
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
   }

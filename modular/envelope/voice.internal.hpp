@@ -1,30 +1,31 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
-#include "resonator.hpp"
+#include "envelope.hpp"
 #include "../../core/block/block.hpp"
-#include "../../core/filter/filter.hpp"
-#include "../../core/modulator/modulator.hpp"
+#include "../../core/envelope/envelope.hpp"
+#include "../../core/voice/voice.hpp"
 
-namespace SOUND::PLUGINS::RESONATOR {
+namespace SOUND::PLUGINS::ENVELOPE {
 
-constexpr Whole STRIDE = 16;
+static_assert(EXPONENTIAL == CORE::ENVELOPE::EXPONENTIAL);
+static_assert(RESUME == CORE::ENVELOPE::RESUME);
 
 struct Module {
   Whole rate = 0;
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
-  Vector<CORE::FILTER::Variable> filters;
-  CORE::MODULATOR::Lfo lfo;
-  Whole countdown = 0;
+  CORE::VOICE::Allocator allocator;
+  CORE::ENVELOPE::Envelope envelope;
+  CORE::ENVELOPE::Gate gate;
   CORE::BLOCK::Meter meter;
 };
 
+void seat(Module &module);
 void settle(Module &module);
-void sweep(Module &module, Whole channel, Float octaves);
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
-}  // namespace SOUND::PLUGINS::RESONATOR
+}  // namespace SOUND::PLUGINS::ENVELOPE

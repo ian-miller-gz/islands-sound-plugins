@@ -4,26 +4,25 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-using Surface = CORE::TABLE::Surface<AMPLIFIER::Module, AMPLIFIER::SHEET>;
+using Surface = CORE::TABLE::Surface<MIXER::Module, MIXER::SHEET>;
 
 auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
-  auto *module = new AMPLIFIER::Module{.rate = rate, .channels = channels};
-  CORE::TABLE::rest(AMPLIFIER::SHEET, module->rows);
+  auto *module = new MIXER::Module{.rate = rate, .channels = channels};
+  CORE::TABLE::rest(MIXER::SHEET, module->rows);
+  MIXER::settle(*module);
   return module;
 }
 
 auto meter(void *instance) -> Float {
-  return CORE::BLOCK::read(static_cast<AMPLIFIER::Module *>(instance)->meter);
+  return CORE::BLOCK::read(static_cast<MIXER::Module *>(instance)->meter);
 }
 
-void destroy(void *instance) {
-  delete static_cast<AMPLIFIER::Module *>(instance);
-}
+void destroy(void *instance) { delete static_cast<MIXER::Module *>(instance); }
 
 const AUDIO::PLUGIN::Plug surface = {
   .create = create,
-  .render = AMPLIFIER::render,
+  .render = MIXER::render,
   .meter = meter,
   .destroy = destroy,
   .parameters = Surface::parameters,
@@ -32,12 +31,14 @@ const AUDIO::PLUGIN::Plug surface = {
   .held = Surface::held,
   .control = Surface::control,
   .ins =
-    {{AUDIO::PLUGIN::Port::AUDIO, "in"},
-     {AUDIO::PLUGIN::Port::AUDIO, "cv"},
+    {{AUDIO::PLUGIN::Port::AUDIO, "1"},
+     {AUDIO::PLUGIN::Port::AUDIO, "2"},
+     {AUDIO::PLUGIN::Port::AUDIO, "3"},
+     {AUDIO::PLUGIN::Port::AUDIO, "4"},
      {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
 [[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
-  {.name = "amplifier", .type = "modular", .surface = &surface});
+  {.name = "mixer", .type = "modular", .surface = &surface});
 
 }  // namespace

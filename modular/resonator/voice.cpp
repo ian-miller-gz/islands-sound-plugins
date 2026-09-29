@@ -13,7 +13,8 @@ auto create(Whole rate, Whole channels) -> void * {
   module->filters.assign(channels, CORE::FILTER::Variable{});
   module->lfo.wave = CORE::MODULATOR::SINE;
   RESONATOR::settle(*module);
-  RESONATOR::sweep(*module, 0);
+  for (Whole channel = 0; channel < channels; ++channel)
+    RESONATOR::sweep(*module, channel, 0);
   return module;
 }
 
@@ -35,7 +36,10 @@ const AUDIO::PLUGIN::Plug surface = {
   .reading = Surface::reading,
   .held = Surface::held,
   .control = Surface::control,
-  .ins = {{AUDIO::PLUGIN::Port::AUDIO}, {AUDIO::PLUGIN::Port::CONTROL}},
+  .ins =
+    {{AUDIO::PLUGIN::Port::AUDIO, "in"},
+     {AUDIO::PLUGIN::Port::AUDIO, "cv"},
+     {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
 [[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
