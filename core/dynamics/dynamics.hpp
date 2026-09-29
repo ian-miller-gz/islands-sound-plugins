@@ -39,6 +39,13 @@ struct Highpass {
   Float low = 0;
 };
 
+struct Hold {
+  Float time = 0;
+  Whole length = 0;
+  Whole left = 0;
+  Float value = 0;
+};
+
 auto gain(Float decibels) -> Float;
 auto decibels(Float gain) -> Float;
 
@@ -53,6 +60,9 @@ auto tick(Ring &ring, Float in) -> Float;
 
 void settle(Highpass &highpass, Whole rate);
 auto tick(Highpass &highpass, Float in) -> Float;
+
+void settle(Hold &hold, Whole rate);
+auto tick(Hold &hold, Float in) -> Float;
 
 }  // namespace SOUND::CORE::DYNAMICS
 
