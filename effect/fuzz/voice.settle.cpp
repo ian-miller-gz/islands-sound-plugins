@@ -6,7 +6,7 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-void open(CORE::DYNAMICS::Detector &gate, Whole rate) {
+void gated(CORE::DYNAMICS::Detector &gate, Whole rate) {
   gate.kind = CORE::DYNAMICS::PEAK;
   gate.attack = FUZZ::OPENING;
   gate.release = FUZZ::CLOSING;
@@ -18,7 +18,7 @@ void open(CORE::DYNAMICS::Detector &gate, Whole rate) {
 void SOUND::PLUGINS::FUZZ::build(Effect &effect) {
   effect.strips.resize(effect.channels);
   for (auto &strip : effect.strips) {
-    ::open(strip.gate, effect.rate);
+    gated(strip.gate, effect.rate);
     CORE::SHAPER::settle(strip.blocker, STILL, effect.rate);
     CORE::FILTER::settle(strip.low, CORE::FILTER::LOW, LOWS, effect.rate);
     CORE::FILTER::settle(strip.high, CORE::FILTER::HIGH, HIGHS, effect.rate);
