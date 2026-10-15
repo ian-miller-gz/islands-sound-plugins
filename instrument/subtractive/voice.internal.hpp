@@ -5,14 +5,10 @@
 #include <threads.hpp>
 
 #include "subtractive.hpp"
-#include "../../core/phase/phase.hpp"
+#include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::SUBTRACTIVE {
-
-constexpr Whole SAW = 0;
-constexpr Whole PULSE = 1;
-constexpr Whole TRIANGLE = 2;
 
 enum Stage : Whole { IDLE, RISING, FALLING, HELD, LEAVING };
 
@@ -34,7 +30,7 @@ struct Gate {
 };
 
 struct Voice {
-  uint32_t phases[OSCILLATORS] = {};
+  CORE::OSCILLATOR::Oscillator oscillators[OSCILLATORS];
   Float low = 0;
   Float band = 0;
   Gate gates[CURVES];
@@ -52,7 +48,7 @@ struct Synth {
     .legato = true};
   Voice voices[VOICES];
   Float turn = 0;
-  Whole shape = SAW;
+  Whole shape = CORE::OSCILLATOR::SAW;
   Float detune = 1;
   Float damping = 2;
   Envelope envelopes[CURVES];

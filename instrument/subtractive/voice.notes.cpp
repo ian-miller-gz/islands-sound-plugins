@@ -8,7 +8,8 @@ void kept(SUBTRACTIVE::Synth &, Whole) {}
 
 void struck(SUBTRACTIVE::Synth &synth, Whole at) {
   SUBTRACTIVE::Voice &voice = synth.voices[at];
-  for (uint32_t &phase : voice.phases) phase = 0;
+  for (CORE::OSCILLATOR::Oscillator &oscillator : voice.oscillators)
+    CORE::OSCILLATOR::reset(oscillator, 0);
   voice.low = 0;
   voice.band = 0;
   for (SUBTRACTIVE::Gate &gate : voice.gates) gate = {0, SUBTRACTIVE::RISING};

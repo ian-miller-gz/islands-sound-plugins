@@ -9,6 +9,10 @@ constexpr Float SQUEEZE = 2.0f;
 constexpr Float CLOSED = 0;
 constexpr Whole SINGLE = 1;
 
+constexpr Whole WAVES[] = {
+  CORE::OSCILLATOR::SAW, CORE::OSCILLATOR::PULSE, CORE::OSCILLATOR::TRIANGLE};
+static_assert(std::size(WAVES) == std::size(SUBTRACTIVE::SHAPES));
+
 constexpr Whole VOICINGS[] = {CORE::VOICE::POLY, CORE::VOICE::MONO};
 constexpr Whole COUNTS[] = {SUBTRACTIVE::VOICES, SINGLE};
 static_assert(std::size(VOICINGS) == std::size(SUBTRACTIVE::ASSIGNS));
@@ -48,7 +52,7 @@ auto SOUND::PLUGINS::SUBTRACTIVE::mode(const Synth &synth) -> Whole {
 
 void SOUND::PLUGINS::SUBTRACTIVE::settle(Synth &synth) {
   const Float *rows = synth.rows;
-  synth.shape = Whole(rows[SHAPE]);
+  synth.shape = ::WAVES[Whole(rows[SHAPE])];
   synth.detune = CORE::PHASE::ratio(rows[SPREAD]);
   synth.damping = ::LOOSE - rows[RESONANCE] * ::SQUEEZE;
   ::contour(synth);

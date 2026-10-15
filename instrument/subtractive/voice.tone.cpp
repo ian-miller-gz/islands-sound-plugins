@@ -4,34 +4,22 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float SCALE = 1.0f / 2147483648.0f;
-constexpr Float PAIR = 0.5f;
+constexpr Float MEAN = 1.0f / Float(SUBTRACTIVE::OSCILLATORS);
 constexpr Float CEILING = 0.45f;
-
-auto wave(Whole shape, uint32_t phase) -> Float {
-  const Float ramp = Float(static_cast<int32_t>(phase)) * SCALE;
-  switch (shape) {
-    case SUBTRACTIVE::PULSE:
-      return ramp < 0 ? -1.0f : 1.0f;
-    case SUBTRACTIVE::TRIANGLE:
-      return (ramp < 0 ? -ramp : ramp) * 2.0f - 1.0f;
-    default:
-      return ramp;
-  }
-}
 
 auto sing(SUBTRACTIVE::Synth &synth, SUBTRACTIVE::Voice &voice, Float key)
   -> Float {
-  const CORE::PHASE::Wheel step =
-    CORE::PHASE::step(CORE::PHASE::hertz(key), synth.rate);
-  const CORE::PHASE::Wheel steps[] = {
-    step, CORE::PHASE::Wheel(Float(step) * synth.detune)};
+  const Float hertz = CORE::PHASE::hertz(key);
+  const Float frequencies[] = {hertz, hertz * synth.detune};
+  static_assert(std::size(frequencies) == SUBTRACTIVE::OSCILLATORS);
   Float mix = 0;
   for (Whole at = 0; at < SUBTRACTIVE::OSCILLATORS; ++at) {
-    mix += ::wave(synth.shape, voice.phases[at]);
-    voice.phases[at] += steps[at];
+    CORE::OSCILLATOR::Oscillator &oscillator = voice.oscillators[at];
+    CORE::OSCILLATOR::settle(
+      oscillator, frequencies[at], CORE::OSCILLATOR::SQUARE, synth.rate);
+    mix += CORE::OSCILLATOR::tick(oscillator, synth.shape);
   }
-  return mix * PAIR;
+  return mix * MEAN;
 }
 
 auto play(SUBTRACTIVE::Synth &synth, Whole at) -> Float {
