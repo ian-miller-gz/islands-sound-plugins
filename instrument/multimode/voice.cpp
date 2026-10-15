@@ -10,6 +10,7 @@ auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *synth = new MULTIMODE::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(MULTIMODE::SHEET, synth->rows);
+  MULTIMODE::seed(*synth);
   MULTIMODE::settle(*synth);
   return synth;
 }
