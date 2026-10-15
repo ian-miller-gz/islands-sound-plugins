@@ -15,6 +15,14 @@ void step(CHIP::Steps &steps, const CHIP::Shape &shape) {
   if (steps.level > floor) --steps.level;
 }
 
+void quarter(CHIP::Synth &synth) {
+  for (Whole at = 0; at < CHIP::ENVELOPES; ++at)
+    step(synth.steps[at], synth.shapes[at]);
+  CORE::VOICE::tick(synth.allocator.notes[0], synth.allocator.glide);
+  synth.wobble = CORE::MODULATOR::tick(synth.vibrato);
+  synth.stale = true;
+}
+
 }  // namespace
 
 auto SOUND::PLUGINS::CHIP::tick(Clock &clock) -> Flag {
@@ -27,6 +35,8 @@ void SOUND::PLUGINS::CHIP::strike(Synth &synth) {
     synth.steps[at] = {.level = synth.shapes[at].level, .held = true};
   synth.arpeggio.phase = 0;
   synth.position = 0;
+  CORE::MODULATOR::reset(synth.vibrato);
+  synth.wobble = 0;
   synth.gated = true;
   synth.stale = true;
 }
@@ -40,10 +50,6 @@ void SOUND::PLUGINS::CHIP::lift(Synth &synth) {
 }
 
 void SOUND::PLUGINS::CHIP::clock(Synth &synth) {
-  if (tick(synth.frame))
-    for (Whole at = 0; at < ENVELOPES; ++at)
-      ::step(synth.steps[at], synth.shapes[at]);
-  if (!tick(synth.arpeggio)) return;
-  synth.position = (synth.position + 1) % POSITIONS;
-  synth.stale = true;
+  if (tick(synth.frame)) ::quarter(synth);
+  if (tick(synth.arpeggio)) synth.position = (synth.position + 1) % POSITIONS;
 }

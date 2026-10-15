@@ -31,8 +31,9 @@ auto divide(CHIP::Clock &clock, const Timer &timer, Float pitch, Whole rate)
 void SOUND::PLUGINS::CHIP::retune(Synth &synth) {
   const Float *rows = synth.rows;
   const Float offsets[POSITIONS] = {0, rows[FIRST], rows[SECOND]};
-  const Float base = Float(synth.allocator.notes[0].pitch) + synth.tune +
-                     rows[BEND] + offsets[synth.position % POSITIONS];
+  const Float base = synth.allocator.notes[0].current + synth.tune +
+                     rows[BEND] + offsets[synth.position % POSITIONS] +
+                     synth.wobble;
   const Float pitches[PULSES] = {base, base + rows[OFFSET2]};
   for (Whole at = 0; at < PULSES; ++at)
     synth.pulses[at].muted =

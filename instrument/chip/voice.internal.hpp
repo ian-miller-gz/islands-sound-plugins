@@ -4,6 +4,7 @@
 #include "voice.channels.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/filter/filter.hpp"
+#include "../../core/modulator/modulator.hpp"
 #include "../../core/phase/phase.hpp"
 #include "../../core/voice/voice.hpp"
 
@@ -16,6 +17,7 @@ constexpr Whole ENVELOPES = 3;
 constexpr Whole NOISE = 2;
 constexpr Whole FILTERS = 3;
 constexpr Whole POSITIONS = 3;
+constexpr Whole QUARTER = 240;
 
 struct Synth {
   Whole rate = 0;
@@ -37,6 +39,8 @@ struct Synth {
   Flag gated = false;
   Flag stale = true;
   Float tune = 0;
+  CORE::MODULATOR::Lfo vibrato;
+  Float wobble = 0;
   CORE::FILTER::Pole filters[FILTERS];
   CORE::BLOCK::Meter meter;
 };
