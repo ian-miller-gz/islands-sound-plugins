@@ -19,6 +19,8 @@ constexpr Float QUICKEST = 0.001f;
 constexpr Float LONGEST = 10;
 constexpr Float LOWEST = 20;
 constexpr Float HIGHEST = 20000;
+constexpr Float SLIDE = 3;
+constexpr Float WANDER = 20;
 constexpr Whole THREEWAY = 2;
 constexpr Whole FOURWAY = 3;
 
@@ -28,6 +30,7 @@ inline constexpr STRING::Hot POSITIONS[] = {"0", "1", "2", "3"};
 inline constexpr STRING::Hot POLARITIES[] = {"Positive", "Negative"};
 inline constexpr STRING::Hot MODES[] = {"Envelope", "Gate"};
 inline constexpr STRING::Hot CHORUSES[] = {"Off", "I", "II", "I+II"};
+inline constexpr STRING::Hot ASSIGNS[] = {"Poly", "Mono", "Unison"};
 
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
@@ -55,7 +58,13 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Rate", "Hz", 4, SLOWEST, FASTEST, 0, nullptr},
   {"Delay", "s", 0, 0, WAITING, 0, nullptr},
   {"Chorus", "", 1, 0, FOURWAY, FOURWAY, CHORUSES},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Assign", "", 0, 0, THREEWAY, THREEWAY, ASSIGNS},
+  {"Glide", "s", 0, 0, SLIDE, 0, nullptr},
+  {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
+  {"Touch", "oct", 1, 0, DEPTH, 0, nullptr},
+  {"Drift", "ct", 3, 0, WANDER, 0, nullptr},
+  {"Trim", "", 0.3f, 0, 1, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
