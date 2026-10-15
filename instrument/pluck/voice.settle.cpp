@@ -44,7 +44,8 @@ void resonate(PLUCK::Synth &synth) {
 }  // namespace
 
 void SOUND::PLUGINS::PLUCK::build(Synth &synth) {
-  const Float longest = Float(synth.rate) / CORE::PHASE::hertz(DEEPEST);
+  const Float lowest = DEEPEST - CENTS / CENT - SEMITONES;
+  const Float longest = Float(synth.rate) / CORE::PHASE::hertz(lowest);
   for (Voice &voice : synth.voices) {
     CORE::LINE::build(voice.string, Whole(longest) + SPARE);
     CORE::LINE::build(voice.pick, Whole(longest) + SPARE);
@@ -67,7 +68,7 @@ void SOUND::PLUGINS::PLUCK::tune(Synth &synth, Whole at) {
 }
 
 void SOUND::PLUGINS::PLUCK::settle(Synth &synth) {
-  synth.tune = synth.rows[TUNE] / CENT;
+  synth.tune = synth.rows[TUNE] / CENT + synth.rows[BEND];
   synth.fall = std::exp(-FULL / (FADING * Float(synth.rate)));
   ::resonate(synth);
   CORE::SHAPER::settle(synth.blocker, BLOCKED, synth.rate);
