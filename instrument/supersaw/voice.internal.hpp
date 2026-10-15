@@ -38,6 +38,7 @@ struct Synth {
   Voice voices[VOICES];
   CORE::ENVELOPE::Envelope contour;
   CORE::ENVELOPE::Envelope door;
+  CORE::MODULATOR::Lfo lfo;
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
   Float tune = 0;
   CORE::BLOCK::Meter meter;

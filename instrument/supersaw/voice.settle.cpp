@@ -18,6 +18,12 @@ constexpr Stages CONTOUR = {
 constexpr Stages LOUDNESS = {
   SUPERSAW::ATTACK2, SUPERSAW::DECAY2, SUPERSAW::SUSTAIN2, SUPERSAW::RELEASE2};
 
+constexpr Whole SHAPES[] = {
+  CORE::MODULATOR::SINE, CORE::MODULATOR::TRIANGLE, CORE::MODULATOR::SAW,
+  CORE::MODULATOR::SQUARE};
+static_assert(std::size(SHAPES) == std::size(SUPERSAW::WAVES));
+constexpr Whole FIRST = 0;
+
 auto contour(const Float *rows, const Stages &stages, Whole rate)
   -> CORE::ENVELOPE::Envelope {
   auto envelope = CORE::ENVELOPE::ADSR::create(
@@ -40,12 +46,20 @@ void stack(SUPERSAW::Synth &synth) {
   CORE::VOICE::settle(allocator, synth.rate);
 }
 
+void swing(SUPERSAW::Synth &synth) {
+  const Whole wave = Whole(synth.rows[SUPERSAW::WAVE]);
+  synth.lfo.wave = SHAPES[wave < std::size(SHAPES) ? wave : FIRST];
+  synth.lfo.hertz = synth.rows[SUPERSAW::RATE];
+  CORE::MODULATOR::settle(synth.lfo, synth.rate);
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::SUPERSAW::settle(Synth &synth) {
   synth.contour = ::contour(synth.rows, ::CONTOUR, synth.rate);
   synth.door = ::contour(synth.rows, ::LOUDNESS, synth.rate);
   ::stack(synth);
+  ::swing(synth);
   synth.tune = synth.rows[TUNE] / CENT;
   for (Voice &voice : synth.voices) CORE::BLOCK::reset(voice.stride);
 }
