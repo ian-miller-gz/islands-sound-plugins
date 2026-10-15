@@ -42,9 +42,10 @@ constexpr Whole LFOS[] = {
 static_assert(std::size(LFOS) == std::size(MONO::WAVES));
 
 void contour(
-  MONO::Contour &contour, const CORE::ENVELOPE::Envelope &envelope,
+  MONO::Contour &contour, const CORE::ENVELOPE::Envelope &envelope, Float depth,
   Whole rate) {
   contour.envelope = envelope;
+  contour.envelope.depth = depth;
   contour.envelope.curve = CORE::ENVELOPE::EXPONENTIAL;
   contour.envelope.trigger = CORE::ENVELOPE::RESUME;
   CORE::ENVELOPE::shape(contour.envelope, rate);
@@ -78,8 +79,10 @@ void SOUND::PLUGINS::MONO::settle(Synth &synth) {
     synth.envelope,
     CORE::ENVELOPE::ADSR::create(
       rows[ATTACK], rows[DECAY], rows[SUSTAIN], rows[RELEASE]),
+    rows[VELOCITY], synth.rate);
+  ::contour(
+    synth.gate, CORE::ENVELOPE::GATE::create(rows[VELOCITY]), rows[VELOCITY],
     synth.rate);
-  ::contour(synth.gate, CORE::ENVELOPE::GATE::create(0), synth.rate);
   synth.allocator.legato = Whole(rows[TRIGGER]) != TRIGGERED;
   ::glide(synth);
   ::swing(synth);
