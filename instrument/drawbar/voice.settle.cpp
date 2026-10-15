@@ -12,6 +12,7 @@ constexpr Float SOFT = 0.5f;
 constexpr Float GLIDE = 0.002f;
 constexpr Float SNAP = 0.004f;
 constexpr Float BRIGHT = 4000;
+constexpr Float MILLISECOND = 0.001f;
 
 auto percussion(const Float *rows, Whole rate) -> CORE::ENVELOPE::Envelope {
   const Float decay = rows[DRAWBAR::DECAY] > 0 ? SLOW : FAST;
@@ -33,6 +34,7 @@ void SOUND::PLUGINS::DRAWBAR::settle(Organ &organ) {
   organ.percussion = ::percussion(rows, organ.rate);
   organ.accent = ::accent(rows);
   organ.pole = CORE::MODULATOR::pole(::GLIDE, organ.rate);
+  organ.contacts.spread = rows[CONTACT] * ::MILLISECOND * Float(organ.rate);
   CORE::NOISE::settle(organ.click, SNAP, BRIGHT, organ.rate);
   settle(organ.scanner, Whole(rows[SCANNER]), organ.rate);
   settle(organ.rotary, Whole(rows[ROTARY]), organ.rate);

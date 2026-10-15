@@ -36,10 +36,11 @@ auto drive(const Float *rows, Float in) -> Float {
 }  // namespace
 
 auto SOUND::PLUGINS::DRAWBAR::sound(Organ &organ) -> Pair {
+  close(organ);
   const Tones tones = ::turn(organ);
   const Float decay = CORE::ENVELOPE::tick(organ.gate, organ.percussion);
   const Float percussion = tones.struck * decay * organ.accent;
-  Float mixed = LEVEL * (tones.body + percussion);
+  Float mixed = ::LEVEL * (tones.body + percussion);
   mixed += CORE::NOISE::tick(organ.click);
   mixed = tick(organ.scanner, mixed);
   return tick(organ.rotary, organ, ::drive(organ.rows, mixed));

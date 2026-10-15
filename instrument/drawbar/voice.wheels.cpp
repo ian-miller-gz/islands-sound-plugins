@@ -45,10 +45,12 @@ auto gain(Float degree) -> Float {
   return std::pow(TEN, -STEP * (DRAWBAR::PULLED - degree) / DECIBELS);
 }
 
-void sound(DRAWBAR::Organ &organ, Integer pitch, Integer harmonic) {
+void sound(DRAWBAR::Organ &organ, Whole pitch, Integer harmonic) {
+  const Integer key = Integer(pitch);
   for (Whole bar = 0; bar < DRAWBAR::BARS; ++bar)
-    organ.targets[::fold(pitch + OFFSETS[bar])] += organ.gains[bar];
-  organ.strikes[::fold(pitch + harmonic)] += 1;
+    if (DRAWBAR::closed(organ, pitch, bar))
+      organ.targets[::fold(key + OFFSETS[bar])] += organ.gains[bar];
+  organ.strikes[::fold(key + harmonic)] += 1;
 }
 
 }  // namespace
@@ -72,5 +74,5 @@ void SOUND::PLUGINS::DRAWBAR::pull(Organ &organ) {
   std::fill(std::begin(organ.strikes), std::end(organ.strikes), 0.0f);
   const Integer harmonic = ::HARMONICS[organ.rows[HARMONIC] > 0 ? 1 : 0];
   for (Whole pitch = 0; pitch < CORE::PHASE::PITCHES; ++pitch)
-    if (organ.keys[pitch]) ::sound(organ, Integer(pitch), harmonic);
+    if (organ.keys[pitch]) ::sound(organ, pitch, harmonic);
 }
