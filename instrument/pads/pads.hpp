@@ -13,6 +13,8 @@ constexpr auto place(Whole pad, Whole knob) -> Whole {
   return pad * KNOBS + knob;
 }
 
+constexpr Whole PAN = Whole(PADS) * KNOBS;
+
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Kick Tune", "Hz", 60, 30, 1000, 0, nullptr},
   {"Kick Bend", "", 0.6f, 0, 1, 0, nullptr},
@@ -55,9 +57,15 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Floor Tone", "Hz", 1200, 200, 12000, 0, nullptr},
   {"Floor Noise", "", 0.2f, 0, 1, 0, nullptr},
   {"Floor Click", "", 0.3f, 0, 1, 0, nullptr},
-  {"Floor Level", "", 0.8f, 0, 1, 0, nullptr}};
+  {"Floor Level", "", 0.8f, 0, 1, 0, nullptr},
+  {"Kick Pan", "", 0, -1, 1, 0, nullptr},
+  {"Snare Pan", "", 0.15f, -1, 1, 0, nullptr},
+  {"High Pan", "", -0.5f, -1, 1, 0, nullptr},
+  {"Mid Pan", "", -0.2f, -1, 1, 0, nullptr},
+  {"Low Pan", "", 0.2f, -1, 1, 0, nullptr},
+  {"Floor Pan", "", 0.5f, -1, 1, 0, nullptr}};
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 constexpr Whole PARAMETERS = SHEET.count;
-static_assert(PARAMETERS == Whole(PADS) * KNOBS);
+static_assert(PARAMETERS == Whole(PADS) * KNOBS + PADS);
 
 }  // namespace SOUND::PLUGINS::PADS
