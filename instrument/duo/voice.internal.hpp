@@ -37,6 +37,7 @@ struct Synth {
   CORE::MODULATOR::Smoother lag;
   Float input = 0;
   Float held = 0;
+  Float velocity = 0;
   CORE::FILTER::Pole highpass;
   CORE::FILTER::Variable variable;
   CORE::FILTER::Ladder ladder;

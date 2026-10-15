@@ -34,6 +34,7 @@ void visit(DUO::Synth &synth, const CORE::VOICE::Note &note) {
 }  // namespace
 
 void SOUND::PLUGINS::DUO::strike(Synth &synth, Float velocity) {
+  synth.velocity = velocity;
   for (Contour *contour : {&synth.adsr, &synth.ar})
     CORE::ENVELOPE::strike(contour->gate, contour->envelope, velocity);
 }

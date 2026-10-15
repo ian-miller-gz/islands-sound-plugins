@@ -62,7 +62,8 @@ auto SOUND::PLUGINS::DUO::sound(Synth &synth) -> Float {
   const Float sum = tones.mixed + rows[NOISE] * noise;
   const Float contour = rows[CONTOUR] > 0 ? ar : adsr;
   const Float filtered = filter(synth, sum, low, lfo, random, contour);
-  const Float gain = rows[AMPLIFIER] > 0 ? ar : adsr;
+  const Float loud = CORE::ENVELOPE::weigh(synth.velocity, rows[VELOCITY]);
+  const Float gain = (rows[AMPLIFIER] > 0 ? ar : adsr) * loud;
   ::quiet(synth);
   return CORE::SHAPER::tick(synth.blocker, filtered * gain);
 }
