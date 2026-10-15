@@ -42,6 +42,7 @@ void SOUND::PLUGINS::DUO::settle(Synth &synth) {
     synth.rate);
   ::glide(synth);
   ::swing(synth);
+  DUO::wander(synth);
   CORE::FILTER::settle(
     synth.highpass, CORE::FILTER::HIGH, rows[HIGHPASS], synth.rate);
   synth.tune = rows[TUNE] / CENT;

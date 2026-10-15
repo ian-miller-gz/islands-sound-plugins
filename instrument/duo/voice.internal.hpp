@@ -35,6 +35,8 @@ struct Synth {
   CORE::NOISE::Pink noise;
   CORE::MODULATOR::Lfo lfo;
   CORE::MODULATOR::Smoother lag;
+  CORE::VOICE::Trim trims[CORE::VOICE::PARTS];
+  CORE::MODULATOR::Drift drifts[CORE::VOICE::PARTS];
   Float input = 0;
   Float held = 0;
   Float velocity = 0;
@@ -50,6 +52,9 @@ struct Synth {
 };
 
 void settle(Synth &synth);
+void seed(Synth &synth);
+void wander(Synth &synth);
+auto stray(Synth &synth, Whole part) -> Float;
 
 void strike(Synth &synth, Float velocity);
 void sample(Synth &synth);
