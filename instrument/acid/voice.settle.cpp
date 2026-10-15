@@ -24,7 +24,8 @@ auto shaped(CORE::ENVELOPE::Envelope envelope, Whole rate)
 }
 
 void contour(ACID::Synth &synth) {
-  const Float decays[ACID::ACCENTS] = {synth.rows[ACID::DECAY], ACID::SHORTEST};
+  const Float decays[ACID::ACCENTS] = {
+    synth.rows[ACID::DECAY], synth.rows[ACID::SNAP]};
   for (Whole accent = 0; accent < ACID::ACCENTS; ++accent)
     synth.contours[accent] =
       ::shaped(CORE::ENVELOPE::AD::create(ATTACK, decays[accent]), synth.rate);
