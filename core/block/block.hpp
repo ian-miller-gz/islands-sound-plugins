@@ -39,4 +39,31 @@ void rest(
   while (cursor.next < count) apply(events[cursor.next++]);
 }
 
+constexpr Float UPPER = 0.1f;
+constexpr Float LOWER = 0.05f;
+
+enum Crossing : Whole { STILL, ROSE, FELL, CROSSINGS };
+
+struct Stride {
+  Whole left = 0;
+};
+
+struct Edge {
+  Flag high = false;
+  Float last = 0;
+  Float since = 0;
+};
+
+auto due(Stride &stride, Whole every) -> Flag;
+void reset(Stride &stride);
+
+auto lane(
+  AUDIO::PLUGIN::Sample *const *lanes, Whole in, Whole channel,
+  Whole channels) -> AUDIO::PLUGIN::Sample *;
+
+auto crossed(Edge &edge, Float in) -> Whole;
+
+auto scaled(Float base, Float cv, Float octaves, Float least, Float most)
+  -> Float;
+
 }  // namespace SOUND::PLUGINS::CORE::BLOCK
