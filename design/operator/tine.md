@@ -74,3 +74,5 @@ Chain: the tine electric piano (tine and tone bar as a two-operator pair, the be
 | velocity through an adjustable curve to level and a per-voice darkening low-pass; notes panned by key about the middle | mda ePiano `src/mdaEPiano.cpp` | GPL-3.0+ LV2 port (method only); MIT or GPL-2.0 original |
 | hammer and release noise, the damper's stop | Pianoteq electric pianos; Stage-73 V | commercial (feature pages) |
 | sustain pedal as a hold on lifts | mda ePiano `src/mdaEPiano.cpp`; Pianoteq (manual) | GPL-3.0+ port (method only); commercial |
+
+Cores: core/stereo

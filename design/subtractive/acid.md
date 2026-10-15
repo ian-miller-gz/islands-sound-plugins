@@ -63,3 +63,5 @@ The Bassline filter stays in the instrument: one instrument states it (a need of
 | the separate accent decay and the output drive as panel switches | JC303 `JC303.cpp` (the modded-unit switches) | GPL-3.0 (method only) |
 | the nonlinear filter run oversampled behind a half-band decimator | Open303 `rosic_Open303.h` (4x; ours 2x on the standing half-band) | MIT |
 | coefficients settled at control rate, not every sample | stmlib `dsp/parameter_interpolator.h` | MIT |
+
+Cores: core/block

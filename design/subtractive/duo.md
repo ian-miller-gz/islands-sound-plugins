@@ -97,3 +97,5 @@ Chain: the duophonic's public panel (two VCOs, sync, ring, sample-and-hold on th
 | the drive switch and the filter revisions | Korg ARP Odyssey (product page) | commercial page |
 | per-voice variance and drift between the two voices | 2DaT Obxd `ObxdVoice.h`; Odin 2 `DriftGenerator.cpp` | GPL-3.0 (method only) |
 | coefficients at control rate | stmlib `dsp/parameter_interpolator.h` | MIT |
+
+Cores: core/block, core/filter, core/modulator, core/voice

@@ -59,3 +59,5 @@ Chain: the analogue clap (white noise through a band under four staggered bursts
 | noise under staggered envelopes, a resonant low-pass, a soft clip | Faust `synths.lib` (`sy.clap`) | LGPL-2.1+ with exception (method only) |
 | a randomised burst spacing; a tail apart from the bursts | Ableton DS Clap (manual); the analogue clap's reverb tail (TR-808 manual) | commercial pages |
 | velocity through an adjustable curve | drumkv1 `src/drumkv1.cpp`; DrumGizmo `src/powermap.cc` | GPL-2.0+; LGPL-3.0+ (method only) |
+
+Cores: core/percussion

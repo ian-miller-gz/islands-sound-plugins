@@ -62,3 +62,5 @@ Chain: the preset-rhythm box (sixteen patterns as tables, tempo, run, fill, voic
 | humanize as random offsets to timing and velocity; swing delays the off-beat steps | Hydrogen `src/core/Basics/Note.cpp` | GPL-2.0+ (method only) |
 | a laid-back offset with a relaxing drift | DrumGizmo `src/latencyfilter.cc` | LGPL-3.0+ (method only) |
 | accent per step; shuffle; voices of the preset boxes | Roland Cloud TR-808/909 (manuals); Microtonic (product page) | commercial |
+
+Cores: core/percussion

@@ -68,3 +68,5 @@ No choice rows. Chain: the analogue kit (the nine circuits seated as one kit ove
 | equal-power pan from quarter-offset sines | Bogaudio `signal.cpp` (matrix `## Methods`) | GPL-3.0+ (method only) |
 | a silent voice skipped; the hit rendered once and read | Geonkick `src/dsp/src/synthesizer.c` | GPL-3.0+ (method only) |
 | velocity through a monotone curve | DrumGizmo `src/powermap.cc` | LGPL-3.0+ (method only) |
+
+Cores: core/percussion, core/stereo

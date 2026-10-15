@@ -57,3 +57,5 @@ Chain: the founding five-slot drum box (a swept sine and a coloured noise per sl
 | a sine swept from a start to an end pitch, noise mixed by a share | LMMS Kicker `plugins/Kicker/KickerOsc.h` | GPL-2.0+ (method only) |
 | the exclusive class: a choked voice gets a very short release | FluidSynth `src/synth/fluid_voice.c`; sfizz `src/sfizz/Voice.cpp` | LGPL-2.1+ (method only); BSD-2-Clause |
 | velocity through an adjustable curve | drumkv1 `src/drumkv1.cpp` | GPL-2.0+ (method only) |
+
+Cores: core/percussion

@@ -65,3 +65,5 @@ The build waits until the library shift has landed `lane`, `taper` and core/ster
 | attenuverting levels; mutes per channel | Mutable Shades manual; Bogaudio Mix4 | MIT (docs); GPL-3.0+ (method only) |
 | a dB taper with a linear ramp near silence | Bogaudio `src/dsp/signal.cpp`; Veils manual | GPL-3.0+ (method only); MIT (docs) |
 | CV on levels | VCV Fundamental `src/VCMixer.cpp` | GPL-3.0+ (method only) |
+
+Cores: core/block, core/stereo

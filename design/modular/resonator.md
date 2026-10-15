@@ -68,3 +68,5 @@ The build waits until the library shift has landed `lane`, `scaled`, `Stride` an
 | ladder of four saturating one-poles, 2x, a whisper of noise to self-oscillate | VCV Fundamental `src/VCF.cpp`; Huovilainen DAFx-04 | GPL-3.0+ (method only); paper |
 | OTA soft-limiting inside the resonance loop; LP2/LP4/BP from one core | Mutable Ripples manual | MIT (docs) |
 | model choice in one filter module | Bitwig Grid user guide; Surge XT Rack manual (VCF) | commercial; GPL-3.0+ (docs) |
+
+Cores: core/block, core/filter

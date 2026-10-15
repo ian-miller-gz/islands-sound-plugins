@@ -99,3 +99,5 @@ Chain: the five-voice poly-modulation chain (A and B per voice, poly-mod from th
 | drift as a random walk | sst-basic-blocks `OscillatorDriftUnisonCharacter.h`; Odin 2 `DriftGenerator.cpp` | GPL-3.0 (method only) |
 | bucket-brigade chorus as swept delay reads | Holters & Parker DAFx-18 | copyright (method only) |
 | effects inside the poly instrument | Repro-5 (manual: five effects) | manual |
+
+Cores: core/line, core/modulator, core/voice

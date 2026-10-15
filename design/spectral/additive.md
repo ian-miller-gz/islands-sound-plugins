@@ -88,3 +88,5 @@ No core beyond `Stride` (already named) is needed: the partial bank has one ride
 | noise through a bandpass per harmonic | ZynAddSubFX `src/Synth/SUBnote.cpp` | GPL-2.0+ | later |
 | table rebuilds off the audio thread | Yoshimi | GPL-2.0+ | later |
 | time-varying partials for resynthesis | Loris | GPL-2.0+ | after seam S2 |
+
+Cores: core/block

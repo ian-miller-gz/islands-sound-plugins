@@ -70,3 +70,5 @@ No choice rows. Chain: the second machine (swept-sine kick with knee and click, 
 | ring-pair hats and a tracking band | Plaits `plaits/dsp/drums/hi_hat.h` | MIT |
 | per-voice Attack, Decay, Tone, Snappy knobs and the cymbal and rim voices | Roland Cloud TR-909 (owner's manual) | commercial manual |
 | velocity squared, then a curve exponent | drumkv1 `src/drumkv1.cpp` | GPL-2.0+ (method only) |
+
+Cores: core/percussion, core/stereo

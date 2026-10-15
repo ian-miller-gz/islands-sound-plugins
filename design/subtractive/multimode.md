@@ -90,3 +90,5 @@ Chain: the two-VCO, 12 dB state-variable chain (low → notch → high sweep, ba
 | per-voice variance; drift | 2DaT Obxd `ObxdVoice.h`; sst-basic-blocks `OscillatorDriftUnisonCharacter.h` | GPL-3.0 (method only) |
 | allocator: same note, else idle, else oldest | stmlib `algorithms/voice_allocator.h` | MIT |
 | coefficients at control rate | stmlib `dsp/parameter_interpolator.h` | MIT |
+
+Cores: core/block, core/filter, core/modulator, core/voice

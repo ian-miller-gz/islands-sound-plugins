@@ -87,3 +87,5 @@ Chain: the six-voice DCO's public panel (Range 16'/8'/4', the four-position high
 | mono modes and portamento | Surge `SurgeVoice.cpp`; Yarns `part.h` | GPL-3.0 (method only); MIT |
 | coefficients at control rate | stmlib `dsp/parameter_interpolator.h` | MIT |
 | bucket-brigade chorus as swept delay reads | Holters & Parker DAFx-18 | copyright (method only) |
+
+Cores: core/block, core/filter, core/line, core/modulator, core/voice

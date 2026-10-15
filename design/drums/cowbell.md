@@ -57,3 +57,5 @@ Chain: the analogue cowbell (two squares, the 540 Hz and 800 Hz pair of the circ
 | the cowbell circuit: two squares, a band, a two-part envelope | Werner, Abel, Smith, AES 137 (citation page); Sound On Sound, Synth Secrets (summaries) | paper; commercial |
 | the circuit's own tuning trimmers as rows | Roland Cloud TR-808 (manual) | commercial manual |
 | velocity through an adjustable curve | drumkv1 `src/drumkv1.cpp` | GPL-2.0+ (method only) |
+
+Cores: core/percussion

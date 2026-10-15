@@ -62,3 +62,5 @@ The build waits until the library shift has landed `lane`, `scaled` and `Slew` `
 | slew shape by crossfading constant, distance-proportional and inverse rate laws | Befaco `src/Rampage.cpp`, `src/SlewLimiter.cpp` | GPL-3.0+ (method only) |
 | separate up and down lags; a smoother morphing exponential to linear | Faust `signals.lib` (lag_ud, smoothq); SuperCollider `LagUD`, `VarLag` (docs) | per function; GPL-3.0 (method only) |
 | nonlinear slew (read; a later round) | Pure Data `src/d_filter.c` (slop~) | BSD-3-Clause |
+
+Cores: core/block

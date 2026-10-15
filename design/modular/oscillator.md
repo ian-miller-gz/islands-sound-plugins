@@ -72,3 +72,5 @@ The build waits until the library shift has landed `lane`, `Edge` and the edge-d
 | exponential pitch CV beside linear FM | VCV Fundamental `src/VCO.cpp`; Cherry Audio Voltage Modular oscillator doc | GPL-3.0+ (method only); commercial doc |
 | through-zero linear FM with the BLEP direction following (read; a later round) | Bogaudio `src/dsp/oscillator.cpp`; Befaco `src/PonyVCO.cpp` | GPL-3.0+ (method only) |
 | a separate detune for a stacked saw | Surge XT `ClassicOscillator.cpp`; Vital `synth_oscillator.cpp` | GPL-3.0 (method only) |
+
+Cores: core/block

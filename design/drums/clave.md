@@ -57,3 +57,5 @@ Chain: the damped bridged-T strike (a bar resonator for the clave, two short res
 | one resonator per mode at a ratio and radius; strike strength shapes the excitation | STK `src/Modal.cpp`, `src/ModalBar.cpp` | STK (MIT-like) |
 | a mode bank whose higher modes decay sooner | Faust `physmodels.lib` (`strikeModel`) | LGPL-2.1+ with exception (method only) |
 | chromatic play about a root | Plaits V/oct; RipplerX keyed | MIT; GPL-3.0 (method only) |
+
+Cores: core/percussion

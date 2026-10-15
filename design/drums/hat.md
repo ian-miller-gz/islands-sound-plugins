@@ -62,3 +62,5 @@ Chain: the analogue hat (six squares at the metallic ratios into a band and a hi
 | a high-Q band run twice per sample for stability | Peaks `peaks/drums/high_hat.cc` | MIT |
 | the open hat choked with a very short release | FluidSynth `src/synth/fluid_voice.c` (exclusive class); sfizz `src/sfizz/Voice.cpp` | LGPL-2.1+ (method only); BSD-2-Clause |
 | pedal and half-open strokes | Addictive Drums 2, Superior Drummer 3 (stroke types) | commercial |
+
+Cores: core/percussion

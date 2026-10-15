@@ -70,3 +70,5 @@ The build waits until the library shift has landed `lane` and `Integral`.
 | selectable oversampling behind a steep low-pass around a folder | Befaco `src/ChoppingKinky.cpp` | GPL-3.0+ (method only) |
 | an offset (bias) before a cubic curve | Faust `misceffects.lib` (`cubicnl`) | per function (STK-4.3 / MIT; method only) |
 | Chebyshev shaping as a module | Bitwig Grid user guide | commercial |
+
+Cores: core/block

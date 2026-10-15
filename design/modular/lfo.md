@@ -69,3 +69,5 @@ The build waits until the library shift has landed `lane`, `Edge`, `scaled`, `St
 | random with stepped, linear and smooth interpolation between draws | VCV Fundamental `src/Random.cpp`; SuperCollider `NoiseUGens.cpp` (LFNoise0/1/2) | GPL-3.0+; GPL-2.0+ (method only) |
 | reset on a trigger in; unipolar/bipolar | VCV Fundamental `src/LFO.cpp`; Bogaudio; Softube A-147 | GPL-3.0+ (method only); commercial manual |
 | an LFO reaching audio rate | Reaktor Blocks (product page, 100 Hz); Tides 2 manual | commercial; MIT (docs) |
+
+Cores: core/block

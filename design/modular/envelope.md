@@ -77,3 +77,5 @@ The build waits until the library shift has landed `lane`, `Edge`, `scaled`, `St
 | curvature as one signed number per segment; loop and release nodes | SuperCollider `Env` (class docs) | GPL-3.0 (method only) |
 | each stage aims at a target past its end (our ratio) | VCV Fundamental `src/ADSR.cpp` | GPL-3.0+ (method only) |
 | a gate read from CV beside the keyboard; a retrigger in | VCV Fundamental `ADSR.cpp`; Softube Modular manual (A-140) | GPL-3.0+; commercial manual |
+
+Cores: core/block

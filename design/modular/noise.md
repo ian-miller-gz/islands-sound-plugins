@@ -67,3 +67,5 @@ The build waits until the library shift has landed `lane`, `scaled`, `Stride`, `
 | velvet noise as sparse signed impulses; noise of any slope | Faust `noises.lib` (velvet, colored_noise) | per function (STK-4.3 / LGPL; method only) |
 | a bounded random walk; sample-and-hold over noise | Bogaudio Walk and S&H; Softube Modular manual (A-118) | GPL-3.0+ (method only); commercial manual |
 | brown as a bounded walk | Geonkick `oscillator.c` | GPL-3.0+ (method only) |
+
+Cores: core/block

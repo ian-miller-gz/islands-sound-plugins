@@ -62,3 +62,5 @@ The standing `settle(tom, tune, decay, bend, tone, rate)` stays with Drop = Deca
 | partials stretched, decay by a power law of frequency | RipplerX `src/dsp/Partial.cpp` | GPL-3.0 (method only) |
 | a pitch envelope with a cubic bend over a time | Befaco Kickall `src/Kickall.cpp` | GPL-3.0+ (method only) |
 | chromatic toms by keytrack | KICK 3 keytrack; Plaits V/oct | commercial; MIT |
+
+Cores: core/percussion

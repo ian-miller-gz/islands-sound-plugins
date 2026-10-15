@@ -62,3 +62,5 @@ The standing `settle(snare, tune, tone, snappy, decay, rate)` and `strike(snare,
 | five inharmonic modes, the upper damped harder; a tone crossfading two modes into many | Plaits `plaits/dsp/drums/analog_snare_drum.h` | MIT |
 | heads with a pitch drop; noise held, then decaying | Plaits `plaits/dsp/drums/synthetic_snare_drum.h` | MIT |
 | rimshot and side-stick strokes | Addictive Drums 2, Superior Drummer 3; the general MIDI map 37/38/40 | commercial; standard |
+
+Cores: core/percussion

@@ -142,3 +142,5 @@ The build waits until the library shift has landed `Tract`/`Formant`, the glotti
 | unison sub-voices with seeded places | ZynAddSubFX `ADnote`; Vital `synth_oscillator.h` | GPL-2.0+; GPL-3.0 | this round in part (a seeded place per slot) |
 | Klatt cascade and parallel, frication, the nasal pair | klatt-syn `src/Klatt.ts`; eSpeak NG `klatt.c` | MIT; GPL-3.0+ | round 2 (consonant) |
 | a BLEP-corrected pulse train | Plaits `dsp/speech/sam_speech_synth.cc` | MIT | round 2 (lack 18) |
+
+Cores: core/block, core/filter, core/glottis, core/modulator, core/stereo

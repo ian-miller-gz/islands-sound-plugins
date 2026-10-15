@@ -89,3 +89,5 @@ Chain: the three-oscillator monosynth's public panel (Range Lo–2', six waves, 
 | Moog VCF analysis (the loop's tuning) | Stilson & Smith ICMC 1996 | copyright |
 | drift as a random walk per voice | sst-basic-blocks `OscillatorDriftUnisonCharacter.h`; Odin 2 `DriftGenerator.cpp` | GPL-3.0 (method only) |
 | coefficients at control rate | stmlib `dsp/parameter_interpolator.h` | MIT |
+
+Cores: core/block, core/filter, core/modulator

@@ -78,3 +78,5 @@ Chain: the little monosynth's public panel (one VCO with square, saw, sub one or
 | the TPT one-pole stages with the loop solved | Zavalishin, *The Art of VA Filter Design*; stmlib `dsp/filter.h` | copyright; MIT |
 | drift as a random walk | sst-basic-blocks `OscillatorDriftUnisonCharacter.h`; Odin 2 `DriftGenerator.cpp` | GPL-3.0 (method only) |
 | coefficients at control rate | stmlib `dsp/parameter_interpolator.h` | MIT |
+
+Cores: core/block, core/filter, core/modulator

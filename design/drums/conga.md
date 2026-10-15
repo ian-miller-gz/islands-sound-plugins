@@ -60,3 +60,5 @@ Chain: the swept bridged-T conga with the hand damp (slap above velocity 0.75 as
 | partials stretched, decay by a power law of frequency | RipplerX `src/dsp/Partial.cpp` | GPL-3.0 (method only) |
 | a pitch envelope with a cubic bend over a decay time | Befaco Kickall `src/Kickall.cpp` | GPL-3.0+ (method only) |
 | mute and open strokes by note | Roland Cloud TR-808 conga switch; Battery 4 articulations | commercial manuals |
+
+Cores: core/percussion

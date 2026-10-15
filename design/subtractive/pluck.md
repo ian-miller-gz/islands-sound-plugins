@@ -63,3 +63,5 @@ Chain: the extended Karplus–Strong plucked string (a delay loop seeded by a bu
 | extended Karplus–Strong: pick-direction low-pass, damping, level by velocity | J.O. Smith, *Physical Audio Signal Processing* | copyright |
 | exciter choices beyond the noise burst | Mutable Rings (exciters); Korg Prophecy plucked model (product page) | MIT; commercial page |
 | equal-power pan | Bogaudio `signal.cpp` (matrix `## Methods`) | GPL-3.0+ (method only) |
+
+Cores: core/stereo

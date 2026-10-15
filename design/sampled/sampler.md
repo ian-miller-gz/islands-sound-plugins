@@ -102,3 +102,5 @@ The public chain is the sample voice of the SoundFont 2.04 generator model (samp
 | velocity curves filled into a table at load | sfizz `src/sfizz/Curve.cpp` | BSD-2-Clause | later |
 | early end when envelope × loop peak sinks under the floor | FluidSynth `src/synth/fluid_voice.c` | LGPL-2.1+ | later (method only) |
 | release clip level scaled by held time | LinuxSampler `src/engines/common/AbstractVoice.cpp` | GPL-2.0+ with a no-commercial-use exception | later (idea only) |
+
+Cores: core/block

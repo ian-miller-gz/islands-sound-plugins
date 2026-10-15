@@ -56,3 +56,5 @@ No choice rows. Chain: the hexagonal-pad kit (six swept-tone and noise pads with
 |---|---|---|
 | equal-power pan from quarter-offset sines | Bogaudio `signal.cpp` (matrix `## Methods`) | GPL-3.0+ (method only) |
 | a pan per drum in a kit | Roland Cloud TR-808/909, Microtonic (product pages, drums survey) | commercial pages |
+
+Cores: core/percussion, core/stereo

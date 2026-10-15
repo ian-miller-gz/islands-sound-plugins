@@ -60,3 +60,5 @@ Chain: the analogue cymbal (six squares at the metallic ratios, three bands each
 | noise crossfaded into the metal | Plaits `plaits/dsp/drums/hi_hat.h` | MIT |
 | choke as a short fade, not a cut | sfizz `src/sfizz/Voice.cpp`; FluidSynth `src/synth/fluid_voice.c` | BSD-2-Clause; LGPL-2.1+ (method only) |
 | bell and choke strokes | Addictive Drums 2, Superior Drummer 3 (manual, product page) | commercial |
+
+Cores: core/percussion

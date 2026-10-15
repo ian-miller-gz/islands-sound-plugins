@@ -71,3 +71,5 @@ The standing `settle(kick, tune, decay, attack, drive, tone, rate)` stays and se
 | the kick behind an oversampler; a cubic pitch bend | Befaco Kickall `src/Kickall.cpp` | GPL-3.0+ (method only) |
 | start and end pitch on a power law; a slope row | LMMS Kicker `plugins/Kicker/KickerOsc.h` | GPL-2.0+ (method only) |
 | a post-drive EQ; click kinds | KICK 3 (reviews), Ableton DS Kick (manual) | commercial |
+
+Cores: core/percussion

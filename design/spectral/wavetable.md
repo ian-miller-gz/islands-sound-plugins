@@ -89,3 +89,5 @@ Chain: the two-table wavetable voice (two morphing table sources, a 24 dB filter
 | frames on a grid; four corner tables | Plaits `wavetable_engine.cc`; Odin 2 `VectorOscillator.cpp` | MIT; GPL-3.0 | later (78) |
 | spectral frame morph; spectral warps | Vital `wave_source.cpp`, `wave_frame.cpp`, `spectral_morph.h` | GPL-3.0 | later (77) |
 | period detection for import | Vital `pitch_detector.cpp`, `file_source.cpp` | GPL-3.0 | after seam S2 |
+
+Cores: core/block, core/stereo

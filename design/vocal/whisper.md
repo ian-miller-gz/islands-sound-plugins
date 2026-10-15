@@ -92,3 +92,5 @@ The build waits until the library shift has landed `Tract`/`Formant` with `bread
 | a 2-D vowel square in log frequency | Vital `src/synthesis/filters/formant_filter.cpp` | GPL-3.0 | read; our place is (open, front) |
 | turbulence where the tract narrows; plosive impulses | pink-trombone-mod `src/Tract.ts` | MIT (the port's) | round 2 (35) |
 | frication into F2 and up, alternating signs | klatt-syn `src/Klatt.ts`; eSpeak NG `klatt.c` | MIT; GPL-3.0+ | round 2 (35) |
+
+Cores: core/block, core/filter, core/glottis, core/stereo

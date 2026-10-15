@@ -78,3 +78,5 @@ Chain: the dance lead's public path (seven detuned saws with the detune curve an
 | TPT state-variable taps | stmlib `dsp/filter.h` | MIT |
 | bucket-brigade chorus as swept delay reads | Holters & Parker DAFx-18 | copyright (method only) |
 | coefficients at control rate | stmlib `dsp/parameter_interpolator.h` | MIT |
+
+Cores: core/block, core/line

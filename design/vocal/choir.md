@@ -105,3 +105,5 @@ The build waits until the library shift has landed `Tract`/`Formant`, the glotti
 | a PADsynth ensemble table under the back singers | PADsynth algorithm page; ZynAddSubFX `PADnote` | public domain; GPL-2.0+ | later (41, after the cost is measured) |
 | pulse-reset sine formants as a cheap back-singer voice | Plaits `dsp/speech/sam_speech_synth.cc` | MIT | later (105) |
 | syllables from onset consonants | Hollywood Choirs WordBuilder; klatt-syn `src/Klatt.ts` | commercial; MIT | round 2 (35) |
+
+Cores: core/block, core/filter, core/glottis, core/modulator, core/stereo

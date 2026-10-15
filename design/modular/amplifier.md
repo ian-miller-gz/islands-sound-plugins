@@ -62,3 +62,5 @@ The build waits until the library shift has landed `lane`, `taper` and `Stride`.
 | a lin↔exp response morph; a dB taper with a linear ramp near silence; a blend of linear and cubed | Veils manual; Bogaudio `src/dsp/signal.cpp`; surge-rack `src/EGxVCA.h` | MIT (docs); GPL-3.0+ (method only); GPL-3.0+ (method only) |
 | low-pass gate: one control on a gain stage and an SVF low-pass | Mutable `plaits/dsp/fx/low_pass_gate.h` | MIT |
 | four-quadrant multiply; a diode ring | Mutable Blinds manual; `warps/dsp/modulator.cc`; Befaco A*B+C | MIT; MIT; GPL-3.0+ (method only) |
+
+Cores: core/block
