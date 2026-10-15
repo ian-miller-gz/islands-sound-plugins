@@ -12,7 +12,10 @@ constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1;
 constexpr Float PEAK = 0.9f;
 constexpr Float SPAN = MULTIMODE::SQUARE - MULTIMODE::NARROW;
-constexpr Float PANS[MULTIMODE::VOICES] = {-FULL, FULL};
+constexpr Float WIDE = 0.75f;
+constexpr Float SLIGHT = 0.25f;
+constexpr Float PANS[MULTIMODE::VOICES] = {-FULL, FULL, -WIDE,   WIDE,
+                                           -HALF, HALF, -SLIGHT, SLIGHT};
 
 auto pitch(
   const MULTIMODE::Synth &synth, const CORE::VOICE::Note &note, Float key,

@@ -11,7 +11,6 @@
 
 namespace SOUND::PLUGINS::MULTIMODE {
 
-constexpr Whole VOICES = 2;
 constexpr Float REFERENCE = 60;
 
 struct Voice {

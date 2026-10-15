@@ -37,6 +37,12 @@ constexpr Whole UNISON = 29;
 constexpr Whole DETUNE = 30;
 constexpr Whole SPREAD = 31;
 constexpr Whole VOLUME = 32;
-constexpr Whole PARAMETERS = 33;
+constexpr Whole COUNT = 33;
+constexpr Whole SATURATION = 34;
+constexpr Whole VELOCITY = 35;
+constexpr Whole TOUCH = 36;
+constexpr Whole DRIFT = 37;
+constexpr Whole TRIM = 38;
+constexpr Whole PARAMETERS = 39;
 
 }  // namespace SOUND::PLUGINS::MULTIMODE
