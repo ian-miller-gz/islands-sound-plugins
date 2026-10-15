@@ -25,6 +25,9 @@ struct Steps {
 struct Pulse {
   Clock clock;
   Whole duty = 0;
+  Whole period = 0;
+  Float swept = 1;
+  Whole divider = 0;
   Flag muted = true;
 };
 

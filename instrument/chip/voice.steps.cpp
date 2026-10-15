@@ -20,6 +20,8 @@ void quarter(CHIP::Synth &synth) {
     step(synth.steps[at], synth.shapes[at]);
   CORE::VOICE::tick(synth.allocator.notes[0], synth.allocator.glide);
   synth.wobble = CORE::MODULATOR::tick(synth.vibrato);
+  if (++synth.quarters % (CHIP::QUARTER / CHIP::SWEEPING) == 0)
+    CHIP::sweep(synth);
   synth.stale = true;
 }
 
@@ -37,6 +39,7 @@ void SOUND::PLUGINS::CHIP::strike(Synth &synth) {
   synth.position = 0;
   CORE::MODULATOR::reset(synth.vibrato);
   synth.wobble = 0;
+  arm(synth);
   synth.gated = true;
   synth.stale = true;
 }

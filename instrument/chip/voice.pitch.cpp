@@ -6,39 +6,43 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Whole MOST = 2047;
+constexpr Float PULSING = 16;
+constexpr Float WAVING = 32;
+constexpr Whole LOWEST = 2;
 
-struct Timer {
-  Float divider;
-  Whole least;
-};
-
-constexpr Timer PULSING = {16, 8};
-constexpr Timer WAVING = {32, 2};
-
-auto divide(CHIP::Clock &clock, const Timer &timer, Float pitch, Whole rate)
-  -> Flag {
+auto counted(Float pitch, Float divider, Float scale) -> Whole {
   const Float hertz = CORE::PHASE::hertz(pitch);
-  const Float counted = std::round(CHIP::CPU / (timer.divider * hertz)) - 1;
-  const Whole period = counted < 0 ? 0 : Whole(counted);
-  const Float actual = CHIP::CPU / (timer.divider * Float(period + 1));
-  clock.step = CORE::PHASE::step(actual, rate);
-  return period < timer.least || period > MOST;
+  const Float period = std::round((CHIP::CPU / (divider * hertz) - 1) * scale);
+  return period < 0 ? 0 : Whole(period);
+}
+
+void drive(CHIP::Clock &clock, Float divider, Whole period, Whole rate) {
+  const Float hertz = CHIP::CPU / (divider * Float(period + 1));
+  clock.step = CORE::PHASE::step(hertz, rate);
+}
+
+auto pitched(const CHIP::Synth &synth) -> Float {
+  const Float *rows = synth.rows;
+  const Float offsets[CHIP::POSITIONS] = {
+    0, rows[CHIP::FIRST], rows[CHIP::SECOND]};
+  return synth.allocator.notes[0].current + synth.tune + rows[CHIP::BEND] +
+         offsets[synth.position % CHIP::POSITIONS] + synth.wobble;
 }
 
 }  // namespace
 
 void SOUND::PLUGINS::CHIP::retune(Synth &synth) {
-  const Float *rows = synth.rows;
-  const Float offsets[POSITIONS] = {0, rows[FIRST], rows[SECOND]};
-  const Float base = synth.allocator.notes[0].current + synth.tune +
-                     rows[BEND] + offsets[synth.position % POSITIONS] +
-                     synth.wobble;
-  const Float pitches[PULSES] = {base, base + rows[OFFSET2]};
-  for (Whole at = 0; at < PULSES; ++at)
-    synth.pulses[at].muted =
-      ::divide(synth.pulses[at].clock, ::PULSING, pitches[at], synth.rate);
-  synth.triangle.muted =
-    ::divide(synth.triangle.clock, ::WAVING, base + rows[OFFSET3], synth.rate);
+  const Float base = ::pitched(synth);
+  const Float pitches[PULSES] = {base, base + synth.rows[OFFSET2]};
+  for (Whole at = 0; at < PULSES; ++at) {
+    Pulse &pulse = synth.pulses[at];
+    pulse.period = ::counted(pitches[at], ::PULSING, pulse.swept);
+    pulse.muted = silenced(synth, at);
+    ::drive(pulse.clock, ::PULSING, pulse.period, synth.rate);
+  }
+  Wave &triangle = synth.triangle;
+  const Whole period = ::counted(base + synth.rows[OFFSET3], ::WAVING, 1);
+  triangle.muted = period < ::LOWEST || period > CEILING;
+  ::drive(triangle.clock, ::WAVING, period, synth.rate);
   synth.stale = false;
 }

@@ -18,6 +18,9 @@ constexpr Whole NOISE = 2;
 constexpr Whole FILTERS = 3;
 constexpr Whole POSITIONS = 3;
 constexpr Whole QUARTER = 240;
+constexpr Whole SWEEPING = 120;
+constexpr Whole FLOOR = 8;
+constexpr Whole CEILING = 2047;
 
 struct Synth {
   Whole rate = 0;
@@ -34,6 +37,7 @@ struct Synth {
   Shape shapes[ENVELOPES];
   Steps steps[ENVELOPES];
   Clock frame;
+  Whole quarters = 0;
   Clock arpeggio;
   Whole position = 0;
   Flag gated = false;
@@ -51,6 +55,11 @@ void lift(Synth &synth);
 void clock(Synth &synth);
 auto shift(Lfsr &noise) -> Whole;
 auto mixed(Whole pulses, Whole triangle, Whole noise) -> Float;
+
+auto target(const Synth &synth, Whole at) -> Whole;
+auto silenced(const Synth &synth, Whole at) -> Flag;
+void arm(Synth &synth);
+void sweep(Synth &synth);
 
 void settle(Synth &synth);
 void retune(Synth &synth);
