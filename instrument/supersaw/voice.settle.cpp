@@ -47,5 +47,5 @@ void SOUND::PLUGINS::SUPERSAW::settle(Synth &synth) {
   synth.door = ::contour(synth.rows, ::LOUDNESS, synth.rate);
   ::stack(synth);
   synth.tune = synth.rows[TUNE] / CENT;
-  for (Voice &voice : synth.voices) voice.stale = true;
+  for (Voice &voice : synth.voices) CORE::BLOCK::reset(voice.stride);
 }

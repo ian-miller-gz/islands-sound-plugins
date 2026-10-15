@@ -11,7 +11,7 @@
 namespace SOUND::PLUGINS::SUPERSAW {
 
 constexpr Whole VOICES = 8;
-constexpr Whole CONTROL = 16;
+constexpr Whole STRIDE = 16;
 constexpr Float REFERENCE = 60;
 
 struct Voice {
@@ -20,7 +20,7 @@ struct Voice {
   CORE::FILTER::Ladder ladder;
   CORE::ENVELOPE::Gate contour;
   CORE::ENVELOPE::Gate door;
-  Flag stale = true;
+  CORE::BLOCK::Stride stride;
 };
 
 struct Pair {
@@ -40,7 +40,6 @@ struct Synth {
   CORE::ENVELOPE::Envelope door;
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
   Float tune = 0;
-  Whole clock = 0;
   CORE::BLOCK::Meter meter;
 };
 

@@ -31,7 +31,6 @@ void tune(
   CORE::FILTER::settle(
     voice.ladder, rows[SUPERSAW::CUTOFF] * std::exp2(octaves),
     rows[SUPERSAW::RESONANCE], DRIVE, synth.rate);
-  voice.stale = false;
 }
 
 auto play(SUPERSAW::Synth &synth, Whole at) -> Float {
@@ -41,7 +40,8 @@ auto play(SUPERSAW::Synth &synth, Whole at) -> Float {
   const Float contour = CORE::ENVELOPE::tick(voice.contour, synth.contour);
   const Float loud = CORE::ENVELOPE::tick(voice.door, synth.door);
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
-  if (voice.stale || synth.clock == 0) ::tune(synth, voice, note, key, contour);
+  if (CORE::BLOCK::due(voice.stride, SUPERSAW::STRIDE))
+    ::tune(synth, voice, note, key, contour);
   const Float saws = LEVEL * CORE::OSCILLATOR::tick(voice.super);
   const Float thinned = CORE::FILTER::tick(voice.highpass, saws);
   const Float out = CORE::FILTER::tick(voice.ladder, thinned) * loud;
@@ -62,6 +62,5 @@ auto SOUND::PLUGINS::SUPERSAW::sound(Synth &synth) -> Pair {
     pair.right += out * ::lean(-pan);
     pair.whole += out;
   }
-  synth.clock = (synth.clock + 1) % CONTROL;
   return pair;
 }
