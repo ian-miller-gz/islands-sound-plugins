@@ -61,5 +61,9 @@ auto SOUND::PLUGINS::SUPERSAW::sound(Synth &synth) -> Pair {
     pair.right += out * ::lean(-pan);
     pair.whole += out;
   }
+  const CORE::STEREO::Pair wet = CORE::LINE::tick(synth.chorus, pair.whole);
+  pair.left += wet.left - pair.whole;
+  pair.right += wet.right - pair.whole;
+  pair.whole = synth.chorus.whole;
   return pair;
 }

@@ -5,6 +5,9 @@ namespace {
 using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
+constexpr Float SWAY = 0.5f;
+constexpr Float DEPTH = 2.5f;
+constexpr Float MILLISECOND = 0.001f;
 
 struct Stages {
   Whole attack;
@@ -61,6 +64,9 @@ void SOUND::PLUGINS::SUPERSAW::settle(Synth &synth) {
   synth.door.depth = synth.rows[VELOCITY];
   ::stack(synth);
   ::swing(synth);
+  CORE::LINE::settle(
+    synth.chorus, ::SWAY, ::DEPTH * ::MILLISECOND, synth.rows[CHORUS],
+    synth.rate);
   synth.tune = synth.rows[TUNE] / CENT;
   for (Voice &voice : synth.voices) CORE::BLOCK::reset(voice.stride);
 }

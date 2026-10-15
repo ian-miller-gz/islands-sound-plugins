@@ -4,6 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
+#include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
@@ -40,6 +41,7 @@ struct Synth {
   CORE::ENVELOPE::Envelope contour;
   CORE::ENVELOPE::Envelope door;
   CORE::MODULATOR::Lfo lfo;
+  CORE::LINE::Chorus chorus;
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
   Float tune = 0;
   CORE::BLOCK::Meter meter;
