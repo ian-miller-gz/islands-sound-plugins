@@ -16,6 +16,7 @@ using Counter = std::uint64_t;
 constexpr Whole CLASSES = 12;
 constexpr Whole TOP = 120;
 constexpr Whole REGISTERS = 4;
+constexpr Whole BANDS = 3;
 constexpr Float BRIGHT = 7000;
 constexpr Float MELLOW = 2500;
 constexpr Float WARM = 1600;
@@ -40,6 +41,11 @@ struct Key {
   CORE::ENVELOPE::Gate gate;
 };
 
+struct Resonator {
+  CORE::FILTER::Biquad bands[BANDS];
+  Float wet = 0;
+};
+
 struct Sums {
   Float eight = 0;
   Float sixteen = 0;
@@ -57,6 +63,7 @@ struct Synth {
   CORE::ENVELOPE::Envelope envelope;
   CORE::ENVELOPE::Gate gate;
   CORE::FILTER::Biquad tones[REGISTERS];
+  Resonator resonator;
   Ensemble ensemble;
   CORE::BLOCK::Meter meter;
 };
@@ -65,6 +72,9 @@ void settle(Synth &synth);
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 auto divide(Synth &synth, Float swell) -> Sums;
+
+void settle(Resonator &resonator, Float formant, Whole rate);
+auto tick(Resonator &resonator, Float in) -> Float;
 
 auto sound(Synth &synth) -> Pair;
 

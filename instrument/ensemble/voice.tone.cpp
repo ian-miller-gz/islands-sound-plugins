@@ -17,5 +17,5 @@ auto SOUND::PLUGINS::ENSEMBLE::sound(Synth &synth) -> Pair {
     const Float fed = stop.eight * sums.eight + stop.sixteen * sums.sixteen;
     mixed += synth.rows[VIOLIN + at] * CORE::FILTER::tick(synth.tones[at], fed);
   }
-  return tick(synth.ensemble, LEVEL * mixed);
+  return tick(synth.ensemble, tick(synth.resonator, LEVEL * mixed));
 }

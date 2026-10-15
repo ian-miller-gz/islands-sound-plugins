@@ -40,5 +40,6 @@ void SOUND::PLUGINS::ENSEMBLE::settle(Synth &synth) {
   synth.ramp = CORE::MODULATOR::delta(KEYING, synth.rate);
   ::tune(synth);
   ::voice(synth);
+  settle(synth.resonator, synth.rows[FORMANT], synth.rate);
   settle(synth.ensemble, synth.rows, synth.rate);
 }
