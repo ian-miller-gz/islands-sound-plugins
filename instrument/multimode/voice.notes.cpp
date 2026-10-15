@@ -11,6 +11,7 @@ void struck(MULTIMODE::Synth &synth, Whole at) {
   const Float velocity = synth.allocator.notes[at].velocity;
   CORE::ENVELOPE::strike(voice.contour, synth.contour, velocity);
   CORE::ENVELOPE::strike(voice.loudness, synth.loudness, velocity);
+  CORE::BLOCK::reset(voice.stride);
 }
 
 void lifted(MULTIMODE::Synth &synth, Whole at) {
@@ -39,4 +40,5 @@ void SOUND::PLUGINS::MULTIMODE::apply(
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);
+  for (Voice &voice : synth.voices) CORE::BLOCK::reset(voice.stride);
 }

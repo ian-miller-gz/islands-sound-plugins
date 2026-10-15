@@ -12,12 +12,16 @@
 namespace SOUND::PLUGINS::MULTIMODE {
 
 constexpr Float REFERENCE = 60;
+constexpr Whole OVERSAMPLING = 2;
+constexpr Whole STRIDE = 16;
 
 struct Voice {
   CORE::OSCILLATOR::Oscillator first;
   CORE::OSCILLATOR::Sync saw;
   CORE::OSCILLATOR::Sync pulse;
   CORE::FILTER::Variable variable;
+  CORE::SHAPER::Oversampler oversampler;
+  CORE::BLOCK::Stride stride;
   CORE::ENVELOPE::Gate contour;
   CORE::ENVELOPE::Gate loudness;
   CORE::SHAPER::Blocker blocker;
@@ -48,7 +52,8 @@ void settle(Synth &synth);
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 auto sing(Synth &synth, Voice &voice, Float pitch, Float width) -> Float;
-auto sweep(Synth &synth, Voice &voice, Float in, Float cutoff) -> Float;
+void steer(Synth &synth, Voice &voice, Float cutoff);
+auto filter(Synth &synth, Voice &voice, Float in) -> Float;
 auto sound(Synth &synth) -> Pair;
 
 void render(

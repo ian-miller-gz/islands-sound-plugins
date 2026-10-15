@@ -10,7 +10,6 @@ constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
 constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1;
-constexpr Float PEAK = 0.9f;
 constexpr Float SPAN = MULTIMODE::SQUARE - MULTIMODE::NARROW;
 constexpr Float WIDE = 0.75f;
 constexpr Float SLIGHT = 0.25f;
@@ -51,8 +50,9 @@ auto play(MULTIMODE::Synth &synth, Whole at, Float lfo) -> Float {
     rows[MULTIMODE::WIDTH] - SPAN * rows[MULTIMODE::SWEEP] * pwm;
   const Float mixed =
     MULTIMODE::sing(synth, voice, ::pitch(synth, note, key, source), width);
-  const Float cutoff = ::swept(synth, note, key, contour, lfo);
-  const Float out = MULTIMODE::sweep(synth, voice, mixed, cutoff) * loud;
+  if (CORE::BLOCK::due(voice.stride, MULTIMODE::STRIDE))
+    MULTIMODE::steer(synth, voice, ::swept(synth, note, key, contour, lfo));
+  const Float out = MULTIMODE::filter(synth, voice, mixed) * loud;
   if (!CORE::ENVELOPE::sounding(voice.loudness)) note.sounding = false;
   return CORE::SHAPER::tick(voice.blocker, out);
 }
@@ -60,17 +60,6 @@ auto play(MULTIMODE::Synth &synth, Whole at, Float lfo) -> Float {
 auto gain(Float pan) -> Float { return pan > 0 ? FULL - pan : FULL; }
 
 }  // namespace
-
-auto SOUND::PLUGINS::MULTIMODE::sweep(
-  Synth &synth, Voice &voice, Float in, Float cutoff) -> Float {
-  const Float *rows = synth.rows;
-  CORE::FILTER::settle(
-    voice.variable, CORE::FILTER::LOW, cutoff, rows[RESONANCE] * PEAK,
-    synth.rate);
-  const CORE::FILTER::Taps taps = CORE::FILTER::split(voice.variable, in);
-  if (rows[BAND] > 0) return taps.band;
-  return taps.low + (taps.high - taps.low) * rows[MODE];
-}
 
 auto SOUND::PLUGINS::MULTIMODE::sound(Synth &synth) -> Pair {
   const Float lfo = CORE::MODULATOR::tick(synth.lfo);
