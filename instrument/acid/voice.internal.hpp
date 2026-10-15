@@ -13,6 +13,15 @@ namespace SOUND::PLUGINS::ACID {
 
 enum Accent : Whole { PLAIN, STRONG, ACCENTS };
 
+struct Bassline {
+  CORE::FILTER::Pole poles[CORE::FILTER::POLES];
+  CORE::FILTER::Pole leak;
+  Float feedback = 0;
+};
+
+void settle(Bassline &bassline, Float cutoff, Float resonance, Whole rate);
+auto tick(Bassline &bassline, Float in) -> Float;
+
 struct Synth {
   Whole rate = 0;
   Whole channels = 0;
