@@ -25,13 +25,15 @@ auto pitch(
          rows[MULTIMODE::MODULATION] * source;
 }
 
-auto swept(const MULTIMODE::Synth &synth, Float key, Float contour, Float lfo)
-  -> Float {
+auto swept(
+  const MULTIMODE::Synth &synth, const CORE::VOICE::Note &note, Float key,
+  Float contour, Float lfo) -> Float {
   const Float *rows = synth.rows;
   Float octaves =
     rows[MULTIMODE::TRACKING] * (key - MULTIMODE::REFERENCE) / OCTAVE;
   octaves +=
     rows[MULTIMODE::ENVELOPE] * contour + rows[MULTIMODE::WOBBLE] * lfo;
+  octaves += rows[MULTIMODE::TOUCH] * note.velocity;
   return rows[MULTIMODE::CUTOFF] * std::exp2(octaves);
 }
 
@@ -49,7 +51,7 @@ auto play(MULTIMODE::Synth &synth, Whole at, Float lfo) -> Float {
     rows[MULTIMODE::WIDTH] - SPAN * rows[MULTIMODE::SWEEP] * pwm;
   const Float mixed =
     MULTIMODE::sing(synth, voice, ::pitch(synth, note, key, source), width);
-  const Float cutoff = ::swept(synth, key, contour, lfo);
+  const Float cutoff = ::swept(synth, note, key, contour, lfo);
   const Float out = MULTIMODE::sweep(synth, voice, mixed, cutoff) * loud;
   if (!CORE::ENVELOPE::sounding(voice.loudness)) note.sounding = false;
   return CORE::SHAPER::tick(voice.blocker, out);

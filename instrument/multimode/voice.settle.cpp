@@ -8,9 +8,10 @@ constexpr Float CENT = 100;
 constexpr Float BLOCKED = 10;
 constexpr Whole SINGLE = 1;
 
-auto contour(Float attack, Float decay, Float sustain, Whole rate)
+auto contour(Float attack, Float decay, Float sustain, Float depth, Whole rate)
   -> CORE::ENVELOPE::Envelope {
   auto envelope = CORE::ENVELOPE::ADSR::create(attack, decay, sustain, decay);
+  envelope.depth = depth;
   envelope.curve = CORE::ENVELOPE::EXPONENTIAL;
   envelope.trigger = CORE::ENVELOPE::RESUME;
   CORE::ENVELOPE::shape(envelope, rate);
@@ -38,9 +39,9 @@ void swing(MULTIMODE::Synth &synth) {
 void SOUND::PLUGINS::MULTIMODE::settle(Synth &synth) {
   const Float *rows = synth.rows;
   synth.contour =
-    ::contour(rows[ATTACK1], rows[DECAY1], rows[SUSTAIN1], synth.rate);
-  synth.loudness =
-    ::contour(rows[ATTACK2], rows[DECAY2], rows[SUSTAIN2], synth.rate);
+    ::contour(rows[ATTACK1], rows[DECAY1], rows[SUSTAIN1], 0, synth.rate);
+  synth.loudness = ::contour(
+    rows[ATTACK2], rows[DECAY2], rows[SUSTAIN2], rows[VELOCITY], synth.rate);
   ::allocate(synth);
   ::swing(synth);
   synth.tune = rows[TUNE] / CENT;
