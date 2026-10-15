@@ -21,5 +21,6 @@ struct Clave {
 void settle(Clave &clave, Float tune, Float decay, Whole rate);
 void strike(Clave &clave, Whole click, Float velocity);
 auto tick(Clave &clave) -> Float;
+auto sounding(const Clave &clave) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

@@ -32,6 +32,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(Snare &snare, Float velocity) {
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Snare &snare) -> Float {
+  if (!sounding(snare)) return 0;
   const Float tones = (tick(snare.low) + tick(snare.high)) * TONES;
   const Float banded = FILTER::tick(snare.band, NOISE::tick(snare.white));
   const Float noise = FILTER::tick(snare.floor, banded);

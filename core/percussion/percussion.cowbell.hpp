@@ -17,5 +17,6 @@ struct Cowbell {
 void settle(Cowbell &cowbell, Float tune, Float decay, Whole rate);
 void strike(Cowbell &cowbell, Float velocity);
 auto tick(Cowbell &cowbell) -> Float;
+auto sounding(const Cowbell &cowbell) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

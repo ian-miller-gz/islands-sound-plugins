@@ -24,5 +24,6 @@ void settle(
   Hat &hat, Float tune, Float closed, Float open, Float tone, Whole rate);
 void strike(Hat &hat, Whole opening, Float velocity);
 auto tick(Hat &hat) -> Float;
+auto sounding(const Hat &hat) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

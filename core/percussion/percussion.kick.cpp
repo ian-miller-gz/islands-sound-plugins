@@ -34,6 +34,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(Kick &kick, Float velocity) {
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Kick &kick) -> Float {
+  if (!sounding(kick)) return 0;
   const Float sweep = ENVELOPE::tick(kick.bend, kick.sweep);
   kick.body.turn = kick.base * (ONE + BEND * sweep);
   const Float body = tick(kick.body);

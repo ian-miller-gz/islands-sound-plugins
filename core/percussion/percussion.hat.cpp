@@ -30,7 +30,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Hat &hat) -> Float {
-  if (!ENVELOPE::sounding(hat.gate)) return 0;
+  if (!sounding(hat)) return 0;
   const Float ring = FILTER::tick(hat.band, tick(hat.metal));
   const Float level = ENVELOPE::tick(hat.gate, hat.envelopes[hat.opening]);
   const Float out = FILTER::tick(hat.high, ring * level * hat.velocity);

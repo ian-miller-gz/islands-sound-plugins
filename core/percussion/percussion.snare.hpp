@@ -20,5 +20,6 @@ void settle(
   Snare &snare, Float tune, Float tone, Float snappy, Float decay, Whole rate);
 void strike(Snare &snare, Float velocity);
 auto tick(Snare &snare) -> Float;
+auto sounding(const Snare &snare) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

@@ -34,5 +34,6 @@ void settle(
   Whole rate);
 void strike(Cymbal &cymbal, Whole plate, Float velocity);
 auto tick(Cymbal &cymbal) -> Float;
+auto sounding(const Cymbal &cymbal) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

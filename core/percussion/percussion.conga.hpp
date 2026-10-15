@@ -21,5 +21,6 @@ struct Conga {
 void settle(Conga &conga, Float tune, Float decay, Float bend, Whole rate);
 void strike(Conga &conga, Whole height, Float velocity);
 auto tick(Conga &conga) -> Float;
+auto sounding(const Conga &conga) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

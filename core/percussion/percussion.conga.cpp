@@ -45,6 +45,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Conga &conga) -> Float {
+  if (!sounding(conga)) return 0;
   const Float body = tick(conga.sweep);
   const Float level = ENVELOPE::tick(conga.click, conga.snap);
   const Float noise = FILTER::tick(conga.crisp, NOISE::tick(conga.white));

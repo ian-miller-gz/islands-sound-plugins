@@ -22,5 +22,6 @@ struct Clap {
 void settle(Clap &clap, Float spread, Float decay, Float tone, Whole rate);
 void strike(Clap &clap, Float velocity);
 auto tick(Clap &clap) -> Float;
+auto sounding(const Clap &clap) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

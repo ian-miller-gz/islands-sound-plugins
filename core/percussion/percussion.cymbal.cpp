@@ -16,12 +16,6 @@ constexpr Float BALANCE = 2.0f;
 constexpr Float ONE = 1.0f;
 constexpr Float GAIN = 4.0f;
 
-auto sounding(const PERCUSSION::Cymbal &cymbal) -> Flag {
-  for (const ENVELOPE::Gate &gate : cymbal.gates)
-    if (ENVELOPE::sounding(gate)) return true;
-  return false;
-}
-
 }  // namespace
 
 void SOUND::PLUGINS::CORE::PERCUSSION::settle(
@@ -51,7 +45,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Cymbal &cymbal) -> Float {
-  if (!::sounding(cymbal)) return 0;
+  if (!sounding(cymbal)) return 0;
   const Float ring = tick(cymbal.metal);
   Float bands[TAIL::TAILS] = {};
   Float sum = 0;

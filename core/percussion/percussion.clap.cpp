@@ -38,6 +38,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(Clap &clap, Float velocity) {
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Clap &clap) -> Float {
+  if (!sounding(clap)) return 0;
   const Float tail = ENVELOPE::tick(clap.gate, clap.tail) * ::TAIL;
   const Float level = clap.burst + tail * clap.velocity;
   ::advance(clap);

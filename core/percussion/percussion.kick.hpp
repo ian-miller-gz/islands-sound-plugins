@@ -24,5 +24,6 @@ void settle(
   Whole rate);
 void strike(Kick &kick, Float velocity);
 auto tick(Kick &kick) -> Float;
+auto sounding(const Kick &kick) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

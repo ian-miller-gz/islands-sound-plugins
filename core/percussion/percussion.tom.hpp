@@ -18,5 +18,6 @@ void settle(
   Tom &tom, Float tune, Float decay, Float bend, Float tone, Whole rate);
 void strike(Tom &tom, Whole height, Float velocity);
 auto tick(Tom &tom) -> Float;
+auto sounding(const Tom &tom) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

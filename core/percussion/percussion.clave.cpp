@@ -34,6 +34,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Clave &clave) -> Float {
+  if (!sounding(clave)) return 0;
   Float rim = 0;
   for (Whole at = 0; at < RIMS; ++at) rim += tick(clave.rims[at]);
   const Float crack = SHAPER::soft(FILTER::tick(clave.edge, rim) * CRACK);

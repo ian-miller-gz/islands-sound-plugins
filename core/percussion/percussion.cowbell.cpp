@@ -34,7 +34,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Cowbell &cowbell) -> Float {
-  if (!ENVELOPE::sounding(cowbell.ring)) return 0;
+  if (!sounding(cowbell)) return 0;
   const Float tone = FILTER::tick(cowbell.band, tick(cowbell.metal));
   const Float sharp = ENVELOPE::tick(cowbell.hit, cowbell.clank) * SHARP;
   const Float ring = ENVELOPE::tick(cowbell.ring, cowbell.tail) * RING;

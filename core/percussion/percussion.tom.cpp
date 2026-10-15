@@ -30,6 +30,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Tom &tom) -> Float {
+  if (!sounding(tom)) return 0;
   const Float body = tick(tom.sweep);
   const Float level = ENVELOPE::tick(tom.hit, tom.skin);
   const Float noise = FILTER::tick(tom.tone, NOISE::tick(tom.white));
