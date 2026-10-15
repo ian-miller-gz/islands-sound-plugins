@@ -34,5 +34,7 @@ auto SOUND::PLUGINS::DRAWBAR::sound(Organ &organ) -> Pair {
   Float mixed = ::LEVEL * (tones.body + percussion);
   mixed += CORE::NOISE::tick(organ.click);
   mixed = tick(organ.scanner, mixed);
-  return tick(organ.rotary, organ, tick(organ.preamp, organ.rows, mixed));
+  const Float driven = tick(organ.preamp, organ.rows, mixed);
+  return tick(
+    organ.room, organ.rows[REVERB], tick(organ.rotary, organ, driven));
 }

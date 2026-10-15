@@ -15,6 +15,7 @@ auto create(Whole rate, Whole channels) -> void * {
   DRAWBAR::build(organ->scanner, rate);
   DRAWBAR::build(organ->rotary, rate);
   DRAWBAR::build(organ->preamp, rate);
+  DRAWBAR::build(organ->room, rate);
   DRAWBAR::settle(*organ);
   return organ;
 }

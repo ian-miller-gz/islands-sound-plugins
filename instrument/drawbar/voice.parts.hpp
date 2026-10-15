@@ -5,6 +5,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
+#include "../../core/reverb/reverb.hpp"
 #include "../../core/shaper/shaper.hpp"
 
 namespace SOUND::PLUGINS::DRAWBAR {
@@ -63,6 +64,10 @@ struct Preamp {
   CORE::SHAPER::Oversampler oversampler;
   CORE::SHAPER::Blocker blocker;
   CORE::DYNAMICS::Detector follower;
+};
+
+struct Room {
+  CORE::REVERB::Network network;
 };
 
 }  // namespace SOUND::PLUGINS::DRAWBAR

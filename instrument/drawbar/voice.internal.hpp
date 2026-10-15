@@ -30,6 +30,7 @@ struct Organ {
   Contacts contacts;
   Leaks leaks;
   Preamp preamp;
+  Room room;
   Scanner scanner;
   Rotary rotary;
   CORE::BLOCK::Meter meter;
@@ -58,6 +59,9 @@ auto tick(Rotary &rotary, const Organ &organ, Float in) -> Pair;
 
 void build(Preamp &preamp, Whole rate);
 auto tick(Preamp &preamp, const Float *rows, Float in) -> Float;
+
+void build(Room &room, Whole rate);
+auto tick(Room &room, Float wet, Pair dry) -> Pair;
 
 auto sound(Organ &organ) -> Pair;
 
