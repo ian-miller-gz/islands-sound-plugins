@@ -58,6 +58,7 @@ void swing(SUPERSAW::Synth &synth) {
 void SOUND::PLUGINS::SUPERSAW::settle(Synth &synth) {
   synth.contour = ::contour(synth.rows, ::CONTOUR, synth.rate);
   synth.door = ::contour(synth.rows, ::LOUDNESS, synth.rate);
+  synth.door.depth = synth.rows[VELOCITY];
   ::stack(synth);
   ::swing(synth);
   synth.tune = synth.rows[TUNE] / CENT;
