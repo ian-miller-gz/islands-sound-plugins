@@ -5,8 +5,10 @@ namespace {
 using namespace SOUND::PLUGINS;
 
 auto alone(const DCO::Synth &synth, Whole at) -> Flag {
+  const CORE::VOICE::Note *notes = synth.allocator.notes;
   for (Whole other = 0; other < DCO::VOICES; ++other)
-    if (other != at && synth.allocator.notes[other].held) return false;
+    if (notes[other].held && notes[other].struck != notes[at].struck)
+      return false;
   return true;
 }
 
@@ -20,6 +22,13 @@ void struck(DCO::Synth &synth, Whole at) {
   if (::alone(synth, at)) CORE::MODULATOR::reset(synth.lfo);
 }
 
+void tied(DCO::Synth &synth, Whole at) {
+  DCO::Voice &voice = synth.voices[at];
+  const Float velocity = synth.allocator.notes[at].velocity;
+  CORE::ENVELOPE::tie(voice.contour, synth.contour, velocity);
+  CORE::ENVELOPE::tie(voice.door, synth.door, velocity);
+}
+
 void lifted(DCO::Synth &synth, Whole at) {
   CORE::ENVELOPE::lift(synth.voices[at].contour);
   CORE::ENVELOPE::lift(synth.voices[at].door);
@@ -27,13 +36,25 @@ void lifted(DCO::Synth &synth, Whole at) {
 
 using Visit = void (*)(DCO::Synth &, Whole);
 
-constexpr Visit VISITS[] = {kept, struck, struck, lifted};
+constexpr Visit VISITS[] = {kept, struck, tied, lifted};
 static_assert(std::size(VISITS) == CORE::VOICE::LIFTED + 1);
 
 void visit(DCO::Synth &synth, const CORE::VOICE::Note &note) {
   const Whole at = Whole(&note - synth.allocator.notes);
   if (at >= DCO::VOICES || note.change >= std::size(VISITS)) return;
   VISITS[note.change](synth, at);
+}
+
+void release(DCO::Synth &synth) {
+  CORE::VOICE::Allocator &allocator = synth.allocator;
+  for (CORE::VOICE::Note &note : allocator.notes) {
+    if (note.held) note.change = CORE::VOICE::LIFTED;
+    note.held = false;
+  }
+  for (Whole &key : allocator.keys) key = 0;
+  CORE::VOICE::drain(allocator, [&synth](const CORE::VOICE::Note &note) {
+    ::visit(synth, note);
+  });
 }
 
 }  // namespace
@@ -44,6 +65,8 @@ void SOUND::PLUGINS::DCO::apply(
     synth.allocator, event,
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
   if (row >= PARAMETERS) return;
+  const Float before = synth.rows[row];
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);
+  if (row == ASSIGN && synth.rows[row] != before) ::release(synth);
 }

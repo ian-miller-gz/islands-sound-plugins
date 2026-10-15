@@ -66,7 +66,7 @@ void SOUND::PLUGINS::DCO::settle(Synth &synth) {
   const Float *rows = synth.rows;
   synth.contour = ::contour(rows, synth.rate);
   synth.door = rows[AMPLIFIER] > 0 ? ::gate(synth.rate) : synth.contour;
-  CORE::VOICE::settle(synth.allocator, synth.rate);
+  assign(synth);
   ::swing(synth);
   ::pass(synth);
   settle(synth.chorus, Whole(rows[CHORUS]), synth.rate);

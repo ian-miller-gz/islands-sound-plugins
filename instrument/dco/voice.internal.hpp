@@ -53,10 +53,12 @@ struct Synth {
   CORE::FILTER::Biquad highpass;
   Chorus chorus;
   Float tune = 0;
+  Float level = 1;
   CORE::BLOCK::Meter meter;
 };
 
 void settle(Synth &synth);
+void assign(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
