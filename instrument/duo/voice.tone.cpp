@@ -69,8 +69,8 @@ auto SOUND::PLUGINS::DUO::sound(Synth &synth) -> Float {
     ::play(synth, low, lfo, random, ::width(synth, lfo, adsr));
   synth.input = tones.saw + (noise - tones.saw) * rows[MIX];
   const Float sum = tones.mixed + rows[NOISE] * noise;
-  const Float contour = rows[CONTOUR] > 0 ? ar : adsr;
-  const Float filtered = filter(synth, sum, low, lfo, random, contour);
+  steer(synth, {low, lfo, random, rows[CONTOUR] > 0 ? ar : adsr});
+  const Float filtered = filter(synth, sum);
   const Float loud = CORE::ENVELOPE::weigh(synth.velocity, rows[VELOCITY]);
   const Float gain = (rows[AMPLIFIER] > 0 ? ar : adsr) * loud;
   ::quiet(synth);
