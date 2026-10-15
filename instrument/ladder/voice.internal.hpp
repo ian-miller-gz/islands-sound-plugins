@@ -56,6 +56,7 @@ struct Synth {
   CORE::SHAPER::Blocker blocker;
   Float tune = 0;
   Float tracking = 0;
+  Float velocity = 0;
   CORE::BLOCK::Meter meter;
 };
 

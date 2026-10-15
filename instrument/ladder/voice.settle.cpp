@@ -76,6 +76,7 @@ void SOUND::PLUGINS::LADDER::settle(Synth &synth) {
     CORE::ENVELOPE::ADSR::create(
       rows[ATTACK], rows[DECAY], rows[SUSTAIN], fade),
     synth.rate);
+  synth.loudness.envelope.depth = rows[VELOCITY];
   synth.allocator.glide.time = rows[GLIDE];
   CORE::VOICE::settle(synth.allocator, synth.rate);
   synth.tune = rows[TUNE] / CENT;

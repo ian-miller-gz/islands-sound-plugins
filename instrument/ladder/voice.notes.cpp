@@ -7,6 +7,7 @@ using namespace SOUND::PLUGINS;
 void kept(LADDER::Synth &, const CORE::VOICE::Note &) {}
 
 void struck(LADDER::Synth &synth, const CORE::VOICE::Note &note) {
+  synth.velocity = note.velocity;
   for (LADDER::Contour *contour : {&synth.loudness, &synth.filter})
     CORE::ENVELOPE::strike(contour->gate, contour->envelope, note.velocity);
 }
