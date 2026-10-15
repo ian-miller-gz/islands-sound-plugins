@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "percussion.circuit.hpp"
+#include "percussion.choke.hpp"
+#include "percussion.play.hpp"
 #include "percussion.kick.hpp"
 #include "percussion.snare.hpp"
 #include "percussion.hat.hpp"

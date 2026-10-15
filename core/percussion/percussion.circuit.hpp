@@ -12,6 +12,7 @@ namespace SOUND::PLUGINS::CORE::PERCUSSION {
 constexpr Whole BANK = 6;
 constexpr Float METALLIC[BANK] = {205.3f, 304.4f, 369.6f,
                                   522.7f, 540.0f, 800.0f};
+constexpr Float FLOOR = 0.0001f;
 
 struct Resonator {
   Float turn = 0;
@@ -31,6 +32,7 @@ struct Sweep {
   ENVELOPE::Gate gate;
   Float base = 0;
   Float depth = 0;
+  Float power = 1;
 };
 
 namespace HEIGHT {
@@ -45,6 +47,8 @@ struct Key {
 };
 
 auto struck(Float velocity) -> Float;
+auto struck(Float velocity, Float curve) -> Float;
+auto touched(Float hertz, Float velocity, Float touch) -> Float;
 auto turn(Float hertz, Whole rate) -> Float;
 auto fall(Float seconds, Whole rate) -> Float;
 void shape(ENVELOPE::Envelope &envelope, Float seconds, Whole rate);
@@ -52,39 +56,25 @@ void shape(ENVELOPE::Envelope &envelope, Float seconds, Whole rate);
 void settle(Resonator &resonator, Float hertz, Float seconds, Whole rate);
 void strike(Resonator &resonator, Float level);
 auto tick(Resonator &resonator) -> Float;
+auto sounding(const Resonator &resonator) -> Flag;
 
 void settle(
   Metal &metal, const Float *hertz, Whole count, Float ratio, Whole rate);
 auto tick(Metal &metal) -> Float;
 
 void settle(Sweep &sweep, Float decay, Float seconds, Float depth, Whole rate);
+void settle(
+  Sweep &sweep, Float decay, Float seconds, Float depth, Float slope,
+  Whole rate);
 void strike(Sweep &sweep, Float base, Float level);
 auto tick(Sweep &sweep) -> Float;
+auto sounding(const Sweep &sweep) -> Flag;
 
 auto keyed(const Key *keys, Whole count, Whole pitch, Whole fallback) -> Whole;
 
 template <Whole COUNT>
 auto keyed(const Key (&keys)[COUNT], Whole pitch, Whole fallback) -> Whole {
   return keyed(keys, COUNT, pitch, fallback);
-}
-
-template <class Sound, class Apply>
-auto play(
-  AUDIO::PLUGIN::Sample *const *lanes, Whole channels, Whole frames,
-  const AUDIO::PLUGIN::Event *events, Whole count, Sound &&sound,
-  Apply &&apply) -> Float {
-  BLOCK::Cursor cursor;
-  Float peak = 0;
-  for (Whole frame = 0; frame < frames; ++frame) {
-    BLOCK::due(cursor, events, count, frame, apply);
-    const Float sample = BLOCK::clipped(sound());
-    for (Whole channel = 0; channel < channels; ++channel)
-      lanes[channel][frame] = sample;
-    const Float size = BLOCK::magnitude(sample);
-    if (size > peak) peak = size;
-  }
-  BLOCK::rest(cursor, events, count, apply);
-  return peak;
 }
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

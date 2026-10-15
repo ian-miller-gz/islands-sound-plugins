@@ -23,7 +23,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::settle(
   shape(snare.body, decay * SHORT, rate);
   shape(snare.rattle, decay, rate);
   FILTER::settle(snare.dark, FILTER::LOW, tone, rate);
-  FILTER::settle(snare.floor, FILTER::HIGH, FLOOR, rate);
+  FILTER::settle(snare.floor, FILTER::HIGH, ::FLOOR, rate);
   snare.snappy = snappy;
 }
 

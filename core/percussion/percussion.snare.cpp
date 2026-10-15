@@ -19,7 +19,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   settle(snare.low, tune, decay * BODY, rate);
   settle(snare.high, tune * DETUNE, decay * BODY, rate);
   FILTER::settle(snare.band, FILTER::BAND, tone, WIDTH, FLAT, rate);
-  FILTER::settle(snare.floor, FILTER::HIGH, FLOOR, rate);
+  FILTER::settle(snare.floor, FILTER::HIGH, ::FLOOR, rate);
   shape(snare.rattle, decay, rate);
   snare.snappy = snappy;
 }

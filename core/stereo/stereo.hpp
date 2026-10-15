@@ -9,4 +9,7 @@ struct Pair {
   Float right = 0;
 };
 
+void pour(
+  AUDIO::PLUGIN::Sample *const *lanes, Whole channels, Whole frame, Pair pair);
+
 }  // namespace SOUND::PLUGINS::CORE::STEREO

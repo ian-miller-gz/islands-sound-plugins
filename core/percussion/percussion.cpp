@@ -12,11 +12,23 @@ constexpr Float PI = 3.14159265f;
 constexpr Float SILENT = 0.001f;
 constexpr Float SHORTEST = 1.0f;
 constexpr Float NYQUIST = 0.45f;
+constexpr Float BASE = 4.0f;
 
 }  // namespace
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::struck(Float velocity) -> Float {
   return velocity < 0 ? 0 : velocity > ONE ? ONE : velocity;
+}
+
+auto SOUND::PLUGINS::CORE::PERCUSSION::struck(Float velocity, Float curve)
+  -> Float {
+  const Float held = curve < -ONE ? -ONE : curve > ONE ? ONE : curve;
+  return std::pow(struck(velocity), std::pow(BASE, -held));
+}
+
+auto SOUND::PLUGINS::CORE::PERCUSSION::touched(
+  Float hertz, Float velocity, Float touch) -> Float {
+  return hertz * std::exp2(touch * (struck(velocity) - ONE));
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::turn(Float hertz, Whole rate) -> Float {
