@@ -8,16 +8,18 @@ using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float WOBBLE = 2;
-constexpr Whole STRIDE = 16;
+constexpr Float CENT = 100;
 
 }  // namespace
 
 void SOUND::PLUGINS::LADDER::steer(
   Synth &synth, Float key, Float wheel, Float contour) {
-  if (!CORE::BLOCK::due(synth.stride, ::STRIDE)) return;
+  if (!CORE::BLOCK::due(synth.stride, STRIDE)) return;
   const Float *rows = synth.rows;
+  synth.stray = CORE::MODULATOR::tick(synth.drift) * rows[DRIFT] / ::CENT;
   Float octaves = synth.tracking * (key - REFERENCE) / ::OCTAVE;
-  octaves += rows[AMOUNT] * contour + rows[TOUCH] * synth.velocity;
+  octaves +=
+    synth.stray + rows[AMOUNT] * contour + rows[TOUCH] * synth.velocity;
   if (rows[FILTER] > 0) octaves += wheel * ::WOBBLE;
   CORE::FILTER::settle(
     synth.transistor, rows[CUTOFF] * std::exp2(octaves), rows[EMPHASIS],

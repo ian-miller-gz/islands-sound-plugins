@@ -27,7 +27,7 @@ auto mixed(LADDER::Synth &synth, Float bent, Float wheel, Float noise)
 auto SOUND::PLUGINS::LADDER::sound(Synth &synth) -> Float {
   CORE::VOICE::Note &note = synth.allocator.notes[0];
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide) + synth.tune;
-  const Float bent = key + synth.rows[BEND];
+  const Float bent = key + synth.rows[BEND] + synth.stray;
   const Float noise = ::noise(synth);
   const Flag keyed = synth.rows[KEYBOARD] > 0;
   Source &control = synth.sources[THIRD];

@@ -4,6 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
+#include "../../core/modulator/modulator.hpp"
 #include "../../core/noise/noise.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/shaper/shaper.hpp"
@@ -27,6 +28,7 @@ constexpr Whole SECOND = 1;
 constexpr Whole THIRD = 2;
 constexpr Float REFERENCE = 60;
 constexpr Whole OVERSAMPLING = 2;
+constexpr Whole STRIDE = 16;
 
 struct Source {
   CORE::OSCILLATOR::Oscillator oscillator;
@@ -54,6 +56,8 @@ struct Synth {
   CORE::FILTER::Transistor transistor;
   CORE::SHAPER::Oversampler oversampler;
   CORE::BLOCK::Stride stride;
+  CORE::MODULATOR::Drift drift;
+  Float stray = 0;
   Contour loudness;
   Contour filter;
   CORE::SHAPER::Blocker blocker;
