@@ -46,6 +46,11 @@ constexpr Whole RELEASE2 = 38;
 constexpr Whole AMPLIFIER = 39;
 constexpr Whole REPEAT = 40;
 constexpr Whole VOLUME = 41;
-constexpr Whole PARAMETERS = 42;
+constexpr Whole DRIVE = 42;
+constexpr Whole VELOCITY = 43;
+constexpr Whole TOUCH = 44;
+constexpr Whole DRIFT = 45;
+constexpr Whole TRIM = 46;
+constexpr Whole PARAMETERS = 47;
 
 }  // namespace SOUND::PLUGINS::DUO
