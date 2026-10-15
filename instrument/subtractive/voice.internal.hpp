@@ -5,6 +5,7 @@
 #include <threads.hpp>
 
 #include "subtractive.hpp"
+#include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
@@ -13,29 +14,12 @@ namespace SOUND::PLUGINS::SUBTRACTIVE {
 
 constexpr Float REFERENCE = 60;
 
-enum Stage : Whole { IDLE, RISING, FALLING, HELD, LEAVING };
-
 enum Curve : Whole { LOUDNESS, CONTOUR, CURVES };
-
-struct Envelope {
-  Float attack = 0;
-  Float decay = 0;
-  Float sustain = 0;
-  Float release = 0;
-  Float rise = 0;
-  Float fall = 0;
-  Float drop = 0;
-};
-
-struct Gate {
-  Float level = 0;
-  Whole stage = IDLE;
-};
 
 struct Voice {
   CORE::OSCILLATOR::Oscillator oscillators[OSCILLATORS];
   CORE::FILTER::Variable variable;
-  Gate gates[CURVES];
+  CORE::ENVELOPE::Gate gates[CURVES];
 };
 
 struct Synth {
@@ -52,16 +36,10 @@ struct Synth {
   Whole shape = CORE::OSCILLATOR::SAW;
   Float detune = 1;
   Whole kind = CORE::FILTER::LOW;
-  Envelope envelopes[CURVES];
+  CORE::ENVELOPE::Envelope envelopes[CURVES];
   Float level[2] = {0, 0};
   THREADS::Shared<Whole> face{0};
 };
-
-auto delta(Float seconds, Whole rate) -> Float;
-
-void shape(Envelope &envelope, Whole rate);
-
-void breathe(const Envelope &envelope, Gate &gate);
 
 void settle(Synth &synth);
 auto mode(const Synth &synth) -> Whole;

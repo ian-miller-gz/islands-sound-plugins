@@ -11,17 +11,22 @@ void struck(SUBTRACTIVE::Synth &synth, Whole at) {
   for (CORE::OSCILLATOR::Oscillator &oscillator : voice.oscillators)
     CORE::OSCILLATOR::reset(oscillator, 0);
   voice.variable = {};
-  for (SUBTRACTIVE::Gate &gate : voice.gates) gate = {0, SUBTRACTIVE::RISING};
+  const Float velocity = synth.allocator.notes[at].velocity;
+  for (Whole curve = 0; curve < SUBTRACTIVE::CURVES; ++curve)
+    CORE::ENVELOPE::strike(
+      voice.gates[curve], synth.envelopes[curve], velocity);
 }
 
 void tied(SUBTRACTIVE::Synth &synth, Whole at) {
-  for (SUBTRACTIVE::Gate &gate : synth.voices[at].gates)
-    if (gate.stage == SUBTRACTIVE::IDLE) gate = {0, SUBTRACTIVE::RISING};
+  SUBTRACTIVE::Voice &voice = synth.voices[at];
+  const Float velocity = synth.allocator.notes[at].velocity;
+  for (Whole curve = 0; curve < SUBTRACTIVE::CURVES; ++curve)
+    CORE::ENVELOPE::tie(voice.gates[curve], synth.envelopes[curve], velocity);
 }
 
 void lifted(SUBTRACTIVE::Synth &synth, Whole at) {
-  for (SUBTRACTIVE::Gate &gate : synth.voices[at].gates)
-    if (gate.stage != SUBTRACTIVE::IDLE) gate.stage = SUBTRACTIVE::LEAVING;
+  for (CORE::ENVELOPE::Gate &gate : synth.voices[at].gates)
+    CORE::ENVELOPE::lift(gate);
 }
 
 using Visit = void (*)(SUBTRACTIVE::Synth &, Whole);

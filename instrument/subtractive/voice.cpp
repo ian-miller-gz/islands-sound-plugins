@@ -43,14 +43,3 @@ const AUDIO::PLUGIN::Plug surface = {
    .surface = &surface});
 
 }  // namespace
-
-auto SOUND::PLUGINS::SUBTRACTIVE::delta(Float span, Whole rate) -> Float {
-  const Float frames = span * Float(rate);
-  return frames <= 1.0f ? 1.0f : 1.0f / frames;
-}
-
-void SOUND::PLUGINS::SUBTRACTIVE::shape(Envelope &envelope, Whole rate) {
-  envelope.rise = delta(envelope.attack, rate);
-  envelope.fall = delta(envelope.decay, rate) * (1.0f - envelope.sustain);
-  envelope.drop = delta(envelope.release, rate);
-}

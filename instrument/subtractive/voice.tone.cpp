@@ -36,18 +36,21 @@ auto play(SUBTRACTIVE::Synth &synth, Whole at) -> Float {
   SUBTRACTIVE::Voice &voice = synth.voices[at];
   CORE::VOICE::Note &note = synth.allocator.notes[at];
   if (!note.sounding) return 0;
-  for (Whole curve = 0; curve < SUBTRACTIVE::CURVES; ++curve)
-    SUBTRACTIVE::breathe(synth.envelopes[curve], voice.gates[curve]);
+  CORE::ENVELOPE::Gate *gates = voice.gates;
+  const CORE::ENVELOPE::Envelope *envelopes = synth.envelopes;
+  const Float contour = CORE::ENVELOPE::tick(
+    gates[SUBTRACTIVE::CONTOUR], envelopes[SUBTRACTIVE::CONTOUR]);
+  const Float loud = CORE::ENVELOPE::tick(
+    gates[SUBTRACTIVE::LOUDNESS], envelopes[SUBTRACTIVE::LOUDNESS]);
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
-  const Float contour = voice.gates[SUBTRACTIVE::CONTOUR].level;
   CORE::FILTER::settle(
     voice.variable, synth.kind, ::swept(synth, key, contour),
     synth.rows[SUBTRACTIVE::RESONANCE], synth.rate);
   const Float out =
     CORE::FILTER::tick(voice.variable, ::sing(synth, voice, key));
-  const SUBTRACTIVE::Gate &loud = voice.gates[SUBTRACTIVE::LOUDNESS];
-  if (loud.stage == SUBTRACTIVE::IDLE) note.sounding = false;
-  return out * loud.level * note.velocity;
+  if (!CORE::ENVELOPE::sounding(gates[SUBTRACTIVE::LOUDNESS]))
+    note.sounding = false;
+  return out * loud;
 }
 
 }  // namespace
