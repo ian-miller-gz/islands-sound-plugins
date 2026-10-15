@@ -49,6 +49,7 @@ void SOUND::PLUGINS::POLYMOD::settle(Synth &synth) {
   const Flag released = rows[RELEASE] > 0;
   synth.contour = ::contour(rows + ATTACK1, released, synth.rate);
   synth.loudness = ::contour(rows + ATTACK2, released, synth.rate);
+  synth.loudness.depth = rows[VELOCITY];
   ::allocate(synth);
   ::swing(synth);
   synth.tune = rows[TUNE] / CENT;

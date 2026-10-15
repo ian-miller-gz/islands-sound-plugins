@@ -24,12 +24,14 @@ auto offset(
 }
 
 auto swept(
-  const POLYMOD::Synth &synth, Float key, Float contour, Float lfo,
-  Float mod) -> Float {
+  const POLYMOD::Synth &synth, const CORE::VOICE::Note &note, Float contour,
+  Float lfo, Float mod) -> Float {
   const Float *rows = synth.rows;
-  Float octaves = rows[POLYMOD::TRACKING] * (key - POLYMOD::REFERENCE) / OCTAVE;
+  const Float key = note.current - POLYMOD::REFERENCE;
+  Float octaves = rows[POLYMOD::TRACKING] * key / OCTAVE;
   octaves += rows[POLYMOD::AMOUNT] * contour + rows[POLYMOD::WOBBLE] * lfo;
   if (rows[POLYMOD::FILTER] > 0) octaves += POLYMOD::OCTAVES * mod;
+  octaves += rows[POLYMOD::TOUCH] * note.velocity;
   return rows[POLYMOD::CUTOFF] * std::exp2(octaves);
 }
 
@@ -49,7 +51,7 @@ auto play(POLYMOD::Synth &synth, Whole at, Sources sources) -> Float {
   const Float a = POLYMOD::sing(synth, voice, key + bent, mod);
   const Float mixed = rows[POLYMOD::LEVELA] * a + rows[POLYMOD::LEVELB] * b +
                       rows[POLYMOD::NOISE] * sources.noise;
-  const Float cutoff = ::swept(synth, key, contour, sources.lfo, mod);
+  const Float cutoff = ::swept(synth, note, contour, sources.lfo, mod);
   CORE::FILTER::settle(
     voice.ladder, cutoff, rows[POLYMOD::RESONANCE], DRIVE, synth.rate);
   const Float out = CORE::FILTER::tick(voice.ladder, mixed) * loud;
