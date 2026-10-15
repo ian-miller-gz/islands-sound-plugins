@@ -3,14 +3,13 @@
 #include "drawbar.hpp"
 #include "voice.parts.hpp"
 #include "../../core/block/block.hpp"
+#include "../../core/dynamics/dynamics.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/noise/noise.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/shaper/shaper.hpp"
 
 namespace SOUND::PLUGINS::DRAWBAR {
-
-constexpr Whole WHEELS = 91;
 
 struct Organ {
   Whole rate = 0;
@@ -31,6 +30,7 @@ struct Organ {
   CORE::ENVELOPE::Gate gate;
   CORE::NOISE::Burst click;
   Contacts contacts;
+  Leaks leaks;
   Scanner scanner;
   Rotary rotary;
   CORE::BLOCK::Meter meter;
@@ -45,6 +45,9 @@ void arm(Organ &organ, Whole pitch);
 void lift(Organ &organ, Whole pitch);
 void close(Organ &organ);
 auto closed(const Organ &organ, Whole pitch, Whole bar) -> Flag;
+
+void build(Leaks &leaks);
+void leak(Organ &organ);
 
 void build(Scanner &scanner, Whole rate);
 void settle(Scanner &scanner, Whole mode, Whole rate);

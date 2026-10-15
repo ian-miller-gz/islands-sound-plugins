@@ -7,6 +7,9 @@
 
 namespace SOUND::PLUGINS::DRAWBAR {
 
+constexpr Whole WHEELS = 91;
+constexpr Whole NEIGHBOURS = 4;
+
 struct Pair {
   Float left = 0;
   Float right = 0;
@@ -43,6 +46,15 @@ struct Contacts {
   Whole pending = 0;
   Float spread = 0;
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
+};
+
+struct Neighbour {
+  Whole wheel = 0;
+  Float gain = 0;
+};
+
+struct Leaks {
+  Neighbour neighbours[WHEELS][NEIGHBOURS] = {};
 };
 
 }  // namespace SOUND::PLUGINS::DRAWBAR

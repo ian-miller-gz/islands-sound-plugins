@@ -11,6 +11,7 @@ auto create(Whole rate, Whole channels) -> void * {
   auto *organ = new DRAWBAR::Organ{.rate = rate, .channels = channels};
   CORE::TABLE::rest(DRAWBAR::SHEET, organ->rows);
   CORE::OSCILLATOR::build(organ->sine);
+  DRAWBAR::build(organ->leaks);
   DRAWBAR::build(organ->scanner, rate);
   DRAWBAR::build(organ->rotary, rate);
   DRAWBAR::settle(*organ);

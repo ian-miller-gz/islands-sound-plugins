@@ -75,4 +75,5 @@ void SOUND::PLUGINS::DRAWBAR::pull(Organ &organ) {
   const Integer harmonic = ::HARMONICS[organ.rows[HARMONIC] > 0 ? 1 : 0];
   for (Whole pitch = 0; pitch < CORE::PHASE::PITCHES; ++pitch)
     if (organ.keys[pitch]) ::sound(organ, pitch, harmonic);
+  leak(organ);
 }
