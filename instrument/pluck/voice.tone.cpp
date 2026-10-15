@@ -10,7 +10,7 @@ auto play(PLUCK::Synth &synth, Whole at) -> Float {
   PLUCK::Voice &voice = synth.voices[at];
   CORE::VOICE::Note &note = synth.allocator.notes[at];
   if (!note.sounding) return 0;
-  const Float raw = CORE::NOISE::tick(voice.burst);
+  const Float raw = PLUCK::excite(synth, voice);
   const Float excite = raw - CORE::LINE::tick(voice.pick, raw, voice.notch);
   const Float out = CORE::LINE::read(voice.string, voice.delay, voice.allpass);
   const Float feedback =

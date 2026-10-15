@@ -46,6 +46,7 @@ void resonate(PLUCK::Synth &synth) {
 void SOUND::PLUGINS::PLUCK::build(Synth &synth) {
   const Float lowest = DEEPEST - CENTS / CENT - SEMITONES;
   const Float longest = Float(synth.rate) / CORE::PHASE::hertz(lowest);
+  CORE::OSCILLATOR::build(synth.table);
   for (Voice &voice : synth.voices) {
     CORE::LINE::build(voice.string, Whole(longest) + SPARE);
     CORE::LINE::build(voice.pick, Whole(longest) + SPARE);

@@ -5,6 +5,7 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/line/line.hpp"
 #include "../../core/noise/noise.hpp"
+#include "../../core/oscillator/oscillator.hpp"
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
@@ -15,12 +16,21 @@ constexpr Whole BODIES = 2;
 
 enum State : Whole { RINGING, DAMPED, STATES };
 
+struct Exciter {
+  CORE::OSCILLATOR::Oscillator wave;
+  Whole kind = 0;
+  Whole left = 0;
+  Float level = 0;
+  Float low = 0;
+};
+
 struct Voice {
   CORE::LINE::Line string;
   CORE::LINE::Line pick;
   CORE::LINE::Allpass allpass;
   CORE::LINE::Loop loop;
   CORE::NOISE::Burst burst;
+  Exciter exciter;
   Float delay = 1;
   Float notch = 1;
   Float feedbacks[STATES] = {};
@@ -34,6 +44,7 @@ struct Synth {
   CORE::VOICE::Allocator allocator = {
     .count = VOICES, .mode = CORE::VOICE::POLY, .steal = CORE::VOICE::OLDEST};
   Voice voices[VOICES];
+  CORE::OSCILLATOR::Table table;
   CORE::FILTER::Biquad bodies[BODIES];
   CORE::SHAPER::Blocker blocker;
   Float tune = 0;
@@ -44,6 +55,8 @@ struct Synth {
 void build(Synth &synth);
 void settle(Synth &synth);
 void tune(Synth &synth, Whole at);
+void strike(Synth &synth, Whole at);
+auto excite(const Synth &synth, Voice &voice) -> Float;
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 

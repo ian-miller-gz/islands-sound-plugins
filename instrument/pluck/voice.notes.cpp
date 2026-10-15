@@ -4,21 +4,14 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float PERIODS = 1;
-constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1;
 
 void kept(PLUCK::Synth &, Whole) {}
 
 void struck(PLUCK::Synth &synth, Whole at) {
-  PLUCK::Voice &voice = synth.voices[at];
-  const CORE::VOICE::Note &note = synth.allocator.notes[at];
   PLUCK::tune(synth, at);
-  const Float hertz = CORE::PHASE::hertz(Float(note.pitch) + synth.tune);
-  const Float colour = synth.rows[PLUCK::TONE] * (HALF + HALF * note.velocity);
-  CORE::NOISE::settle(voice.burst, PERIODS / hertz, colour, synth.rate);
-  CORE::NOISE::strike(voice.burst, note.velocity);
-  voice.level = FULL;
+  PLUCK::strike(synth, at);
+  synth.voices[at].level = FULL;
 }
 
 using Visit = void (*)(PLUCK::Synth &, Whole);
