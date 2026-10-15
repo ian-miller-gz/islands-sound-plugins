@@ -3,11 +3,9 @@
 #include "drawbar.hpp"
 #include "voice.parts.hpp"
 #include "../../core/block/block.hpp"
-#include "../../core/dynamics/dynamics.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/noise/noise.hpp"
 #include "../../core/oscillator/oscillator.hpp"
-#include "../../core/shaper/shaper.hpp"
 
 namespace SOUND::PLUGINS::DRAWBAR {
 
@@ -31,6 +29,7 @@ struct Organ {
   CORE::NOISE::Burst click;
   Contacts contacts;
   Leaks leaks;
+  Preamp preamp;
   Scanner scanner;
   Rotary rotary;
   CORE::BLOCK::Meter meter;
@@ -56,6 +55,9 @@ auto tick(Scanner &scanner, Float in) -> Float;
 void build(Rotary &rotary, Whole rate);
 void settle(Rotary &rotary, Whole mode, Whole rate);
 auto tick(Rotary &rotary, const Organ &organ, Float in) -> Pair;
+
+void build(Preamp &preamp, Whole rate);
+auto tick(Preamp &preamp, const Float *rows, Float in) -> Float;
 
 auto sound(Organ &organ) -> Pair;
 

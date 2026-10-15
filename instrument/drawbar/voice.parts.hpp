@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "drawbar.hpp"
+#include "../../core/dynamics/dynamics.hpp"
 #include "../../core/filter/filter.hpp"
 #include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
+#include "../../core/shaper/shaper.hpp"
 
 namespace SOUND::PLUGINS::DRAWBAR {
 
@@ -55,6 +57,12 @@ struct Neighbour {
 
 struct Leaks {
   Neighbour neighbours[WHEELS][NEIGHBOURS] = {};
+};
+
+struct Preamp {
+  CORE::SHAPER::Oversampler oversampler;
+  CORE::SHAPER::Blocker blocker;
+  CORE::DYNAMICS::Detector follower;
 };
 
 }  // namespace SOUND::PLUGINS::DRAWBAR
