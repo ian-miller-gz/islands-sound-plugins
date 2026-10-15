@@ -15,8 +15,7 @@ auto create(Whole rate, Whole channels) -> void * {
 }
 
 auto meter(void *instance) -> Float {
-  auto &synth = *static_cast<SUBTRACTIVE::Synth *>(instance);
-  return synth.level[synth.face.load(std::memory_order_acquire)];
+  return CORE::BLOCK::read(static_cast<SUBTRACTIVE::Synth *>(instance)->meter);
 }
 
 void destroy(void *instance) {

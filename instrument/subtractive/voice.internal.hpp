@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
-#include <cstdint>
-
-#include <threads.hpp>
-
 #include "subtractive.hpp"
+#include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
 #include "../../core/oscillator/oscillator.hpp"
@@ -37,8 +34,7 @@ struct Synth {
   Float detune = 1;
   Whole kind = CORE::FILTER::LOW;
   CORE::ENVELOPE::Envelope envelopes[CURVES];
-  Float level[2] = {0, 0};
-  THREADS::Shared<Whole> face{0};
+  CORE::BLOCK::Meter meter;
 };
 
 void settle(Synth &synth);
@@ -49,7 +45,7 @@ void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 auto sound(Synth &synth) -> Float;
 
 void render(
-  void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
+  void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
 }  // namespace SOUND::PLUGINS::SUBTRACTIVE
