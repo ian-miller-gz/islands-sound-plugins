@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-auto SOUND::PLUGINS::PADS::mix(Kit &kit) -> Float {
-  Float sum = 0;
-  for (Whole pad = 0; pad < PADS; ++pad)
-    sum += CORE::PERCUSSION::tick(kit.pads[pad]) * kit.rows[place(pad, LEVEL)];
-  return CORE::SHAPER::soft(sum);
+auto SOUND::PLUGINS::PADS::mix(Kit &kit) -> CORE::STEREO::Pair {
+  CORE::STEREO::Pair sum;
+  for (Whole pad = 0; pad < PADS; ++pad) {
+    const Float hit = CORE::PERCUSSION::tick(kit.pads[pad]);
+    CORE::STEREO::add(sum, hit * kit.rows[place(pad, LEVEL)], kit.sides[pad]);
+  }
+  return {CORE::SHAPER::soft(sum.left), CORE::SHAPER::soft(sum.right)};
 }
 
 void SOUND::PLUGINS::PADS::render(

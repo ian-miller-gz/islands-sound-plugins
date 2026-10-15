@@ -22,7 +22,7 @@ void settle(Kit &kit);
 
 void apply(Kit &kit, const AUDIO::PLUGIN::Event &event);
 
-auto mix(Kit &kit) -> Float;
+auto mix(Kit &kit) -> CORE::STEREO::Pair;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
