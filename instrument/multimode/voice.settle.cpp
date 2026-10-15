@@ -20,8 +20,9 @@ auto contour(Float attack, Float decay, Float sustain, Whole rate)
 void allocate(MULTIMODE::Synth &synth) {
   CORE::VOICE::Allocator &allocator = synth.allocator;
   allocator.glide.time = synth.rows[MULTIMODE::GLIDE];
+  allocator.count = Whole(synth.rows[MULTIMODE::COUNT]);
   allocator.unison =
-    synth.rows[MULTIMODE::UNISON] > 0 ? MULTIMODE::VOICES : SINGLE;
+    synth.rows[MULTIMODE::UNISON] > 0 ? allocator.count : SINGLE;
   allocator.detune = synth.rows[MULTIMODE::DETUNE];
   CORE::VOICE::settle(allocator, synth.rate);
 }
