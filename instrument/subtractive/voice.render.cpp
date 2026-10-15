@@ -32,8 +32,9 @@ auto sound(const SUBTRACTIVE::Synth &synth, SUBTRACTIVE::Note &note) -> Float {
     note.phases[voice] += note.steps[voice];
   }
   mix *= PAIR;
-  const Float lift = note.gates[SUBTRACTIVE::CONTOUR].level * synth.depth;
-  Float feed = (synth.cutoff + lift) * synth.turn;
+  const Float lift =
+    note.gates[SUBTRACTIVE::CONTOUR].level * synth.rows[SUBTRACTIVE::DEPTH];
+  Float feed = (synth.rows[SUBTRACTIVE::CUTOFF] + lift) * synth.turn;
   if (feed > CEILING) feed = CEILING;
   note.band += feed * (mix - note.low - synth.damping * note.band);
   note.low += feed * note.band;
@@ -64,7 +65,7 @@ void SOUND::PLUGINS::SUBTRACTIVE::render(
         breathe(synth.envelopes[curve], note.gates[curve]);
       sample += ::sound(synth, note);
     }
-    sample *= synth.gain;
+    sample *= synth.rows[GAIN];
     for (Whole channel = 0; channel < synth.channels; ++channel)
       outputs[channel][frame] = sample;
     const Float magnitude = sample < 0 ? -sample : sample;

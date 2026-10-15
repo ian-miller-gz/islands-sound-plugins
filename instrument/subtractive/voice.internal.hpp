@@ -5,10 +5,13 @@
 #include <threads.hpp>
 
 #include "subtractive.hpp"
+#include "../../core/phase/phase.hpp"
 
 namespace SOUND::PLUGINS::SUBTRACTIVE {
 
-constexpr Whole CENTS = 25;
+constexpr Whole SAW = 0;
+constexpr Whole PULSE = 1;
+constexpr Whole TRIANGLE = 2;
 
 enum Stage : Whole { IDLE, RISING, FALLING, HELD, LEAVING };
 
@@ -43,17 +46,12 @@ struct Note {
 struct Synth {
   Whole rate = 0;
   Whole channels = 0;
-  Vector<uint32_t> steps;
-  Vector<Float> ratios;
+  Float rows[PARAMETERS] = {};
+  CORE::PHASE::Tuning tuning;
   Float turn = 0;
-  Float gain = 0;
   Whole shape = SAW;
-  Float spread = 0;
   Float detune = 1;
-  Float cutoff = 0;
-  Float resonance = 0;
   Float damping = 2;
-  Float depth = 0;
   Envelope envelopes[CURVES];
   Note notes[VOICES];
   Whole clock = 0;
@@ -67,20 +65,12 @@ void shape(Envelope &envelope, Whole rate);
 
 void breathe(const Envelope &envelope, Gate &gate);
 
-void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
+void settle(Synth &synth);
 
-void steer(Synth &synth, Whole id, Float value);
+void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
 }  // namespace SOUND::PLUGINS::SUBTRACTIVE
-
-namespace SOUND::PLUGINS::SUBTRACTIVE::SURFACE {
-auto parameters(void *instance) -> Whole;
-auto name(void *instance, Whole index) -> String;
-auto reading(void *instance, Whole index) -> String;
-auto held(void *instance, Whole index) -> Float;
-auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::PLUGINS::SUBTRACTIVE::SURFACE

@@ -16,8 +16,8 @@ auto claim(SUBTRACTIVE::Synth &synth) -> SUBTRACTIVE::Note & {
 
 void strike(SUBTRACTIVE::Synth &synth, const AUDIO::PLUGIN::Event &event) {
   SUBTRACTIVE::Note &note = claim(synth);
-  note.pitch = event.index < synth.steps.size() ? event.index : 0;
-  note.steps[0] = synth.steps[note.pitch];
+  note.pitch = event.index < CORE::PHASE::PITCHES ? event.index : 0;
+  note.steps[0] = CORE::PHASE::stepped(synth.tuning, note.pitch);
   note.steps[1] = uint32_t(Float(note.steps[0]) * synth.detune);
   note.velocity = event.value < 0 ? 0 : event.value > 1 ? 1 : event.value;
   for (uint32_t &phase : note.phases) phase = 0;
@@ -49,7 +49,10 @@ void SOUND::PLUGINS::SUBTRACTIVE::apply(
       ::lift(synth, event.index);
       break;
     case AUDIO::PLUGIN::Event::CONTROLLER:
-      steer(synth, event.index, event.value);
+      if (event.index >= PARAMETERS) break;
+      synth.rows[event.index] =
+        CORE::TABLE::clamped(SHEET, event.index, event.value);
+      settle(synth);
       break;
     default:
       break;
