@@ -9,7 +9,7 @@ constexpr Float FAST = 0.2f;
 constexpr Float SLOW = 1.0f;
 constexpr Float NORMAL = 1.0f;
 constexpr Float SOFT = 0.5f;
-constexpr Float CONTACT = 0.002f;
+constexpr Float GLIDE = 0.002f;
 constexpr Float SNAP = 0.004f;
 constexpr Float BRIGHT = 4000;
 
@@ -32,7 +32,7 @@ void SOUND::PLUGINS::DRAWBAR::settle(Organ &organ) {
   const Float *rows = organ.rows;
   organ.percussion = ::percussion(rows, organ.rate);
   organ.accent = ::accent(rows);
-  organ.pole = CORE::MODULATOR::pole(CONTACT, organ.rate);
+  organ.pole = CORE::MODULATOR::pole(::GLIDE, organ.rate);
   CORE::NOISE::settle(organ.click, SNAP, BRIGHT, organ.rate);
   settle(organ.scanner, Whole(rows[SCANNER]), organ.rate);
   settle(organ.rotary, Whole(rows[ROTARY]), organ.rate);
