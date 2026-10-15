@@ -8,7 +8,6 @@ using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
-constexpr Float DRIVE = 1;
 constexpr Float LEVEL = 0.3f;
 constexpr Float FULL = 1;
 
@@ -28,9 +27,8 @@ void tune(
   Float octaves =
     rows[SUPERSAW::KEYBOARD] * (key - SUPERSAW::REFERENCE) / OCTAVE;
   octaves += rows[SUPERSAW::ENVELOPE] * contour + rows[SUPERSAW::WOBBLE] * lfo;
-  CORE::FILTER::settle(
-    voice.ladder, rows[SUPERSAW::CUTOFF] * std::exp2(octaves),
-    rows[SUPERSAW::RESONANCE], DRIVE, synth.rate);
+  octaves += rows[SUPERSAW::TOUCH] * note.velocity;
+  SUPERSAW::settle(synth, voice, rows[SUPERSAW::CUTOFF] * std::exp2(octaves));
 }
 
 auto play(SUPERSAW::Synth &synth, Whole at, Float lfo) -> Float {
@@ -44,7 +42,7 @@ auto play(SUPERSAW::Synth &synth, Whole at, Float lfo) -> Float {
     ::tune(synth, voice, note, key, contour, lfo);
   const Float saws = LEVEL * CORE::OSCILLATOR::tick(voice.super);
   const Float thinned = CORE::FILTER::tick(voice.highpass, saws);
-  const Float out = CORE::FILTER::tick(voice.ladder, thinned) * loud;
+  const Float out = SUPERSAW::filter(synth, voice, thinned) * loud;
   if (!CORE::ENVELOPE::sounding(voice.door)) note.sounding = false;
   return out;
 }

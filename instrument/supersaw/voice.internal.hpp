@@ -18,6 +18,7 @@ struct Voice {
   CORE::OSCILLATOR::Super super;
   CORE::FILTER::Biquad highpass;
   CORE::FILTER::Ladder ladder;
+  CORE::FILTER::Variable variable;
   CORE::ENVELOPE::Gate contour;
   CORE::ENVELOPE::Gate door;
   CORE::BLOCK::Stride stride;
@@ -47,6 +48,9 @@ struct Synth {
 void settle(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
+
+void settle(const Synth &synth, Voice &voice, Float cutoff);
+auto filter(const Synth &synth, Voice &voice, Float in) -> Float;
 
 auto sound(Synth &synth) -> Pair;
 
