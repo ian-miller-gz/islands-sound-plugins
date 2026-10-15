@@ -7,6 +7,7 @@ using namespace SOUND::PLUGINS;
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
 constexpr Float BLOCKED = 10;
+constexpr Float WANDERING = 1;
 constexpr Float HALVED = 2;
 constexpr Float QUARTERED = 4;
 constexpr Float QUARTER = 0.25f;
@@ -61,6 +62,8 @@ void swing(MONO::Synth &synth) {
   synth.lfo.wave = LFOS[Whole(synth.rows[MONO::WAVE])];
   synth.lfo.hertz = synth.rows[MONO::RATE];
   CORE::MODULATOR::settle(synth.lfo, synth.rate);
+  CORE::MODULATOR::settle(synth.drift, WANDERING, synth.rate);
+  CORE::MODULATOR::settle(synth.wander, WANDERING, synth.rate);
 }
 
 }  // namespace

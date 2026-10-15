@@ -7,6 +7,7 @@ namespace {
 using namespace SOUND::PLUGINS;
 
 constexpr Float OCTAVE = 12;
+constexpr Float CENT = 100;
 constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1;
 constexpr Float SPAN = 0.45f;
@@ -20,6 +21,11 @@ auto swing(MONO::Synth &synth, Float noise) -> Float {
   if (cycled && held && synth.lfo.phase < before)
     MONO::strike(synth.envelope, synth.allocator.notes[0].velocity);
   return Whole(synth.rows[MONO::WAVE]) == MONO::NOISY ? noise : value;
+}
+
+auto wander(MONO::Synth &synth) -> Float {
+  CORE::MODULATOR::tick(synth.wander);
+  return synth.rows[MONO::DRIFT] * CORE::MODULATOR::tick(synth.drift) / CENT;
 }
 
 auto width(const MONO::Synth &synth, Float lfo, Float contour) -> Float {
@@ -48,6 +54,7 @@ auto swept(const MONO::Synth &synth, Float key, Float lfo, Float contour)
   Float octaves = synth.rows[MONO::KEYBOARD] * (key - MONO::REFERENCE) / OCTAVE;
   octaves += synth.rows[MONO::ENVELOPE] * contour;
   octaves += synth.rows[MONO::MODULATION] * lfo;
+  octaves += synth.rows[MONO::DRIFT] * synth.wander.value / CENT;
   return synth.rows[MONO::CUTOFF] * std::exp2(octaves);
 }
 
@@ -67,8 +74,8 @@ auto SOUND::PLUGINS::MONO::sound(Synth &synth) -> Float {
   const Float gated =
     CORE::ENVELOPE::tick(synth.gate.gate, synth.gate.envelope);
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
-  const Float pitch =
-    key + synth.offset + synth.rows[BEND] + synth.rows[VIBRATO] * lfo;
+  const Float pitch = key + synth.offset + ::wander(synth) + synth.rows[BEND] +
+                      synth.rows[VIBRATO] * lfo;
   Float sum = ::mixed(synth, pitch, ::width(synth, lfo, contour));
   sum += synth.rows[NOISE] * noise;
   const Float cutoff = ::swept(synth, key, lfo, contour);

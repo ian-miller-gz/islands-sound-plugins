@@ -38,6 +38,8 @@ struct Synth {
   CORE::OSCILLATOR::Oscillator sub;
   CORE::NOISE::White noise;
   CORE::MODULATOR::Lfo lfo;
+  CORE::MODULATOR::Drift drift;
+  CORE::MODULATOR::Drift wander;
   CORE::FILTER::Ladder ladder;
   Contour envelope;
   Contour gate;
