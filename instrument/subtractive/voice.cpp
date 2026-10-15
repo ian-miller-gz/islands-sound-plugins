@@ -6,13 +6,10 @@ using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<SUBTRACTIVE::Synth, SUBTRACTIVE::SHEET>;
 
-constexpr Float TAU = 6.2831853f;
-
 auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *synth = new SUBTRACTIVE::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(SUBTRACTIVE::SHEET, synth->rows);
-  synth->turn = TAU / Float(rate);
   SUBTRACTIVE::settle(*synth);
   return synth;
 }

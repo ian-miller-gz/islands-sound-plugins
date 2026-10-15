@@ -5,10 +5,13 @@
 #include <threads.hpp>
 
 #include "subtractive.hpp"
+#include "../../core/filter/filter.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::SUBTRACTIVE {
+
+constexpr Float REFERENCE = 60;
 
 enum Stage : Whole { IDLE, RISING, FALLING, HELD, LEAVING };
 
@@ -31,8 +34,7 @@ struct Gate {
 
 struct Voice {
   CORE::OSCILLATOR::Oscillator oscillators[OSCILLATORS];
-  Float low = 0;
-  Float band = 0;
+  CORE::FILTER::Variable variable;
   Gate gates[CURVES];
 };
 
@@ -47,10 +49,9 @@ struct Synth {
     .priority = CORE::VOICE::LAST,
     .legato = true};
   Voice voices[VOICES];
-  Float turn = 0;
   Whole shape = CORE::OSCILLATOR::SAW;
   Float detune = 1;
-  Float damping = 2;
+  Whole kind = CORE::FILTER::LOW;
   Envelope envelopes[CURVES];
   Float level[2] = {0, 0};
   THREADS::Shared<Whole> face{0};

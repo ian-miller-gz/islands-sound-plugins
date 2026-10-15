@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#include <cmath>
+
 #include "voice.internal.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
 constexpr Float MEAN = 1.0f / Float(SUBTRACTIVE::OSCILLATORS);
-constexpr Float CEILING = 0.45f;
 
 auto sing(SUBTRACTIVE::Synth &synth, SUBTRACTIVE::Voice &voice, Float key)
   -> Float {
@@ -22,6 +23,15 @@ auto sing(SUBTRACTIVE::Synth &synth, SUBTRACTIVE::Voice &voice, Float key)
   return mix * MEAN;
 }
 
+auto swept(const SUBTRACTIVE::Synth &synth, Float key, Float contour) -> Float {
+  const Float *rows = synth.rows;
+  const Float octaves = rows[SUBTRACTIVE::KEYBOARD] *
+                        (key - SUBTRACTIVE::REFERENCE) / CORE::PHASE::OCTAVE;
+  const Float base =
+    rows[SUBTRACTIVE::CUTOFF] + rows[SUBTRACTIVE::DEPTH] * contour;
+  return base * std::exp2(octaves);
+}
+
 auto play(SUBTRACTIVE::Synth &synth, Whole at) -> Float {
   SUBTRACTIVE::Voice &voice = synth.voices[at];
   CORE::VOICE::Note &note = synth.allocator.notes[at];
@@ -29,16 +39,15 @@ auto play(SUBTRACTIVE::Synth &synth, Whole at) -> Float {
   for (Whole curve = 0; curve < SUBTRACTIVE::CURVES; ++curve)
     SUBTRACTIVE::breathe(synth.envelopes[curve], voice.gates[curve]);
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
-  const Float mix = ::sing(synth, voice, key);
-  const Float lift =
-    voice.gates[SUBTRACTIVE::CONTOUR].level * synth.rows[SUBTRACTIVE::DEPTH];
-  Float feed = (synth.rows[SUBTRACTIVE::CUTOFF] + lift) * synth.turn;
-  if (feed > CEILING) feed = CEILING;
-  voice.band += feed * (mix - voice.low - synth.damping * voice.band);
-  voice.low += feed * voice.band;
+  const Float contour = voice.gates[SUBTRACTIVE::CONTOUR].level;
+  CORE::FILTER::settle(
+    voice.variable, synth.kind, ::swept(synth, key, contour),
+    synth.rows[SUBTRACTIVE::RESONANCE], synth.rate);
+  const Float out =
+    CORE::FILTER::tick(voice.variable, ::sing(synth, voice, key));
   const SUBTRACTIVE::Gate &loud = voice.gates[SUBTRACTIVE::LOUDNESS];
   if (loud.stage == SUBTRACTIVE::IDLE) note.sounding = false;
-  return voice.low * loud.level * note.velocity;
+  return out * loud.level * note.velocity;
 }
 
 }  // namespace

@@ -10,8 +10,7 @@ void struck(SUBTRACTIVE::Synth &synth, Whole at) {
   SUBTRACTIVE::Voice &voice = synth.voices[at];
   for (CORE::OSCILLATOR::Oscillator &oscillator : voice.oscillators)
     CORE::OSCILLATOR::reset(oscillator, 0);
-  voice.low = 0;
-  voice.band = 0;
+  voice.variable = {};
   for (SUBTRACTIVE::Gate &gate : voice.gates) gate = {0, SUBTRACTIVE::RISING};
 }
 

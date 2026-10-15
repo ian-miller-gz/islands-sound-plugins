@@ -4,14 +4,17 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float LOOSE = 2.0f;
-constexpr Float SQUEEZE = 2.0f;
 constexpr Float CLOSED = 0;
 constexpr Whole SINGLE = 1;
 
 constexpr Whole WAVES[] = {
   CORE::OSCILLATOR::SAW, CORE::OSCILLATOR::PULSE, CORE::OSCILLATOR::TRIANGLE};
 static_assert(std::size(WAVES) == std::size(SUBTRACTIVE::SHAPES));
+
+constexpr Whole KINDS[] = {
+  CORE::FILTER::LOW, CORE::FILTER::BAND, CORE::FILTER::HIGH,
+  CORE::FILTER::NOTCH};
+static_assert(std::size(KINDS) == std::size(SUBTRACTIVE::MODES));
 
 constexpr Whole VOICINGS[] = {CORE::VOICE::POLY, CORE::VOICE::MONO};
 constexpr Whole COUNTS[] = {SUBTRACTIVE::VOICES, SINGLE};
@@ -54,7 +57,7 @@ void SOUND::PLUGINS::SUBTRACTIVE::settle(Synth &synth) {
   const Float *rows = synth.rows;
   synth.shape = ::WAVES[Whole(rows[SHAPE])];
   synth.detune = CORE::PHASE::ratio(rows[SPREAD]);
-  synth.damping = ::LOOSE - rows[RESONANCE] * ::SQUEEZE;
+  synth.kind = ::KINDS[Whole(rows[MODE])];
   ::contour(synth);
   ::loudness(synth);
   for (Envelope &envelope : synth.envelopes) shape(envelope, synth.rate);
