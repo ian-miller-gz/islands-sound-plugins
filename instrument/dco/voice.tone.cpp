@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-#include <cmath>
-
 #include "voice.internal.hpp"
 
 namespace {
@@ -9,11 +7,9 @@ using namespace SOUND::PLUGINS;
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
 constexpr Float EIGHT = 1;
-constexpr Float DRIVE = 1;
 constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1;
 constexpr Float DETUNE = 8;
-constexpr Float SHIFT = 0.25f;
 
 struct Sources {
   Float lfo = 0;
@@ -36,19 +32,6 @@ auto shape(const Float *rows, Float contour, Float lfo) -> Float {
   return at < std::size(shapes) ? shapes[at] : FULL;
 }
 
-auto swept(const DCO::Synth &synth, Whole at, Float contour, Float lfo)
-  -> Float {
-  const Float *rows = synth.rows;
-  const CORE::VOICE::Note &note = synth.allocator.notes[at];
-  const Float sign = rows[DCO::POLARITY] > 0 ? -FULL : FULL;
-  Float octaves =
-    rows[DCO::KEYBOARD] * (note.current - DCO::REFERENCE) / OCTAVE;
-  octaves += sign * rows[DCO::ENVELOPE] * contour + rows[DCO::WOBBLE] * lfo;
-  octaves += rows[DCO::TOUCH] * note.velocity;
-  octaves += SHIFT * rows[DCO::TRIM] * synth.trims[at].cutoff;
-  return rows[DCO::CUTOFF] * std::exp2(octaves);
-}
-
 auto play(DCO::Synth &synth, Whole at, Sources sources) -> Float {
   DCO::Voice &voice = synth.voices[at];
   CORE::VOICE::Note &note = synth.allocator.notes[at];
@@ -64,10 +47,7 @@ auto play(DCO::Synth &synth, Whole at, Sources sources) -> Float {
   const Float width = ::shape(rows, contour, sources.lfo);
   const Float mixed =
     DCO::sing(synth, voice, played, width) + rows[DCO::NOISE] * sources.noise;
-  const Float cutoff = ::swept(synth, at, contour, sources.lfo);
-  CORE::FILTER::settle(
-    voice.ladder, cutoff, rows[DCO::RESONANCE], DRIVE, synth.rate);
-  const Float out = CORE::FILTER::tick(voice.ladder, mixed) * loud;
+  const Float out = DCO::filter(synth, at, mixed, contour, sources.lfo) * loud;
   if (!CORE::ENVELOPE::sounding(voice.amplifier.gate)) note.sounding = false;
   return CORE::SHAPER::tick(voice.blocker, out);
 }

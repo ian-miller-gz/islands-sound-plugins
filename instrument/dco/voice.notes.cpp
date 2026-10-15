@@ -19,6 +19,7 @@ void struck(DCO::Synth &synth, Whole at) {
   const Float velocity = synth.allocator.notes[at].velocity;
   CORE::ENVELOPE::strike(voice.filter.gate, voice.filter.shape, velocity);
   CORE::ENVELOPE::strike(voice.amplifier.gate, voice.amplifier.shape, velocity);
+  CORE::BLOCK::reset(voice.stride);
   if (::alone(synth, at)) CORE::MODULATOR::reset(synth.lfo);
 }
 

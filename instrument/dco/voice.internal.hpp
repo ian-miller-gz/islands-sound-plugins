@@ -25,7 +25,9 @@ struct Contour {
 struct Voice {
   CORE::OSCILLATOR::Oscillator oscillator;
   CORE::OSCILLATOR::Oscillator sub;
-  CORE::FILTER::Ladder ladder;
+  CORE::FILTER::Transistor transistor;
+  CORE::SHAPER::Oversampler oversampler;
+  CORE::BLOCK::Stride stride;
   Contour filter;
   Contour amplifier;
   CORE::SHAPER::Blocker blocker;
@@ -72,6 +74,8 @@ void settle(Chorus &chorus, Whole mode, Whole rate);
 auto tick(Chorus &chorus, Float in) -> Pair;
 
 auto sing(Synth &synth, Voice &voice, Float pitch, Float shape) -> Float;
+auto filter(Synth &synth, Whole at, Float in, Float contour, Float lfo)
+  -> Float;
 auto sound(Synth &synth) -> Pair;
 
 void render(
