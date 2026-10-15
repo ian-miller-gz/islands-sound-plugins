@@ -9,6 +9,7 @@ constexpr Float BLOCKED = 10;
 constexpr Float CUT = 0.005f;
 constexpr Float TIME = 0.1f;
 constexpr Float FULL = 1;
+constexpr Float WANDERING = 1;
 constexpr Whole SINGLE = 1;
 constexpr Whole DECAY = POLYMOD::DECAY1 - POLYMOD::ATTACK1;
 constexpr Whole SUSTAIN = POLYMOD::SUSTAIN1 - POLYMOD::ATTACK1;
@@ -42,6 +43,7 @@ void shape(POLYMOD::Synth &synth) {
       ::contour(rows + POLYMOD::ATTACK2, released, scale, synth.rate);
     voice.loudness.shape.depth = rows[POLYMOD::VELOCITY];
     CORE::SHAPER::settle(voice.blocker, BLOCKED, synth.rate);
+    CORE::MODULATOR::settle(voice.drift, WANDERING, synth.rate);
   }
 }
 

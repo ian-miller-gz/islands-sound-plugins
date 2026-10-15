@@ -28,6 +28,7 @@ struct Voice {
   Contour contour;
   Contour loudness;
   CORE::SHAPER::Blocker blocker;
+  CORE::MODULATOR::Drift drift;
 };
 
 struct Synth {
