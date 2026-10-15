@@ -26,6 +26,7 @@ constexpr Whole FIRST = 0;
 constexpr Whole SECOND = 1;
 constexpr Whole THIRD = 2;
 constexpr Float REFERENCE = 60;
+constexpr Whole OVERSAMPLING = 2;
 
 struct Source {
   CORE::OSCILLATOR::Oscillator oscillator;
@@ -50,7 +51,9 @@ struct Synth {
     .legato = true};
   Source sources[OSCILLATORS];
   CORE::NOISE::Pink noise;
-  CORE::FILTER::Ladder ladder;
+  CORE::FILTER::Transistor transistor;
+  CORE::SHAPER::Oversampler oversampler;
+  CORE::BLOCK::Stride stride;
   Contour loudness;
   Contour filter;
   CORE::SHAPER::Blocker blocker;
@@ -66,6 +69,8 @@ void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 auto sing(Source &source, Float pitch, Whole rate) -> Float;
 
+void steer(Synth &synth, Float key, Float wheel, Float contour);
+auto filter(Synth &synth, Float in) -> Float;
 auto sound(Synth &synth) -> Float;
 
 void render(
