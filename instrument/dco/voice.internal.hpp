@@ -29,6 +29,7 @@ struct Voice {
   Contour filter;
   Contour amplifier;
   CORE::SHAPER::Blocker blocker;
+  CORE::MODULATOR::Drift drift;
 };
 
 struct Chorus {

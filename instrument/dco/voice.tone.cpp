@@ -24,7 +24,8 @@ auto pitch(const DCO::Synth &synth, Whole at, Float key, Float lfo) -> Float {
   const Float *rows = synth.rows;
   const Float range = (rows[DCO::RANGE] - EIGHT) * OCTAVE;
   const Float trim = DETUNE * rows[DCO::TRIM] * synth.trims[at].pitch;
-  const Float cents = synth.allocator.notes[at].cents + trim;
+  const Float wander = rows[DCO::DRIFT] * synth.voices[at].drift.value;
+  const Float cents = synth.allocator.notes[at].cents + trim + wander;
   return key + range + cents / CENT + synth.tune + rows[DCO::BEND] +
          rows[DCO::VIBRATO] * lfo;
 }
@@ -58,6 +59,7 @@ auto play(DCO::Synth &synth, Whole at, Sources sources) -> Float {
   const Float loud =
     CORE::ENVELOPE::tick(voice.amplifier.gate, voice.amplifier.shape);
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
+  CORE::MODULATOR::tick(voice.drift);
   const Float played = ::pitch(synth, at, key, sources.lfo);
   const Float width = ::shape(rows, contour, sources.lfo);
   const Float mixed =

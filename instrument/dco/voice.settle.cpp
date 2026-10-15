@@ -14,6 +14,7 @@ constexpr Float UPPER = 720;
 constexpr Whole FLATTENED = 1;
 constexpr Float TIME = 0.1f;
 constexpr Float FULL = 1;
+constexpr Float WANDERING = 1;
 
 struct Position {
   Whole kind;
@@ -74,6 +75,7 @@ void shape(DCO::Synth &synth) {
       rows[DCO::AMPLIFIER] > 0 ? gated : voice.filter.shape;
     voice.amplifier.shape.depth = rows[DCO::VELOCITY];
     CORE::SHAPER::settle(voice.blocker, BLOCKED, synth.rate);
+    CORE::MODULATOR::settle(voice.drift, WANDERING, synth.rate);
   }
 }
 
