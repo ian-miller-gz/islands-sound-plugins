@@ -15,13 +15,18 @@ namespace SOUND::PLUGINS::POLYMOD {
 constexpr Whole VOICES = 5;
 constexpr Float REFERENCE = 60;
 
+struct Contour {
+  CORE::ENVELOPE::Envelope shape;
+  CORE::ENVELOPE::Gate gate;
+};
+
 struct Voice {
   CORE::OSCILLATOR::Oscillator master;
   CORE::OSCILLATOR::Sync saw;
   CORE::OSCILLATOR::Sync pulse;
   CORE::FILTER::Ladder ladder;
-  CORE::ENVELOPE::Gate contour;
-  CORE::ENVELOPE::Gate loudness;
+  Contour contour;
+  Contour loudness;
   CORE::SHAPER::Blocker blocker;
 };
 
@@ -32,10 +37,9 @@ struct Synth {
   CORE::VOICE::Allocator allocator = {
     .count = VOICES, .mode = CORE::VOICE::POLY, .steal = CORE::VOICE::OLDEST};
   Voice voices[VOICES];
+  CORE::VOICE::Trim trims[VOICES];
   CORE::MODULATOR::Lfo lfo;
   CORE::NOISE::White noise;
-  CORE::ENVELOPE::Envelope contour;
-  CORE::ENVELOPE::Envelope loudness;
   Float tune = 0;
   CORE::BLOCK::Meter meter;
 };

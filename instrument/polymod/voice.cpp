@@ -10,6 +10,7 @@ auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *synth = new POLYMOD::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(POLYMOD::SHEET, synth->rows);
+  CORE::VOICE::draw(synth->trims, CORE::MODULATOR::SEED);
   POLYMOD::settle(*synth);
   return synth;
 }

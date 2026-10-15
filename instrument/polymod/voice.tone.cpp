@@ -9,29 +9,33 @@ using namespace SOUND::PLUGINS;
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
 constexpr Float DRIVE = 1;
+constexpr Float DETUNE = 8;
+constexpr Float SHIFT = 0.25f;
 
 struct Sources {
   Float lfo = 0;
   Float noise = 0;
 };
 
-auto offset(
-  const POLYMOD::Synth &synth, const CORE::VOICE::Note &note,
-  Float lfo) -> Float {
+auto offset(const POLYMOD::Synth &synth, Whole at, Float lfo) -> Float {
   const Float *rows = synth.rows;
-  return note.cents / CENT + synth.tune + rows[POLYMOD::BEND] +
+  const Float trim = DETUNE * rows[POLYMOD::TRIM] * synth.trims[at].pitch;
+  const Float cents = synth.allocator.notes[at].cents + trim;
+  return cents / CENT + synth.tune + rows[POLYMOD::BEND] +
          rows[POLYMOD::VIBRATO] * lfo;
 }
 
 auto swept(
-  const POLYMOD::Synth &synth, const CORE::VOICE::Note &note, Float contour,
-  Float lfo, Float mod) -> Float {
+  const POLYMOD::Synth &synth, Whole at, Float contour, Float lfo,
+  Float mod) -> Float {
   const Float *rows = synth.rows;
+  const CORE::VOICE::Note &note = synth.allocator.notes[at];
   const Float key = note.current - POLYMOD::REFERENCE;
   Float octaves = rows[POLYMOD::TRACKING] * key / OCTAVE;
   octaves += rows[POLYMOD::AMOUNT] * contour + rows[POLYMOD::WOBBLE] * lfo;
   if (rows[POLYMOD::FILTER] > 0) octaves += POLYMOD::OCTAVES * mod;
   octaves += rows[POLYMOD::TOUCH] * note.velocity;
+  octaves += SHIFT * rows[POLYMOD::TRIM] * synth.trims[at].cutoff;
   return rows[POLYMOD::CUTOFF] * std::exp2(octaves);
 }
 
@@ -40,10 +44,12 @@ auto play(POLYMOD::Synth &synth, Whole at, Sources sources) -> Float {
   CORE::VOICE::Note &note = synth.allocator.notes[at];
   if (!note.sounding) return 0;
   const Float *rows = synth.rows;
-  const Float contour = CORE::ENVELOPE::tick(voice.contour, synth.contour);
-  const Float loud = CORE::ENVELOPE::tick(voice.loudness, synth.loudness);
+  const Float contour =
+    CORE::ENVELOPE::tick(voice.contour.gate, voice.contour.shape);
+  const Float loud =
+    CORE::ENVELOPE::tick(voice.loudness.gate, voice.loudness.shape);
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
-  const Float bent = ::offset(synth, note, sources.lfo);
+  const Float bent = ::offset(synth, at, sources.lfo);
   const Float played = rows[POLYMOD::KEYBOARD] > 0 ? key : POLYMOD::REFERENCE;
   const Float b = POLYMOD::modulate(synth, voice, played + bent);
   const Float mod =
@@ -51,11 +57,11 @@ auto play(POLYMOD::Synth &synth, Whole at, Sources sources) -> Float {
   const Float a = POLYMOD::sing(synth, voice, key + bent, mod);
   const Float mixed = rows[POLYMOD::LEVELA] * a + rows[POLYMOD::LEVELB] * b +
                       rows[POLYMOD::NOISE] * sources.noise;
-  const Float cutoff = ::swept(synth, note, contour, sources.lfo, mod);
+  const Float cutoff = ::swept(synth, at, contour, sources.lfo, mod);
   CORE::FILTER::settle(
     voice.ladder, cutoff, rows[POLYMOD::RESONANCE], DRIVE, synth.rate);
   const Float out = CORE::FILTER::tick(voice.ladder, mixed) * loud;
-  if (!CORE::ENVELOPE::sounding(voice.loudness)) note.sounding = false;
+  if (!CORE::ENVELOPE::sounding(voice.loudness.gate)) note.sounding = false;
   return CORE::SHAPER::tick(voice.blocker, out);
 }
 
