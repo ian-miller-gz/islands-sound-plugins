@@ -39,6 +39,12 @@ void visit(TINE::Synth &synth, const CORE::VOICE::Note &note) {
   VISITS[note.change](synth, at);
 }
 
+void sustain(TINE::Synth &synth) {
+  CORE::VOICE::hold(
+    synth.allocator, synth.rows[TINE::HOLD] > 0,
+    [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::TINE::apply(
@@ -49,4 +55,5 @@ void SOUND::PLUGINS::TINE::apply(
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);
+  if (row == HOLD) ::sustain(synth);
 }
