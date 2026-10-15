@@ -5,6 +5,8 @@ namespace {
 using namespace SOUND::PLUGINS;
 
 constexpr Float SILENT = 0.0001f;
+constexpr Whole LEFT = 0;
+constexpr Whole RIGHT = 1;
 
 auto play(PLUCK::Synth &synth, Whole at) -> Float {
   PLUCK::Voice &voice = synth.voices[at];
@@ -24,12 +26,18 @@ auto play(PLUCK::Synth &synth, Whole at) -> Float {
   return out;
 }
 
+auto shape(PLUCK::Synth &synth, Whole side, Float in) -> Float {
+  Float out = in;
+  for (CORE::FILTER::Biquad &body : synth.bodies[side])
+    out = CORE::FILTER::tick(body, out);
+  return CORE::SHAPER::tick(synth.blockers[side], out);
+}
+
 }  // namespace
 
-auto SOUND::PLUGINS::PLUCK::sound(Synth &synth) -> Float {
-  Float sum = 0;
-  for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at);
-  for (CORE::FILTER::Biquad &body : synth.bodies)
-    sum = CORE::FILTER::tick(body, sum);
-  return CORE::SHAPER::tick(synth.blocker, sum);
+auto SOUND::PLUGINS::PLUCK::sound(Synth &synth) -> CORE::STEREO::Pair {
+  CORE::STEREO::Pair sum;
+  for (Whole at = 0; at < VOICES; ++at)
+    CORE::STEREO::add(sum, ::play(synth, at), synth.voices[at].gains);
+  return {::shape(synth, LEFT, sum.left), ::shape(synth, RIGHT, sum.right)};
 }

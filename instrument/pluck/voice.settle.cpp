@@ -35,10 +35,11 @@ auto decay(Float seconds, Float hertz) -> Float {
 
 void resonate(PLUCK::Synth &synth) {
   const Float *rows = synth.rows;
-  for (Whole at = 0; at < PLUCK::BODIES; ++at)
-    CORE::FILTER::settle(
-      synth.bodies[at], CORE::FILTER::PEAK, MODES[at].hertz * rows[PLUCK::SIZE],
-      MODES[at].q, LIFT * rows[PLUCK::BODY], synth.rate);
+  for (auto &side : synth.bodies)
+    for (Whole at = 0; at < PLUCK::BODIES; ++at)
+      CORE::FILTER::settle(
+        side[at], CORE::FILTER::PEAK, MODES[at].hertz * rows[PLUCK::SIZE],
+        MODES[at].q, LIFT * rows[PLUCK::BODY], synth.rate);
 }
 
 }  // namespace
@@ -57,8 +58,9 @@ void SOUND::PLUGINS::PLUCK::build(Synth &synth) {
 void SOUND::PLUGINS::PLUCK::tune(Synth &synth, Whole at) {
   Voice &voice = synth.voices[at];
   const Float *rows = synth.rows;
-  const Float hertz =
-    CORE::PHASE::hertz(Float(synth.allocator.notes[at].pitch) + synth.tune);
+  const Float key = Float(synth.allocator.notes[at].pitch);
+  const Float hertz = CORE::PHASE::hertz(key + synth.tune);
+  voice.gains = CORE::STEREO::pan(CORE::STEREO::place(key, synth.spread));
   const Float octaves = FULL + SPAN * (FULL - rows[DAMPING]);
   CORE::LINE::settle(voice.loop, 0, hertz * std::exp2(octaves), synth.rate);
   const Float lag = voice.loop.pole / (FULL - voice.loop.pole);
@@ -76,7 +78,9 @@ void SOUND::PLUGINS::PLUCK::settle(Synth &synth) {
   synth.tune = synth.rows[TUNE] / CENT + synth.rows[BEND];
   synth.fall = std::exp(-FULL / (FADING * Float(synth.rate)));
   ::resonate(synth);
-  CORE::SHAPER::settle(synth.blocker, BLOCKED, synth.rate);
+  synth.spread = synth.channels < SIDES ? 0 : synth.rows[WIDTH];
+  for (CORE::SHAPER::Blocker &blocker : synth.blockers)
+    CORE::SHAPER::settle(blocker, BLOCKED, synth.rate);
   for (Whole at = 0; at < VOICES; ++at)
     if (synth.allocator.notes[at].sounding) tune(synth, at);
 }

@@ -9,6 +9,7 @@ using CORE::OSCILLATOR::Wheel;
 constexpr Float PERIODS = 1;
 constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1;
+constexpr Float LIGHT = 0.25f;
 constexpr Wheel MIDWAY = Wheel(CORE::PHASE::HALF);
 
 auto period(PLUCK::Voice &voice, Float value) -> Float {
@@ -39,10 +40,11 @@ struct Shape {
   Excite excite;
   Float pace;
   Wheel start;
+  Float gain;
 };
 
 constexpr Shape SHAPES[] = {
-  {noise, FULL, 0}, {pick, FULL, MIDWAY}, {mallet, HALF, 0}};
+  {noise, FULL, 0, FULL}, {pick, FULL, MIDWAY, LIGHT}, {mallet, HALF, 0, FULL}};
 static_assert(std::size(SHAPES) == PLUCK::KINDS + 1);
 
 }  // namespace
@@ -58,7 +60,8 @@ void SOUND::PLUGINS::PLUCK::strike(Synth &synth, Whole at) {
   const ::Shape &shape = ::SHAPES[kind <= KINDS ? kind : 0];
   Exciter &exciter = voice.exciter;
   const Whole frames = Whole(Float(synth.rate) / hertz);
-  exciter = {.kind = kind, .left = frames, .level = note.velocity};
+  const Float level = note.velocity * shape.gain;
+  exciter = {.kind = kind, .left = frames, .level = level};
   CORE::OSCILLATOR::settle(
     exciter.wave, hertz * shape.pace, CORE::OSCILLATOR::SQUARE, synth.rate);
   CORE::OSCILLATOR::reset(exciter.wave, shape.start);
