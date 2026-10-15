@@ -77,10 +77,11 @@ auto play(POLYMOD::Synth &synth, Whole at, Sources sources) -> Float {
 
 }  // namespace
 
-auto SOUND::PLUGINS::POLYMOD::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::POLYMOD::sound(Synth &synth) -> Pair {
   const Sources sources = {
     CORE::MODULATOR::tick(synth.lfo), CORE::NOISE::tick(synth.noise)};
   Float sum = 0;
   for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at, sources);
-  return sum;
+  const CORE::STEREO::Pair pair = CORE::LINE::tick(synth.chorus, sum);
+  return {pair.left, pair.right, synth.chorus.whole};
 }

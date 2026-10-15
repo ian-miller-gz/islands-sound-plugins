@@ -10,6 +10,8 @@ constexpr Float CUT = 0.005f;
 constexpr Float TIME = 0.1f;
 constexpr Float FULL = 1;
 constexpr Float WANDERING = 1;
+constexpr Float PACE = 0.5f;
+constexpr Float REACH = 0.0025f;
 constexpr Whole SINGLE = 1;
 constexpr Whole DECAY = POLYMOD::DECAY1 - POLYMOD::ATTACK1;
 constexpr Whole SUSTAIN = POLYMOD::SUSTAIN1 - POLYMOD::ATTACK1;
@@ -69,4 +71,6 @@ void SOUND::PLUGINS::POLYMOD::settle(Synth &synth) {
   ::allocate(synth);
   ::swing(synth);
   synth.tune = synth.rows[TUNE] / CENT;
+  CORE::LINE::settle(
+    synth.chorus, ::PACE, ::REACH, synth.rows[CHORUS], synth.rate);
 }

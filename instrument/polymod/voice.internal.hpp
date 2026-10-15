@@ -4,6 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
+#include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/noise/noise.hpp"
 #include "../../core/oscillator/oscillator.hpp"
@@ -31,6 +32,12 @@ struct Voice {
   CORE::MODULATOR::Drift drift;
 };
 
+struct Pair {
+  Float left = 0;
+  Float right = 0;
+  Float whole = 0;
+};
+
 struct Synth {
   Whole rate = 0;
   Whole channels = 0;
@@ -41,6 +48,7 @@ struct Synth {
   CORE::VOICE::Trim trims[VOICES];
   CORE::MODULATOR::Lfo lfo;
   CORE::NOISE::White noise;
+  CORE::LINE::Chorus chorus;
   Float tune = 0;
   CORE::BLOCK::Meter meter;
 };
@@ -51,7 +59,7 @@ void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 auto modulate(Synth &synth, Voice &voice, Float pitch) -> Float;
 auto sing(Synth &synth, Voice &voice, Float pitch, Float mod) -> Float;
-auto sound(Synth &synth) -> Float;
+auto sound(Synth &synth) -> Pair;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
