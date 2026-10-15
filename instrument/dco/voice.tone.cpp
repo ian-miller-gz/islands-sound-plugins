@@ -33,12 +33,15 @@ auto shape(const Float *rows, Float contour, Float lfo) -> Float {
   return at < std::size(shapes) ? shapes[at] : FULL;
 }
 
-auto swept(const DCO::Synth &synth, Float key, Float contour, Float lfo)
-  -> Float {
+auto swept(
+  const DCO::Synth &synth, const CORE::VOICE::Note &note, Float contour,
+  Float lfo) -> Float {
   const Float *rows = synth.rows;
   const Float sign = rows[DCO::POLARITY] > 0 ? -FULL : FULL;
-  Float octaves = rows[DCO::KEYBOARD] * (key - DCO::REFERENCE) / OCTAVE;
+  Float octaves =
+    rows[DCO::KEYBOARD] * (note.current - DCO::REFERENCE) / OCTAVE;
   octaves += sign * rows[DCO::ENVELOPE] * contour + rows[DCO::WOBBLE] * lfo;
+  octaves += rows[DCO::TOUCH] * note.velocity;
   return rows[DCO::CUTOFF] * std::exp2(octaves);
 }
 
@@ -54,7 +57,7 @@ auto play(DCO::Synth &synth, Whole at, Sources sources) -> Float {
   const Float width = ::shape(rows, contour, sources.lfo);
   const Float mixed =
     DCO::sing(synth, voice, played, width) + rows[DCO::NOISE] * sources.noise;
-  const Float cutoff = ::swept(synth, key, contour, sources.lfo);
+  const Float cutoff = ::swept(synth, note, contour, sources.lfo);
   CORE::FILTER::settle(
     voice.ladder, cutoff, rows[DCO::RESONANCE], DRIVE, synth.rate);
   const Float out = CORE::FILTER::tick(voice.ladder, mixed) * loud;
