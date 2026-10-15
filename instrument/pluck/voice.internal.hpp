@@ -13,6 +13,7 @@ namespace SOUND::PLUGINS::PLUCK {
 
 constexpr Whole VOICES = 16;
 constexpr Whole BODIES = 2;
+constexpr Whole STAGES = 4;
 
 enum State : Whole { RINGING, DAMPED, STATES };
 
@@ -31,6 +32,8 @@ struct Voice {
   CORE::LINE::Loop loop;
   CORE::NOISE::Burst burst;
   Exciter exciter;
+  CORE::FILTER::Allpass stages[STAGES];
+  Whole engaged = 0;
   Float delay = 1;
   Float notch = 1;
   Float feedbacks[STATES] = {};
@@ -55,6 +58,9 @@ struct Synth {
 void build(Synth &synth);
 void settle(Synth &synth);
 void tune(Synth &synth, Whole at);
+void build(Voice &voice);
+auto stiffen(Voice &voice, Float stiffness, Float period, Float room) -> Float;
+auto disperse(Voice &voice, Float in) -> Float;
 void strike(Synth &synth, Whole at);
 auto excite(const Synth &synth, Voice &voice) -> Float;
 

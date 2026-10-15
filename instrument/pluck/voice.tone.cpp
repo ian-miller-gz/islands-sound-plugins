@@ -15,8 +15,9 @@ auto play(PLUCK::Synth &synth, Whole at) -> Float {
   const Float out = CORE::LINE::read(voice.string, voice.delay, voice.allpass);
   const Float feedback =
     voice.feedbacks[note.held ? PLUCK::RINGING : PLUCK::DAMPED];
+  const Float damped = CORE::LINE::damp(voice.loop, out);
   CORE::LINE::write(
-    voice.string, excite + feedback * CORE::LINE::damp(voice.loop, out));
+    voice.string, excite + feedback * PLUCK::disperse(voice, damped));
   const Float size = CORE::BLOCK::magnitude(out);
   voice.level = size > voice.level ? size : voice.level * synth.fall;
   if (!note.held && voice.level < SILENT) note.sounding = false;

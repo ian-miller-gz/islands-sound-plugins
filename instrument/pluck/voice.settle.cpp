@@ -50,6 +50,7 @@ void SOUND::PLUGINS::PLUCK::build(Synth &synth) {
   for (Voice &voice : synth.voices) {
     CORE::LINE::build(voice.string, Whole(longest) + SPARE);
     CORE::LINE::build(voice.pick, Whole(longest) + SPARE);
+    build(voice);
   }
 }
 
@@ -62,7 +63,10 @@ void SOUND::PLUGINS::PLUCK::tune(Synth &synth, Whole at) {
   CORE::LINE::settle(voice.loop, 0, hertz * std::exp2(octaves), synth.rate);
   const Float lag = voice.loop.pole / (FULL - voice.loop.pole);
   const Float period = Float(synth.rate) / hertz;
-  voice.delay = period - lag < SHORTEST ? SHORTEST : period - lag;
+  const Float room = period - lag - SHORTEST;
+  const Float stretch = stiffen(voice, rows[STIFFNESS], period, room);
+  const Float left = period - lag - stretch;
+  voice.delay = left < SHORTEST ? SHORTEST : left;
   voice.notch = period * rows[POSITION];
   voice.feedbacks[RINGING] = ::decay(rows[DECAY], hertz);
   voice.feedbacks[DAMPED] = ::decay(rows[RELEASE], hertz);
