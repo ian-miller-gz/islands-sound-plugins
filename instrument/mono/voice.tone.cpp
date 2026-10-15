@@ -1,17 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-#include <cmath>
-
 #include "voice.internal.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
 constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1;
 constexpr Float SPAN = 0.45f;
-constexpr Float DRIVE = 1;
 
 auto swing(MONO::Synth &synth, Float noise) -> Float {
   const CORE::PHASE::Wheel before = synth.lfo.phase;
@@ -49,15 +45,6 @@ auto mixed(MONO::Synth &synth, Float pitch, Float width) -> Float {
   return sum;
 }
 
-auto swept(const MONO::Synth &synth, Float key, Float lfo, Float contour)
-  -> Float {
-  Float octaves = synth.rows[MONO::KEYBOARD] * (key - MONO::REFERENCE) / OCTAVE;
-  octaves += synth.rows[MONO::ENVELOPE] * contour;
-  octaves += synth.rows[MONO::MODULATION] * lfo;
-  octaves += synth.rows[MONO::DRIFT] * synth.wander.value / CENT;
-  return synth.rows[MONO::CUTOFF] * std::exp2(octaves);
-}
-
 auto quiet(const MONO::Synth &synth) -> Flag {
   return !CORE::ENVELOPE::sounding(synth.envelope.gate) &&
          !CORE::ENVELOPE::sounding(synth.gate.gate);
@@ -78,12 +65,9 @@ auto SOUND::PLUGINS::MONO::sound(Synth &synth) -> Float {
                       synth.rows[VIBRATO] * lfo;
   Float sum = ::mixed(synth, pitch, ::width(synth, lfo, contour));
   sum += synth.rows[NOISE] * noise;
-  const Float cutoff = ::swept(synth, key, lfo, contour);
-  CORE::FILTER::settle(
-    synth.ladder, cutoff, synth.rows[RESONANCE], ::DRIVE, synth.rate);
   const Flag open = Whole(synth.rows[AMPLIFIER]) == OPEN;
   const Float out =
-    CORE::FILTER::tick(synth.ladder, sum) * (open ? gated : contour);
+    filter(synth, sum, key, lfo, contour) * (open ? gated : contour);
   if (::quiet(synth)) note.sounding = false;
   return CORE::SHAPER::tick(synth.blocker, out);
 }
