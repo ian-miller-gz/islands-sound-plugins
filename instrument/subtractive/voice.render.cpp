@@ -6,40 +6,7 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float SCALE = 1.0f / 2147483648.0f;
-constexpr Float PAIR = 0.5f;
-constexpr Float CEILING = 0.45f;
-
 void denormals() { _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON); }
-
-auto wave(Whole shape, uint32_t phase) -> Float {
-  const Float ramp = Float(static_cast<int32_t>(phase)) * SCALE;
-  switch (shape) {
-    case SUBTRACTIVE::PULSE:
-      return ramp < 0 ? -1.0f : 1.0f;
-    case SUBTRACTIVE::TRIANGLE:
-      return (ramp < 0 ? -ramp : ramp) * 2.0f - 1.0f;
-    default:
-      return ramp;
-  }
-}
-
-auto sound(const SUBTRACTIVE::Synth &synth, SUBTRACTIVE::Note &note) -> Float {
-  if (note.gates[SUBTRACTIVE::LOUDNESS].stage == SUBTRACTIVE::IDLE) return 0;
-  Float mix = 0;
-  for (Whole voice = 0; voice < SUBTRACTIVE::OSCILLATORS; ++voice) {
-    mix += ::wave(synth.shape, note.phases[voice]);
-    note.phases[voice] += note.steps[voice];
-  }
-  mix *= PAIR;
-  const Float lift =
-    note.gates[SUBTRACTIVE::CONTOUR].level * synth.rows[SUBTRACTIVE::DEPTH];
-  Float feed = (synth.rows[SUBTRACTIVE::CUTOFF] + lift) * synth.turn;
-  if (feed > CEILING) feed = CEILING;
-  note.band += feed * (mix - note.low - synth.damping * note.band);
-  note.low += feed * note.band;
-  return note.low * note.gates[SUBTRACTIVE::LOUDNESS].level * note.velocity;
-}
 
 void publish(SUBTRACTIVE::Synth &synth, Float peak) {
   const Whole idle = synth.face.load(std::memory_order_relaxed) ^ 1u;
@@ -59,13 +26,7 @@ void SOUND::PLUGINS::SUBTRACTIVE::render(
   for (Whole frame = 0; frame < frames; ++frame) {
     while (next < count && events[next].offset <= frame)
       apply(synth, events[next++]);
-    Float sample = 0;
-    for (Note &note : synth.notes) {
-      for (Whole curve = 0; curve < CURVES; ++curve)
-        breathe(synth.envelopes[curve], note.gates[curve]);
-      sample += ::sound(synth, note);
-    }
-    sample *= synth.rows[GAIN];
+    const Float sample = sound(synth);
     for (Whole channel = 0; channel < synth.channels; ++channel)
       outputs[channel][frame] = sample;
     const Float magnitude = sample < 0 ? -sample : sample;

@@ -6,6 +6,7 @@
 
 #include "subtractive.hpp"
 #include "../../core/phase/phase.hpp"
+#include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::SUBTRACTIVE {
 
@@ -32,29 +33,29 @@ struct Gate {
   Whole stage = IDLE;
 };
 
-struct Note {
+struct Voice {
   uint32_t phases[OSCILLATORS] = {};
-  uint32_t steps[OSCILLATORS] = {};
-  Whole pitch = 0;
-  Float velocity = 0;
   Float low = 0;
   Float band = 0;
   Gate gates[CURVES];
-  Whole struck = 0;
 };
 
 struct Synth {
   Whole rate = 0;
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
-  CORE::PHASE::Tuning tuning;
+  CORE::VOICE::Allocator allocator = {
+    .count = VOICES,
+    .mode = CORE::VOICE::POLY,
+    .steal = CORE::VOICE::OLDEST,
+    .priority = CORE::VOICE::LAST,
+    .legato = true};
+  Voice voices[VOICES];
   Float turn = 0;
   Whole shape = SAW;
   Float detune = 1;
   Float damping = 2;
   Envelope envelopes[CURVES];
-  Note notes[VOICES];
-  Whole clock = 0;
   Float level[2] = {0, 0};
   THREADS::Shared<Whole> face{0};
 };
@@ -66,8 +67,11 @@ void shape(Envelope &envelope, Whole rate);
 void breathe(const Envelope &envelope, Gate &gate);
 
 void settle(Synth &synth);
+auto mode(const Synth &synth) -> Whole;
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
+
+auto sound(Synth &synth) -> Float;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
