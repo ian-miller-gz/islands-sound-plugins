@@ -39,4 +39,5 @@ void SOUND::PLUGINS::ACID::apply(
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);
+  CORE::BLOCK::reset(synth.stride);
 }

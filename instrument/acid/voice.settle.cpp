@@ -11,6 +11,7 @@ constexpr Float COUPLING = 44;
 constexpr Float BLOCKED = 10;
 constexpr Float SWIFT = 0.01f;
 constexpr Float SWEEP = 0.09f;
+constexpr Float UNITY = 1;
 
 constexpr Whole SHAPES[] = {CORE::OSCILLATOR::SAW, CORE::OSCILLATOR::PULSE};
 static_assert(std::size(SHAPES) == std::size(ACID::WAVES));
@@ -48,6 +49,9 @@ void SOUND::PLUGINS::ACID::settle(Synth &synth) {
   synth.push.time = SWIFT + SWEEP * rows[RESONANCE];
   CORE::MODULATOR::settle(synth.push, synth.rate);
   synth.wave = SHAPES[Whole(rows[WAVE])];
+  synth.filter = Whole(rows[FILTER]);
+  synth.drive = rows[DRIVE];
+  synth.level = UNITY / CORE::SHAPER::soft(rows[DRIVE]);
   CORE::FILTER::settle(
     synth.coupling, CORE::FILTER::HIGH, COUPLING, synth.rate);
   CORE::SHAPER::settle(synth.blocker, BLOCKED, synth.rate);
