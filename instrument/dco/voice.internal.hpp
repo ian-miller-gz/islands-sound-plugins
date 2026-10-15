@@ -14,7 +14,6 @@
 namespace SOUND::PLUGINS::DCO {
 
 constexpr Whole VOICES = 6;
-constexpr Whole LINES = 3;
 constexpr Float REFERENCE = 60;
 
 struct Contour {
@@ -34,13 +33,6 @@ struct Voice {
   CORE::MODULATOR::Drift drift;
 };
 
-struct Chorus {
-  CORE::LINE::Line line;
-  CORE::LINE::Sweep sweeps[LINES];
-  CORE::MODULATOR::Lfo lfos[LINES];
-  Float wet = 0;
-};
-
 struct Pair {
   Float left = 0;
   Float right = 0;
@@ -58,7 +50,7 @@ struct Synth {
   CORE::MODULATOR::Lfo lfo;
   CORE::NOISE::White noise;
   CORE::FILTER::Biquad highpass;
-  Chorus chorus;
+  CORE::LINE::Chorus chorus;
   Float tune = 0;
   Float level = 1;
   CORE::BLOCK::Meter meter;
@@ -69,9 +61,8 @@ void assign(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
-void build(Chorus &chorus, Whole rate);
-void settle(Chorus &chorus, Whole mode, Whole rate);
-auto tick(Chorus &chorus, Float in) -> Pair;
+void settle(CORE::FILTER::Biquad &highpass, Whole position, Whole rate);
+void settle(CORE::LINE::Chorus &chorus, Whole mode, Whole rate);
 
 auto sing(Synth &synth, Voice &voice, Float pitch, Float shape) -> Float;
 auto filter(Synth &synth, Whole at, Float in, Float contour, Float lfo)

@@ -60,5 +60,7 @@ auto SOUND::PLUGINS::DCO::sound(Synth &synth) -> Pair {
   Float sum = 0;
   for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at, sources);
   const Float level = synth.level * sum;
-  return tick(synth.chorus, CORE::FILTER::tick(synth.highpass, level));
+  const Float passed = CORE::FILTER::tick(synth.highpass, level);
+  const CORE::STEREO::Pair pair = CORE::LINE::tick(synth.chorus, passed);
+  return {pair.left, pair.right, synth.chorus.whole};
 }

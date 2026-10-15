@@ -7,27 +7,9 @@ using namespace SOUND::PLUGINS;
 constexpr Float CENT = 100;
 constexpr Float BLOCKED = 10;
 constexpr Float CLICK = 0.002f;
-constexpr Float SHELF = 100;
-constexpr Float BOOST = 6;
-constexpr Float LOWER = 240;
-constexpr Float UPPER = 720;
-constexpr Whole FLATTENED = 1;
 constexpr Float TIME = 0.1f;
 constexpr Float FULL = 1;
 constexpr Float WANDERING = 1;
-
-struct Position {
-  Whole kind;
-  Float cutoff;
-  Float gain;
-};
-
-constexpr Position POSITIONS[] = {
-  {CORE::FILTER::LOWSHELF, SHELF, BOOST},
-  {CORE::FILTER::LOWSHELF, SHELF, 0},
-  {CORE::FILTER::HIGH, LOWER, 0},
-  {CORE::FILTER::HIGH, UPPER, 0}};
-static_assert(std::size(POSITIONS) == std::size(DCO::POSITIONS));
 
 auto contour(const Float *rows, Float scale, Whole rate)
   -> CORE::ENVELOPE::Envelope {
@@ -55,15 +37,6 @@ void swing(DCO::Synth &synth) {
   CORE::MODULATOR::settle(synth.lfo, synth.rate);
 }
 
-void pass(DCO::Synth &synth) {
-  const Whole at = Whole(synth.rows[DCO::HIGHPASS]);
-  const Position &position =
-    ::POSITIONS[at < std::size(::POSITIONS) ? at : FLATTENED];
-  CORE::FILTER::settle(
-    synth.highpass, position.kind, position.cutoff, CORE::FILTER::FLAT,
-    position.gain, synth.rate);
-}
-
 void shape(DCO::Synth &synth) {
   const Float *rows = synth.rows;
   const CORE::ENVELOPE::Envelope gated = ::gate(synth.rate);
@@ -86,7 +59,7 @@ void SOUND::PLUGINS::DCO::settle(Synth &synth) {
   ::shape(synth);
   assign(synth);
   ::swing(synth);
-  ::pass(synth);
+  settle(synth.highpass, Whole(rows[HIGHPASS]), synth.rate);
   settle(synth.chorus, Whole(rows[CHORUS]), synth.rate);
   synth.tune = rows[TUNE] / CENT;
 }
