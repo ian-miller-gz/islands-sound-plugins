@@ -20,6 +20,14 @@ constexpr Float SLOWEST = 1;
 constexpr Float FASTEST = 240;
 constexpr Float CENTS = 200;
 constexpr Float SEMITONES = 12;
+constexpr Float DEEPEST = 2;
+constexpr Float CALMEST = 0.5f;
+constexpr Float QUICKEST = 12;
+constexpr Float LONGEST = 2;
+constexpr Float STEEPEST = 7;
+constexpr Whole SWEEPS = 14;
+constexpr Float LAZIEST = 7;
+constexpr Whole PACES = 7;
 
 inline constexpr STRING::Hot DIGITS[] = {
   "0",  "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",  "10", "11", "12",
@@ -51,7 +59,14 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Speed", "Hz", FRAMES, SLOWEST, FASTEST, 0, nullptr},
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
   {"Bend", "st", 0, -SEMITONES, SEMITONES, 0, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
+  {"Vibrato", "st", 0.25f, 0, DEEPEST, 0, nullptr},
+  {"Rate", "Hz", 5.5f, CALMEST, QUICKEST, 0, nullptr},
+  {"Delay", "s", 0.4f, 0, LONGEST, 0, nullptr},
+  {"Glide", "s", 0, 0, 1, 0, nullptr},
+  {"Sweep", "", 0, -STEEPEST, STEEPEST, SWEEPS, nullptr},
+  {"Pace", "", 3, 0, LAZIEST, PACES, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
