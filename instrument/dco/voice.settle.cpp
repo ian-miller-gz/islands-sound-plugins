@@ -12,6 +12,8 @@ constexpr Float BOOST = 6;
 constexpr Float LOWER = 240;
 constexpr Float UPPER = 720;
 constexpr Whole FLATTENED = 1;
+constexpr Float TIME = 0.1f;
+constexpr Float FULL = 1;
 
 struct Position {
   Whole kind;
@@ -26,10 +28,11 @@ constexpr Position POSITIONS[] = {
   {CORE::FILTER::HIGH, UPPER, 0}};
 static_assert(std::size(POSITIONS) == std::size(DCO::POSITIONS));
 
-auto contour(const Float *rows, Whole rate) -> CORE::ENVELOPE::Envelope {
+auto contour(const Float *rows, Float scale, Whole rate)
+  -> CORE::ENVELOPE::Envelope {
   auto envelope = CORE::ENVELOPE::ADSR::create(
-    rows[DCO::ATTACK], rows[DCO::DECAY], rows[DCO::SUSTAIN],
-    rows[DCO::RELEASE]);
+    scale * rows[DCO::ATTACK], scale * rows[DCO::DECAY], rows[DCO::SUSTAIN],
+    scale * rows[DCO::RELEASE]);
   envelope.curve = CORE::ENVELOPE::EXPONENTIAL;
   envelope.trigger = CORE::ENVELOPE::RESUME;
   CORE::ENVELOPE::shape(envelope, rate);
@@ -60,18 +63,28 @@ void pass(DCO::Synth &synth) {
     position.gain, synth.rate);
 }
 
+void shape(DCO::Synth &synth) {
+  const Float *rows = synth.rows;
+  const CORE::ENVELOPE::Envelope gated = ::gate(synth.rate);
+  for (Whole at = 0; at < DCO::VOICES; ++at) {
+    DCO::Voice &voice = synth.voices[at];
+    const Float scale = FULL + TIME * rows[DCO::TRIM] * synth.trims[at].time;
+    voice.filter.shape = ::contour(rows, scale, synth.rate);
+    voice.amplifier.shape =
+      rows[DCO::AMPLIFIER] > 0 ? gated : voice.filter.shape;
+    voice.amplifier.shape.depth = rows[DCO::VELOCITY];
+    CORE::SHAPER::settle(voice.blocker, BLOCKED, synth.rate);
+  }
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::DCO::settle(Synth &synth) {
   const Float *rows = synth.rows;
-  synth.contour = ::contour(rows, synth.rate);
-  synth.door = rows[AMPLIFIER] > 0 ? ::gate(synth.rate) : synth.contour;
-  synth.door.depth = rows[VELOCITY];
+  ::shape(synth);
   assign(synth);
   ::swing(synth);
   ::pass(synth);
   settle(synth.chorus, Whole(rows[CHORUS]), synth.rate);
   synth.tune = rows[TUNE] / CENT;
-  for (Voice &voice : synth.voices)
-    CORE::SHAPER::settle(voice.blocker, BLOCKED, synth.rate);
 }

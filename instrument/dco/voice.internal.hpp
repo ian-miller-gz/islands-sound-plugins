@@ -17,12 +17,17 @@ constexpr Whole VOICES = 6;
 constexpr Whole LINES = 3;
 constexpr Float REFERENCE = 60;
 
+struct Contour {
+  CORE::ENVELOPE::Envelope shape;
+  CORE::ENVELOPE::Gate gate;
+};
+
 struct Voice {
   CORE::OSCILLATOR::Oscillator oscillator;
   CORE::OSCILLATOR::Oscillator sub;
   CORE::FILTER::Ladder ladder;
-  CORE::ENVELOPE::Gate contour;
-  CORE::ENVELOPE::Gate door;
+  Contour filter;
+  Contour amplifier;
   CORE::SHAPER::Blocker blocker;
 };
 
@@ -46,10 +51,9 @@ struct Synth {
   CORE::VOICE::Allocator allocator = {
     .count = VOICES, .mode = CORE::VOICE::POLY, .steal = CORE::VOICE::OLDEST};
   Voice voices[VOICES];
+  CORE::VOICE::Trim trims[VOICES];
   CORE::MODULATOR::Lfo lfo;
   CORE::NOISE::White noise;
-  CORE::ENVELOPE::Envelope contour;
-  CORE::ENVELOPE::Envelope door;
   CORE::FILTER::Biquad highpass;
   Chorus chorus;
   Float tune = 0;

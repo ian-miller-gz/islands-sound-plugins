@@ -17,21 +17,21 @@ void kept(DCO::Synth &, Whole) {}
 void struck(DCO::Synth &synth, Whole at) {
   DCO::Voice &voice = synth.voices[at];
   const Float velocity = synth.allocator.notes[at].velocity;
-  CORE::ENVELOPE::strike(voice.contour, synth.contour, velocity);
-  CORE::ENVELOPE::strike(voice.door, synth.door, velocity);
+  CORE::ENVELOPE::strike(voice.filter.gate, voice.filter.shape, velocity);
+  CORE::ENVELOPE::strike(voice.amplifier.gate, voice.amplifier.shape, velocity);
   if (::alone(synth, at)) CORE::MODULATOR::reset(synth.lfo);
 }
 
 void tied(DCO::Synth &synth, Whole at) {
   DCO::Voice &voice = synth.voices[at];
   const Float velocity = synth.allocator.notes[at].velocity;
-  CORE::ENVELOPE::tie(voice.contour, synth.contour, velocity);
-  CORE::ENVELOPE::tie(voice.door, synth.door, velocity);
+  CORE::ENVELOPE::tie(voice.filter.gate, voice.filter.shape, velocity);
+  CORE::ENVELOPE::tie(voice.amplifier.gate, voice.amplifier.shape, velocity);
 }
 
 void lifted(DCO::Synth &synth, Whole at) {
-  CORE::ENVELOPE::lift(synth.voices[at].contour);
-  CORE::ENVELOPE::lift(synth.voices[at].door);
+  CORE::ENVELOPE::lift(synth.voices[at].filter.gate);
+  CORE::ENVELOPE::lift(synth.voices[at].amplifier.gate);
 }
 
 using Visit = void (*)(DCO::Synth &, Whole);

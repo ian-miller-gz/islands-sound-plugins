@@ -11,6 +11,7 @@ auto create(Whole rate, Whole channels) -> void * {
   auto *synth = new DCO::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(DCO::SHEET, synth->rows);
   DCO::build(synth->chorus, rate);
+  CORE::VOICE::draw(synth->trims, CORE::MODULATOR::SEED);
   DCO::settle(*synth);
   return synth;
 }
