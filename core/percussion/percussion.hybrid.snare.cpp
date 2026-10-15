@@ -37,7 +37,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::tick(Snare &snare) -> Float {
-  if (!ENVELOPE::sounding(snare.snap)) return 0;
+  if (!sounding(snare)) return 0;
   const Float heads = tick(snare.low) + tick(snare.high) * SECOND;
   const Float shell = heads * ENVELOPE::tick(snare.tone, snare.body) * SHELL;
   const Float dark = FILTER::tick(snare.dark, NOISE::tick(snare.white));

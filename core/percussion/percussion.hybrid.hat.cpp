@@ -81,8 +81,9 @@ void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::tick(Hat &hat) -> Float {
+  if (!sounding(hat)) return 0;
   const Whole length = hat.loop.size();
-  if (length == 0 || !ENVELOPE::sounding(hat.gate)) return 0;
+  if (length == 0) return 0;
   const Whole at = Whole(hat.at);
   const Float part = hat.at - Float(at);
   const Float here = hat.loop[at];

@@ -54,7 +54,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(Pad &pad, Float velocity) {
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Pad &pad) -> Float {
-  if (!ENVELOPE::sounding(pad.gate)) return 0;
+  if (!sounding(pad)) return 0;
   const Float level = ENVELOPE::tick(pad.gate, pad.decay);
   const Float pole = pad.floor + (pad.top - pad.floor) * level;
   pad.low += (NOISE::tick(pad.white) - pad.low) * pole;

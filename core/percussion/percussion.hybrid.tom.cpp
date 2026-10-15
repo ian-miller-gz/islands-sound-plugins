@@ -32,7 +32,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::tick(Tom &tom) -> Float {
-  if (!ENVELOPE::sounding(tom.gate)) return 0;
+  if (!sounding(tom)) return 0;
   const Float body = tick(tom.body) * ENVELOPE::tick(tom.gate, tom.decay);
   const Float skin = ENVELOPE::tick(tom.hit, tom.skin) * STICK;
   const Float noise = FILTER::tick(tom.tone, NOISE::tick(tom.white)) * skin;

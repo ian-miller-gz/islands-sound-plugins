@@ -41,7 +41,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::tick(Kick &kick) -> Float {
-  if (!ENVELOPE::sounding(kick.gate)) return 0;
+  if (!sounding(kick)) return 0;
   const Float body = tick(kick.body) * ENVELOPE::tick(kick.gate, kick.decay);
   const Float snap = ENVELOPE::tick(kick.click, kick.snap);
   const Float noise = FILTER::tick(kick.crisp, NOISE::tick(kick.white)) * snap;
