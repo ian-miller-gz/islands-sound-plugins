@@ -100,7 +100,8 @@ def harness(request):
       objects = list(pool.map(lambda pair: compiled(flags, *pair), zip(units, targets)))
     binary = cache / 'harness' / name
     binary.parent.mkdir(parents=True, exist_ok=True)
-    command = [*COMPILE, *flags, '-x', 'c++', '-', '-x', 'none', str(HARNESSES / f'{name}.cpp'), *map(str, objects), '-o', str(binary)]
+    sources = [HARNESSES / f'{name}.cpp', *sorted(HARNESSES.glob(f'{name}.*.cpp'))]
+    command = [*COMPILE, *flags, '-x', 'c++', '-', '-x', 'none', *map(str, sources), *map(str, objects), '-o', str(binary)]
     done = subprocess.run(command, input=ENTRY.format(name.upper()), capture_output=True, text=True)
     assert done.returncode == 0, done.stderr
     ran = subprocess.run([str(binary)], capture_output=True, text=True, check=True)
