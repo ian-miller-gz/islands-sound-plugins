@@ -21,6 +21,8 @@ void SOUND::PLUGINS::KICK::settle(Voice &voice) {
     .slope = rows[SLOPE],
     .click = Whole(rows[CLICK] + HALF),
     .sigh = rows[SIGH],
+    .low = rows[LOW],
+    .high = rows[HIGH],
     .curve = rows[CURVE],
     .touch = rows[TOUCH]};
   CORE::PERCUSSION::settle(voice.kick, batter, voice.rate);

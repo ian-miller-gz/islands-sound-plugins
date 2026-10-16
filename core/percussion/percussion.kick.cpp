@@ -16,6 +16,8 @@ constexpr Float FIXED = 0;
 constexpr Float CEILING = 0.2f;
 constexpr Float SIGH = 0.5f;
 constexpr Float HUSH = 100.0f;
+constexpr Float BASS = 80.0f;
+constexpr Float TREBLE = 5000.0f;
 constexpr Float SEMITONE = PHASE::CENTS / PHASE::OCTAVE;
 
 void bound(PERCUSSION::Kick &kick, Float depth, Whole rate) {
@@ -38,6 +40,8 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
     .slope = FLAT,
     .click = TRANSIENT::NOISE,
     .sigh = STILL,
+    .low = FLAT,
+    .high = FLAT,
     .curve = LINEAR,
     .touch = FIXED};
   settle(kick, batter, rate);
@@ -52,6 +56,10 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   kick.sigh = batter.sigh * SIGH;
   shape(kick, batter.click, rate);
   FILTER::settle(kick.hush, FILTER::LOW, HUSH, rate);
+  FILTER::settle(
+    kick.low, FILTER::LOWSHELF, BASS, FILTER::FLAT, batter.low, rate);
+  FILTER::settle(
+    kick.high, FILTER::HIGHSHELF, TREBLE, FILTER::FLAT, batter.high, rate);
   kick.attack = batter.attack;
   kick.drive = ONE + batter.drive * DRIVE;
   kick.colour = batter.tone;
@@ -79,5 +87,6 @@ auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Kick &kick) -> Float {
   const Float drive = kick.drive;
   const auto clip = [drive](Float in) { return SHAPER::soft(in * drive); };
   const Float driven = SHAPER::tick(kick.oversampler, body + crack(kick), clip);
-  return FILTER::tick(kick.tone, driven);
+  const Float toned = FILTER::tick(kick.tone, driven);
+  return FILTER::tick(kick.high, FILTER::tick(kick.low, toned));
 }

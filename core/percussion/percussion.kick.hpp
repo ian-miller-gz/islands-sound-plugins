@@ -21,6 +21,8 @@ struct Batter {
   Float slope = 0;
   Whole click = TRANSIENT::NOISE;
   Float sigh = 0;
+  Float low = 0;
+  Float high = 0;
   Float curve = 0;
   Float touch = 0;
 };
@@ -36,6 +38,8 @@ struct Kick {
   FILTER::Pole round;
   FILTER::Pole hush;
   FILTER::Pole tone;
+  FILTER::Biquad low;
+  FILTER::Biquad high;
   SHAPER::Oversampler oversampler;
   Float base = 0;
   Float hertz = 0;
