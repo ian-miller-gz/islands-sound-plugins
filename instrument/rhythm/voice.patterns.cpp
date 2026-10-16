@@ -6,8 +6,8 @@ using namespace SOUND::PLUGINS;
 
 constexpr Whole QUADRUPLE = 4;
 constexpr Whole TRIPLE = 3;
-constexpr Whole SIXTEENTHS = 4;
-constexpr Whole TRIPLETS = 3;
+using RHYTHM::SIXTEENTHS;
+using RHYTHM::TRIPLETS;
 constexpr Whole BIT = 1;
 
 constexpr RHYTHM::Pattern TABLE[RHYTHM::PATTERNS] = {

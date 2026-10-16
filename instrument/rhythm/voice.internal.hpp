@@ -7,6 +7,9 @@
 
 namespace SOUND::PLUGINS::RHYTHM {
 
+constexpr Whole SIXTEENTHS = 4;
+constexpr Whole TRIPLETS = 3;
+
 struct Pattern {
   Whole beats = 0;
   Whole division = 0;

@@ -51,6 +51,8 @@ void SOUND::PLUGINS::RHYTHM::settle(Box &box) {
 
 void SOUND::PLUGINS::RHYTHM::pace(Box &box) {
   const Pattern &chosen = pattern(Whole(box.rows[PATTERN]));
+  const Float swing =
+    chosen.division == SIXTEENTHS ? box.rows[SWING] : ::STRAIGHT;
   CORE::CLOCK::settle(
-    box.clock, box.rows[TEMPO], Float(chosen.division), ::STRAIGHT, box.rate);
+    box.clock, box.rows[TEMPO], Float(chosen.division), swing, box.rate);
 }

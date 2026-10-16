@@ -44,6 +44,11 @@ auto found(Whole pitch) -> const Pad * {
   return nullptr;
 }
 
+auto paced(Whole index) -> Flag {
+  return index == RHYTHM::PATTERN || index == RHYTHM::TEMPO ||
+         index == RHYTHM::SWING;
+}
+
 void run(RHYTHM::Box &box) {
   if (box.rows[RHYTHM::RUN] > 0) return CORE::CLOCK::run(box.clock);
   CORE::CLOCK::stop(box.clock);
@@ -58,7 +63,7 @@ void SOUND::PLUGINS::RHYTHM::apply(
     if (event.index >= PARAMETERS) return;
     box.rows[event.index] =
       CORE::TABLE::clamped(SHEET, event.index, event.value);
-    if (event.index == PATTERN || event.index == TEMPO) pace(box);
+    if (::paced(event.index)) pace(box);
     if (event.index == RUN) ::run(box);
     return;
   }
