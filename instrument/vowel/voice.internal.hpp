@@ -8,7 +8,6 @@
 
 namespace SOUND::PLUGINS::VOWEL {
 
-constexpr Whole VOICES = 8;
 constexpr Float SPAN = 400.0f;
 constexpr Float CENT = 100.0f;
 constexpr CORE::NOISE::Register SCATTER = 0x2545F491u;
@@ -28,7 +27,7 @@ struct Singer {
   CORE::OSCILLATOR::Table table;
   CORE::ENVELOPE::Envelope envelope;
   CORE::VOICE::Allocator allocator;
-  Throat throats[VOICES];
+  Throat throats[THROATS];
   CORE::BLOCK::Meter meter;
 };
 

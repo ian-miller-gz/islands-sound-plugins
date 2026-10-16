@@ -12,7 +12,8 @@ struct Shape {
 void voice(const VOWEL::Singer &singer, VOWEL::Throat &throat, Shape shape) {
   const Float *rows = singer.rows;
   CORE::FILTER::settle(throat.formant, shape.place, shape.shift, singer.rate);
-  CORE::GLOTTIS::settle(throat.source, rows[VOWEL::OPEN], rows[VOWEL::BREATH]);
+  CORE::GLOTTIS::settle(
+    throat.source, rows[VOWEL::TENSION], rows[VOWEL::BREATH], singer.rate);
   throat.vibrato.hertz = rows[VOWEL::RATE];
   throat.vibrato.depth = rows[VOWEL::DEPTH];
   throat.vibrato.fade = rows[VOWEL::DELAY];

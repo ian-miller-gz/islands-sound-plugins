@@ -24,7 +24,7 @@ static_assert(sizeof(CHANGES) / sizeof(CHANGES[0]) == CORE::VOICE::LIFTED + 1);
 
 void voice(VOWEL::Singer &singer, CORE::VOICE::Note &note) {
   const Whole at = Whole(&note - singer.allocator.notes);
-  if (at >= VOWEL::VOICES || note.change > CORE::VOICE::LIFTED) return;
+  if (at >= VOWEL::THROATS || note.change > CORE::VOICE::LIFTED) return;
   CHANGES[note.change](singer, note, singer.throats[at]);
 }
 
@@ -54,7 +54,7 @@ void SOUND::PLUGINS::VOWEL::apply(
 
 auto SOUND::PLUGINS::VOWEL::sing(Singer &singer) -> Float {
   Float sum = 0;
-  for (Whole at = 0; at < VOICES; ++at) {
+  for (Whole at = 0; at < THROATS; ++at) {
     CORE::VOICE::Note &note = singer.allocator.notes[at];
     if (note.sounding) sum += ::sung(singer, note, singer.throats[at]);
   }

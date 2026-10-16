@@ -10,8 +10,8 @@ auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *singer = new VOWEL::Singer{.rate = rate, .channels = channels};
   CORE::GLOTTIS::build(singer->table);
-  singer->allocator.count = VOWEL::VOICES;
-  for (Whole at = 0; at < VOWEL::VOICES; ++at)
+  singer->allocator.count = VOWEL::THROATS;
+  for (Whole at = 0; at < VOWEL::THROATS; ++at)
     CORE::GLOTTIS::seed(
       singer->throats[at].source,
       CORE::NOISE::SEED ^ (CORE::NOISE::Register(at + 1) * VOWEL::SCATTER));
