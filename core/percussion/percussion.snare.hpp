@@ -15,6 +15,7 @@ struct Setting {
   Float decay = 0;
   Float bend = 0;
   Float drop = DROP;
+  Float hold = 0;
 };
 
 }  // namespace SNARE
@@ -29,6 +30,8 @@ struct Snare {
   ENVELOPE::Gate gate;
   SNARE::Setting setting;
   Whole rate = 0;
+  Whole hold = 0;
+  Whole holding = 0;
   Float velocity = 0;
 };
 
