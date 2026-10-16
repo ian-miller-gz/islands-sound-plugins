@@ -5,6 +5,7 @@
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
+#include "../../core/noise/noise.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
@@ -22,6 +23,8 @@ struct Voice {
   CORE::ENVELOPE::Gate strike;
   CORE::ENVELOPE::Gate ring;
   CORE::FILTER::Pole low;
+  CORE::NOISE::Burst hammer;
+  CORE::NOISE::Burst damper;
   CORE::SHAPER::Blocker blocker;
   Float chime = 0;
   Float velocity = 0;
@@ -58,6 +61,7 @@ void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 auto curve(const Synth &synth, Float velocity) -> Float;
 void touch(Synth &synth, Whole at);
+void seed(Synth &synth);
 
 auto pick(const Synth &synth, Float displacement) -> Float;
 auto sound(Synth &synth) -> Pair;

@@ -9,11 +9,9 @@ constexpr Float HALF = 0.5f;
 constexpr Float FLOOR = 0.15f;
 constexpr Float MIX = 0.5f;
 constexpr Float TWICE = 2;
+constexpr Float QUIET = 0.0001f;
 
-auto play(TINE::Synth &synth, Whole at) -> Float {
-  TINE::Voice &voice = synth.voices[at];
-  CORE::VOICE::Note &note = synth.allocator.notes[at];
-  if (!note.sounding) return 0;
+auto tone(TINE::Synth &synth, TINE::Voice &voice) -> Float {
   const Float *rows = synth.rows;
   const auto &sine = synth.sine;
   const Float loud = CORE::ENVELOPE::tick(voice.door, voice.loudness);
@@ -27,10 +25,19 @@ auto play(TINE::Synth &synth, Whole at) -> Float {
   const Float coupled = tine * (FULL + coupling * bar) / (FULL + coupling);
   const Float chime = rows[TINE::BELL] * voice.chime * ring * voice.taper;
   const Float bell = CORE::OSCILLATOR::tick(voice.bell, sine, 0, chime);
-  const Float picked = TINE::pick(synth, (coupled + bell) * loud);
-  const Float heard = CORE::FILTER::tick(voice.low, picked);
-  if (!CORE::ENVELOPE::sounding(voice.door)) note.sounding = false;
-  return CORE::SHAPER::tick(voice.blocker, heard);
+  return TINE::pick(synth, (coupled + bell) * loud);
+}
+
+auto play(TINE::Synth &synth, Whole at) -> Float {
+  TINE::Voice &voice = synth.voices[at];
+  CORE::VOICE::Note &note = synth.allocator.notes[at];
+  if (!note.sounding) return 0;
+  const Float heard = CORE::FILTER::tick(voice.low, ::tone(synth, voice));
+  const Float thump = CORE::NOISE::tick(voice.hammer);
+  const Float stop = CORE::NOISE::tick(voice.damper);
+  const Flag quiet = voice.damper.level < QUIET;
+  if (!CORE::ENVELOPE::sounding(voice.door) && quiet) note.sounding = false;
+  return CORE::SHAPER::tick(voice.blocker, heard + thump + stop);
 }
 
 }  // namespace

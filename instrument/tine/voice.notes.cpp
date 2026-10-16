@@ -24,10 +24,13 @@ void struck(TINE::Synth &synth, Whole at) {
   CORE::ENVELOPE::strike(voice.door, voice.loudness, velocity);
   CORE::ENVELOPE::strike(voice.strike, synth.strike, velocity);
   CORE::ENVELOPE::strike(voice.ring, synth.ring, velocity);
+  CORE::NOISE::strike(voice.hammer, synth.rows[TINE::HAMMER] * velocity);
 }
 
 void lifted(TINE::Synth &synth, Whole at) {
-  CORE::ENVELOPE::lift(synth.voices[at].door);
+  TINE::Voice &voice = synth.voices[at];
+  CORE::ENVELOPE::lift(voice.door);
+  CORE::NOISE::strike(voice.damper, synth.rows[TINE::DAMPER] * voice.velocity);
 }
 
 using Visit = void (*)(TINE::Synth &, Whole);
