@@ -39,6 +39,7 @@ void SOUND::PLUGINS::VOWEL::settle(Singer &singer) {
   singer.pole = CORE::MODULATOR::pole(TRACT::TIME, singer.pace);
   singer.motion.hertz = rows[MOTION];
   CORE::MODULATOR::settle(singer.motion, singer.pace);
+  allot(singer);
   aim(singer);
   for (Throat &throat : singer.throats) ::voice(singer, throat);
 }

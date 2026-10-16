@@ -47,7 +47,9 @@ void SOUND::PLUGINS::VOWEL::apply(
     singer.allocator, event,
     [&singer](CORE::VOICE::Note &note) { ::voice(singer, note); });
   if (row >= PARAMETERS) return;
+  const Float before = singer.rows[row];
   singer.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
+  if (row == MODE && singer.rows[row] != before) release(singer);
   settle(singer);
 }
 

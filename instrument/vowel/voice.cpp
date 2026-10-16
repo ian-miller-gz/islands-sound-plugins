@@ -12,7 +12,6 @@ auto create(Whole rate, Whole channels) -> void * {
   const Whole pace = rate / VOWEL::STRIDE;
   singer->pace = pace == 0 ? 1 : pace;
   CORE::GLOTTIS::build(singer->table);
-  singer->allocator.count = VOWEL::THROATS;
   for (Whole at = 0; at < VOWEL::THROATS; ++at) VOWEL::seat(*singer, at);
   CORE::TABLE::rest(VOWEL::SHEET, singer->rows);
   VOWEL::settle(*singer);

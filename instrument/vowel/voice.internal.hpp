@@ -56,6 +56,8 @@ struct Singer {
 
 void seat(Singer &singer, Whole at);
 void settle(Singer &singer);
+void allot(Singer &singer);
+void release(Singer &singer);
 
 void apply(Singer &singer, const AUDIO::PLUGIN::Event &event);
 
