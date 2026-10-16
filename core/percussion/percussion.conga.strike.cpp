@@ -26,6 +26,10 @@ void hit(PERCUSSION::Conga &conga, Float base, Float velocity, Flag muted) {
   conga.sweep.depth = conga.bend * (ONE + conga.slap);
   PERCUSSION::strike(conga.sweep, base, conga.velocity);
   conga.sweep.body.damp = conga.open + (conga.muted - conga.open) * hand;
+  for (PERCUSSION::Mode &mode : conga.modes) {
+    PERCUSSION::strike(mode.resonator, conga.velocity);
+    mode.resonator.damp = mode.open + (mode.muted - mode.open) * hand;
+  }
   ENVELOPE::strike(conga.click, conga.snap, conga.velocity);
 }
 

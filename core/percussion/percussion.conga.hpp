@@ -4,6 +4,8 @@
 
 namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
+constexpr Whole MODES = 2;
+
 struct Head {
   Float tune = 0;
   Float decay = 0;
@@ -11,6 +13,7 @@ struct Head {
   Float drop = 0;
   Float slope = 0;
   Float tone = 0;
+  Float ring = 0;
   Float curve = 0;
 };
 
@@ -19,8 +22,15 @@ struct Stroke {
   Flag muted = false;
 };
 
+struct Mode {
+  Resonator resonator;
+  Float open = 0;
+  Float muted = 0;
+};
+
 struct Conga {
   Sweep sweep;
+  Mode modes[MODES];
   ENVELOPE::Envelope snap;
   ENVELOPE::Gate click;
   NOISE::White white;
@@ -31,6 +41,7 @@ struct Conga {
   Float bend = 0;
   Float slap = 0;
   Float velocity = 0;
+  Float ring = 0;
   Float curve = 0;
   Whole rate = 0;
 };

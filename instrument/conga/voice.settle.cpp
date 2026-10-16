@@ -10,6 +10,7 @@ void SOUND::PLUGINS::CONGA::settle(Voice &voice) {
     .drop = rows[DROP],
     .slope = rows[SLOPE],
     .tone = rows[TONE],
+    .ring = rows[RING],
     .curve = rows[CURVE]};
   CORE::PERCUSSION::settle(voice.conga, head, voice.rate);
 }
