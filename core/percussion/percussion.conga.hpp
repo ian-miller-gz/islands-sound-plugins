@@ -14,6 +14,11 @@ struct Head {
   Float curve = 0;
 };
 
+struct Stroke {
+  Whole height = HEIGHT::MID;
+  Flag muted = false;
+};
+
 struct Conga {
   Sweep sweep;
   ENVELOPE::Envelope snap;
@@ -27,11 +32,14 @@ struct Conga {
   Float slap = 0;
   Float velocity = 0;
   Float curve = 0;
+  Whole rate = 0;
 };
 
 void settle(Conga &conga, Float tune, Float decay, Float bend, Whole rate);
 void settle(Conga &conga, const Head &head, Whole rate);
 void strike(Conga &conga, Whole height, Float velocity);
+void strike(Conga &conga, const Stroke &stroke, Float velocity);
+void strike(Conga &conga, Float hertz, Float velocity);
 auto tick(Conga &conga) -> Float;
 auto sounding(const Conga &conga) -> Flag;
 
