@@ -24,6 +24,8 @@ struct Kick {
   FILTER::Pole crisp;
   FILTER::Pole tone;
   Float base = 0;
+  Float hertz = 0;
+  Float top = 0;
   Float attack = 0;
   Float drive = 1;
   Float colour = 0;
@@ -38,7 +40,9 @@ void settle(
   Whole rate);
 void settle(Kick &kick, const Batter &batter, Whole rate);
 void strike(Kick &kick, Float velocity);
+void strike(Kick &kick, Float hertz, Float velocity);
 auto tick(Kick &kick) -> Float;
+void darken(Kick &kick);
 auto sounding(const Kick &kick) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION
