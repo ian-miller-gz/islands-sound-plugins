@@ -11,7 +11,7 @@ constexpr Float SIZZLE = 10500.0f;
 constexpr Float CENTRES[PERCUSSION::TAIL::TAILS] = {PING, WASH, SIZZLE};
 constexpr Float AIRS[PERCUSSION::TAIL::TAILS] = {0, 1.0f, 1.0f};
 constexpr Float WIDTH = 1.0f;
-constexpr Float FLAT = 0;
+constexpr Float LEVEL = 0;
 constexpr Float LENGTHS[PERCUSSION::PLATE::PLATES][PERCUSSION::TAIL::TAILS] = {
   {1.0f, 0.4f, 0.6f}, {0.7f, 1.0f, 0.8f}, {1.4f, 0.15f, 0.1f}};
 constexpr Float FLASH = 0.04f;
@@ -53,7 +53,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   settle(cymbal.metal, METALLIC, BANK, ratio, rate);
   for (Whole tail = 0; tail < TAIL::TAILS; ++tail) {
     FILTER::settle(
-      cymbal.bands[tail], FILTER::BAND, CENTRES[tail], WIDTH, FLAT, rate);
+      cymbal.bands[tail], FILTER::BAND, CENTRES[tail], WIDTH, LEVEL, rate);
     cymbal.airs[tail] = bronze.noise * AIRS[tail];
   }
   for (Whole plate = 0; plate < PLATE::PLATES; ++plate)
@@ -62,7 +62,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
         cymbal.tails[plate][tail], bronze.decay * LENGTHS[plate][tail], rate);
   shape(cymbal.flash, FLASH, rate);
   FILTER::settle(
-    cymbal.edge, FILTER::HIGH, bronze.edge, FILTER::FLAT, FLAT, rate);
+    cymbal.edge, FILTER::HIGH, bronze.edge, FILTER::FLAT, LEVEL, rate);
   settle(cymbal.choke, ::FADE, rate);
   ::balance(cymbal, bronze.tone);
   cymbal.splash = bronze.splash;
