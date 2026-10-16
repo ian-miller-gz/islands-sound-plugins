@@ -36,3 +36,8 @@ auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::sounding(const Hat &hat)
 auto SOUND::PLUGINS::CORE::PERCUSSION::sounding(const Pad &pad) -> Flag {
   return ::swept(pad.tone) || ENVELOPE::sounding(pad.gate);
 }
+
+auto SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::sounding(const Cymbal &cymbal)
+  -> Flag {
+  return ENVELOPE::sounding(cymbal.gate);
+}

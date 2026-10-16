@@ -2,13 +2,12 @@
 #pragma once
 #include "percussion.circuit.hpp"
 #include "percussion.hat.hpp"
+#include "percussion.hybrid.loop.hpp"
 
 namespace SOUND::PLUGINS::CORE::PERCUSSION::HYBRID {
 
 struct Hat {
-  Vector<Float> loop;
-  Float at = 0;
-  Float speed = 1;
+  Loop loop;
   ENVELOPE::Envelope envelopes[OPENING::OPENINGS];
   ENVELOPE::Gate gate;
   Whole opening = OPENING::CLOSED;

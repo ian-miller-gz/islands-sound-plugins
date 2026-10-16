@@ -92,3 +92,4 @@ auto sounding(const Tom &tom) -> Flag;
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION::HYBRID
 
 #include "percussion.hybrid.hat.hpp"
+#include "percussion.hybrid.cymbal.hpp"
