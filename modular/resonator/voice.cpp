@@ -10,7 +10,7 @@ auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *module = new RESONATOR::Module{.rate = rate, .channels = channels};
   CORE::TABLE::rest(RESONATOR::SHEET, module->rows);
-  module->filters.assign(channels, CORE::FILTER::Variable{});
+  module->stages.assign(channels, RESONATOR::Stage{});
   module->lfo.wave = CORE::MODULATOR::SINE;
   RESONATOR::settle(*module);
   for (Whole channel = 0; channel < channels; ++channel)

@@ -33,10 +33,11 @@ void SOUND::PLUGINS::RESONATOR::render(
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
     ::step(module, lanes, frame);
+    const RESONATOR::Model &model = RESONATOR::model(module);
     for (Whole channel = 0; channel < module.channels; ++channel) {
       Float &sample = CORE::BLOCK::lane(
         lanes, RESONATOR::IN, channel, module.channels)[frame];
-      sample = CORE::FILTER::tick(module.filters[channel], sample);
+      sample = model.tick(module.stages[channel], sample);
     }
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
