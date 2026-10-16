@@ -13,8 +13,9 @@ void kept(OPERATOR::Synth &, Whole) {}
 void struck(OPERATOR::Synth &synth, Whole at) {
   OPERATOR::Voice &voice = synth.voices[at];
   const Float velocity = synth.allocator.notes[at].velocity;
+  OPERATOR::fit(synth, at);
   for (Whole unit = 0; unit < OPERATOR::OPERATORS; ++unit) {
-    CORE::ENVELOPE::strike(voice.walks[unit], synth.segments[unit], velocity);
+    CORE::ENVELOPE::strike(voice.walks[unit], voice.segments[unit], velocity);
     CORE::OSCILLATOR::reset(voice.units[unit], 0);
     voice.outs[unit] = 0;
   }

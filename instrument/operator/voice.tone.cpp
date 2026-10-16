@@ -54,8 +54,8 @@ auto play(OPERATOR::Synth &synth, Whole at) -> Float {
   Flag alive = false;
   for (Whole unit = OPERATOR::OPERATORS; unit-- > 0;) {
     const Float level =
-      synth.levels[unit] *
-      CORE::ENVELOPE::tick(voice.walks[unit], synth.segments[unit]);
+      voice.gains[unit] *
+      CORE::ENVELOPE::tick(voice.walks[unit], voice.segments[unit]);
     const Float phase = ::modulated(synth, voice, unit);
     voice.outs[unit] =
       CORE::OSCILLATOR::tick(voice.units[unit], synth.table, phase, level);

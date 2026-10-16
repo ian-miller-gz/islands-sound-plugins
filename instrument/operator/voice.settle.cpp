@@ -27,21 +27,9 @@ auto looped(Float feedback) -> Float {
 
 void prepare(OPERATOR::Synth &synth, Whole unit) {
   const Float *rows = synth.rows;
-  CORE::ENVELOPE::Segments &segments = synth.segments[unit];
-  for (Whole stage = 0; stage < OPERATOR::STAGES; ++stage) {
-    segments.rates[stage] = rows[OPERATOR::field(unit, OPERATOR::RATE + stage)];
-    segments.levels[stage] =
-      rows[OPERATOR::field(unit, OPERATOR::LEVEL + stage)];
-  }
-  segments.curve = CORE::ENVELOPE::EXPONENTIAL;
-  segments.depth = rows[OPERATOR::VELOCITY];
-  CORE::ENVELOPE::shape(segments, synth.rate);
   const Float detune = rows[OPERATOR::field(unit, OPERATOR::DETUNE)] * STEP;
   synth.factors[unit] =
     rows[OPERATOR::field(unit, OPERATOR::RATIO)] * CORE::PHASE::ratio(detune);
-  synth.levels[unit] = CORE::ENVELOPE::loudness(
-    rows[OPERATOR::field(unit, OPERATOR::OUTPUT)] / OPERATOR::TOP,
-    CORE::ENVELOPE::EXPONENTIAL);
 }
 
 void swing(OPERATOR::Synth &synth) {
@@ -60,6 +48,7 @@ void SOUND::PLUGINS::OPERATOR::settle(Synth &synth) {
   synth.routing = &routed(synth.rows[ALGORITHM]);
   synth.feedback = ::looped(synth.rows[FEEDBACK]);
   for (Whole unit = 0; unit < OPERATORS; ++unit) ::prepare(synth, unit);
+  for (Whole at = 0; at < VOICES; ++at) fit(synth, at);
   ::swing(synth);
   allocate(synth);
   synth.tune = synth.rows[TUNE] / CENT;
