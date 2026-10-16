@@ -6,13 +6,13 @@ namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
 namespace PLATE {
 
-enum Plate : Whole { RIDE, CRASH, PLATES };
+enum Plate : Whole { RIDE, CRASH, BELL, PLATES };
 
 }  // namespace PLATE
 
 namespace TAIL {
 
-enum Tail : Whole { PING, WASH, TAILS };
+enum Tail : Whole { PING, WASH, SIZZLE, TAILS };
 
 }  // namespace TAIL
 
@@ -24,7 +24,9 @@ struct Cymbal {
   ENVELOPE::Gate gates[TAIL::TAILS];
   ENVELOPE::Gate burst;
   Float weights[TAIL::TAILS] = {};
+  Float gains[TAIL::TAILS] = {};
   Float splash = 0;
+  Float flare = 0;
   Whole plate = PLATE::CRASH;
   Float velocity = 0;
 };

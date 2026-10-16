@@ -6,7 +6,7 @@ using namespace SOUND::PLUGINS;
 
 constexpr CORE::PERCUSSION::Key KEYS[] = {
   {51, CORE::PERCUSSION::PLATE::RIDE},
-  {53, CORE::PERCUSSION::PLATE::RIDE},
+  {53, CORE::PERCUSSION::PLATE::BELL},
   {59, CORE::PERCUSSION::PLATE::RIDE}};
 
 }  // namespace

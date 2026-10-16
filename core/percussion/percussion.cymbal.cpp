@@ -5,16 +5,17 @@ namespace {
 using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float SEMITONE = 100.0f;
-constexpr Float CENTRES[PERCUSSION::TAIL::TAILS] = {3440.0f, 7100.0f};
+constexpr Float PING = 3440.0f;
+constexpr Float WASH = 7100.0f;
+constexpr Float SIZZLE = 10500.0f;
+constexpr Float CENTRES[PERCUSSION::TAIL::TAILS] = {PING, WASH, SIZZLE};
 constexpr Float WIDTH = 1.0f;
 constexpr Float FLAT = 0;
 constexpr Float LENGTHS[PERCUSSION::PLATE::PLATES][PERCUSSION::TAIL::TAILS] = {
-  {1.0f, 0.4f}, {0.7f, 1.0f}};
-constexpr Float SPLASHES[PERCUSSION::PLATE::PLATES] = {0.3f, 1.0f};
+  {1.0f, 0.4f, 0.6f}, {0.7f, 1.0f, 0.8f}, {1.4f, 0.15f, 0.1f}};
 constexpr Float FLASH = 0.04f;
 constexpr Float BALANCE = 2.0f;
 constexpr Float ONE = 1.0f;
-constexpr Float GAIN = 4.0f;
 
 }  // namespace
 
@@ -30,33 +31,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
       shape(cymbal.tails[plate][tail], decay * LENGTHS[plate][tail], rate);
   shape(cymbal.flash, FLASH, rate);
   cymbal.weights[TAIL::PING] = (ONE - tone) * BALANCE;
-  cymbal.weights[TAIL::WASH] = tone * BALANCE;
+  cymbal.weights[TAIL::WASH] = ONE;
+  cymbal.weights[TAIL::SIZZLE] = tone * BALANCE;
   cymbal.splash = splash;
-}
-
-void SOUND::PLUGINS::CORE::PERCUSSION::strike(
-  Cymbal &cymbal, Whole plate, Float velocity) {
-  cymbal.plate = plate < PLATE::PLATES ? plate : PLATE::CRASH;
-  cymbal.velocity = struck(velocity);
-  for (Whole tail = 0; tail < TAIL::TAILS; ++tail)
-    ENVELOPE::strike(
-      cymbal.gates[tail], cymbal.tails[cymbal.plate][tail], cymbal.velocity);
-  ENVELOPE::strike(cymbal.burst, cymbal.flash, cymbal.velocity);
-}
-
-auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Cymbal &cymbal) -> Float {
-  if (!sounding(cymbal)) return 0;
-  const Float ring = tick(cymbal.metal);
-  Float bands[TAIL::TAILS] = {};
-  Float sum = 0;
-  for (Whole tail = 0; tail < TAIL::TAILS; ++tail) {
-    const ENVELOPE::Envelope &envelope = cymbal.tails[cymbal.plate][tail];
-    const Float level = ENVELOPE::tick(cymbal.gates[tail], envelope);
-    bands[tail] = FILTER::tick(cymbal.bands[tail], ring);
-    sum += bands[tail] * level * cymbal.weights[tail];
-  }
-  const Float flash = ENVELOPE::tick(cymbal.burst, cymbal.flash);
-  const Float splash = flash * cymbal.splash * SPLASHES[cymbal.plate];
-  return SHAPER::soft(
-    (sum + bands[TAIL::WASH] * splash) * cymbal.velocity * GAIN);
 }
