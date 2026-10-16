@@ -36,6 +36,7 @@ struct Kick {
   FILTER::Pole round;
   FILTER::Pole hush;
   FILTER::Pole tone;
+  SHAPER::Oversampler oversampler;
   Float base = 0;
   Float hertz = 0;
   Float top = 0;

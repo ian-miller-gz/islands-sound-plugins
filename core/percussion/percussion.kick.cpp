@@ -76,6 +76,8 @@ auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Kick &kick) -> Float {
   const Float body = tick(kick.body);
   const Float hushed = BLOCK::magnitude(FILTER::tick(kick.hush, body));
   kick.breath = hushed < ONE ? hushed : ONE;
-  const Float driven = SHAPER::soft((body + crack(kick)) * kick.drive);
+  const Float drive = kick.drive;
+  const auto clip = [drive](Float in) { return SHAPER::soft(in * drive); };
+  const Float driven = SHAPER::tick(kick.oversampler, body + crack(kick), clip);
   return FILTER::tick(kick.tone, driven);
 }
