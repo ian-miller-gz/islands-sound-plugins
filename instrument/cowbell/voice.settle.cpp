@@ -3,7 +3,8 @@
 
 void SOUND::PLUGINS::COWBELL::settle(Voice &voice) {
   CORE::PERCUSSION::settle(
-    voice.cowbell, voice.rows[TUNE], voice.rows[DECAY], voice.rate);
+    voice.cowbell, voice.rows[TUNE], voice.rows[DECAY], voice.rows[INTERVAL],
+    voice.rows[TONE], voice.rate);
 }
 
 void SOUND::PLUGINS::COWBELL::apply(
