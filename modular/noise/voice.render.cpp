@@ -28,12 +28,10 @@ auto velvet(NOISE::Source &source) -> Float {
   return CORE::NOISE::tick(source.velvet);
 }
 
-using Colour = auto (*)(NOISE::Source &) -> Float;
-
-constexpr Colour COLOURS[] = {white, pink, brown, blue, violet, velvet};
+constexpr NOISE::Colour COLOURS[] = {white, pink, brown, blue, violet, velvet};
 static_assert(std::size(COLOURS) == NOISE::COLOURS);
 
-auto colour(const NOISE::Module &module) -> Colour {
+auto colour(const NOISE::Module &module) -> NOISE::Colour {
   const Whole chosen = Whole(module.rows[NOISE::COLOUR]);
   return COLOURS[chosen < std::size(COLOURS) ? chosen : NOISE::WHITE];
 }
@@ -53,11 +51,12 @@ void SOUND::PLUGINS::NOISE::render(
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
     follow(module, lanes, frame);
-    const Colour tick = ::colour(module);
+    const Colour colour = ::colour(module);
+    const Mode mode = NOISE::mode(module);
     const Float level = CORE::MODULATOR::tick(module.level, module.target);
     for (Whole channel = 0; channel < module.channels; ++channel)
       CORE::BLOCK::lane(lanes, CV, channel, module.channels)[frame] =
-        tick(module.sources[channel]) * level;
+        mode(module.sources[channel], colour) * level;
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
   }

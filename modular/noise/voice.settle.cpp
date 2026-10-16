@@ -41,4 +41,6 @@ void SOUND::PLUGINS::NOISE::apply(
   module.rows[event.index] =
     CORE::TABLE::clamped(SHEET, event.index, event.value);
   settle(module);
+  if (event.index != MODE) return;
+  for (Source &source : module.sources) CORE::NOISE::reset(source.hold);
 }

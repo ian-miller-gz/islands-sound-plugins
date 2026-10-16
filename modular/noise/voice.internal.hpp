@@ -35,11 +35,15 @@ struct Module {
   CORE::BLOCK::Meter meter;
 };
 
+using Colour = auto (*)(Source &source) -> Float;
+using Mode = auto (*)(Source &source, Colour colour) -> Float;
+
 void seed(Module &module);
 void settle(Module &module);
 void tune(Module &module);
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
 void follow(Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame);
+auto mode(const Module &module) -> Mode;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
