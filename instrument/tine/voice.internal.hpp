@@ -3,6 +3,7 @@
 #include "tine.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
+#include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/shaper/shaper.hpp"
@@ -20,10 +21,12 @@ struct Voice {
   CORE::ENVELOPE::Gate door;
   CORE::ENVELOPE::Gate strike;
   CORE::ENVELOPE::Gate ring;
+  CORE::FILTER::Pole low;
   CORE::SHAPER::Blocker blocker;
   Float chime = 0;
   Float velocity = 0;
   Float taper = 1;
+  Float hertz = 0;
 };
 
 struct Pair {

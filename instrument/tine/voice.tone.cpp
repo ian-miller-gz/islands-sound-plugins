@@ -27,7 +27,8 @@ auto play(TINE::Synth &synth, Whole at) -> Float {
   const Float coupled = tine * (FULL + coupling * bar) / (FULL + coupling);
   const Float chime = rows[TINE::BELL] * voice.chime * ring * voice.taper;
   const Float bell = CORE::OSCILLATOR::tick(voice.bell, sine, 0, chime);
-  const Float heard = TINE::pick(synth, (coupled + bell) * loud);
+  const Float picked = TINE::pick(synth, (coupled + bell) * loud);
+  const Float heard = CORE::FILTER::tick(voice.low, picked);
   if (!CORE::ENVELOPE::sounding(voice.door)) note.sounding = false;
   return CORE::SHAPER::tick(voice.blocker, heard);
 }
