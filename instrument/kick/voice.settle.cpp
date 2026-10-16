@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
+namespace {
+using namespace SOUND::PLUGINS;
+
+constexpr Float HALF = 0.5f;
+
+}  // namespace
+
 void SOUND::PLUGINS::KICK::settle(Voice &voice) {
   const Float *rows = voice.rows;
   const CORE::PERCUSSION::Batter batter = {
@@ -12,6 +19,7 @@ void SOUND::PLUGINS::KICK::settle(Voice &voice) {
     .bend = rows[BEND],
     .drop = rows[DROP],
     .slope = rows[SLOPE],
+    .click = Whole(rows[CLICK] + HALF),
     .sigh = rows[SIGH],
     .curve = rows[CURVE],
     .touch = rows[TOUCH]};

@@ -8,8 +8,6 @@ using namespace SOUND::PLUGINS::CORE;
 constexpr Float ONE = 1.0f;
 constexpr Float BEND = 16.0f;
 constexpr Float DROP = 0.03f;
-constexpr Float SNAP = 0.005f;
-constexpr Float CRISP = 2000.0f;
 constexpr Float DRIVE = 8.0f;
 constexpr Float FLAT = 0;
 constexpr Float STILL = 0;
@@ -38,6 +36,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
     .bend = BEND,
     .drop = DROP,
     .slope = FLAT,
+    .click = TRANSIENT::NOISE,
     .sigh = STILL,
     .curve = LINEAR,
     .touch = FIXED};
@@ -51,8 +50,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   ::bound(kick, depth, rate);
   kick.hertz = batter.tune;
   kick.sigh = batter.sigh * SIGH;
-  shape(kick.snap, SNAP, rate);
-  FILTER::settle(kick.crisp, FILTER::HIGH, CRISP, rate);
+  shape(kick, batter.click, rate);
   FILTER::settle(kick.hush, FILTER::LOW, HUSH, rate);
   kick.attack = batter.attack;
   kick.drive = ONE + batter.drive * DRIVE;
@@ -63,15 +61,21 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   darken(kick);
 }
 
+void SOUND::PLUGINS::CORE::PERCUSSION::darken(Kick &kick) {
+  const Float tone = touched(kick.colour, kick.velocity, kick.touch);
+  FILTER::settle(kick.tone, FILTER::LOW, tone, kick.rate);
+}
+
+void SOUND::PLUGINS::CORE::PERCUSSION::strike(Kick &kick, Float velocity) {
+  strike(kick, kick.hertz, velocity);
+}
+
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Kick &kick) -> Float {
   if (!sounding(kick)) return 0;
   kick.body.base = kick.base * (ONE + kick.sigh * kick.breath);
   const Float body = tick(kick.body);
   const Float hushed = BLOCK::magnitude(FILTER::tick(kick.hush, body));
   kick.breath = hushed < ONE ? hushed : ONE;
-  const Float snap = ENVELOPE::tick(kick.click, kick.snap);
-  const Float noise = FILTER::tick(kick.crisp, NOISE::tick(kick.white));
-  const Float crack = noise * snap * kick.attack * kick.velocity;
-  const Float driven = SHAPER::soft((body + crack) * kick.drive);
+  const Float driven = SHAPER::soft((body + crack(kick)) * kick.drive);
   return FILTER::tick(kick.tone, driven);
 }
