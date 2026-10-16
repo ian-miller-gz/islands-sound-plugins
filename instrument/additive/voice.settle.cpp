@@ -4,22 +4,38 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float SINGLE = 1.0f;
-constexpr Float SILENT = 0.000001f;
+auto envelope(
+  Float attack, Float decay, Float sustain, Float release, Whole curve,
+  Whole rate) -> CORE::ENVELOPE::Envelope {
+  auto shaped = CORE::ENVELOPE::ADSR::create(attack, decay, sustain, release);
+  shaped.curve = curve;
+  shaped.trigger = CORE::ENVELOPE::RESET;
+  CORE::ENVELOPE::shape(shaped, rate);
+  return shaped;
+}
 
-auto delta(Float span, Whole rate) -> Float {
-  const Float frames = span * Float(rate);
-  return frames <= SINGLE ? SINGLE : SINGLE / frames;
+auto series(const Float *rows, Whole at) -> Float {
+  if (at < ADDITIVE::HARMONICS) return rows[ADDITIVE::HARMONIC1 + at];
+  return rows[ADDITIVE::HARMONIC8] * Float(ADDITIVE::HARMONICS) / Float(at + 1);
+}
+
+void spread(ADDITIVE::Synth &synth) {
+  for (Whole at = 0; at < ADDITIVE::BANK; ++at) {
+    synth.weights[at] = ::series(synth.rows, at);
+    synth.ratios[at] = Float(at + 1);
+  }
 }
 
 }  // namespace
 
 void SOUND::PLUGINS::ADDITIVE::settle(Synth &synth) {
   const Float *rows = synth.rows;
-  synth.rise = ::delta(rows[ATTACK], synth.rate);
-  synth.fall = ::delta(rows[DECAY], synth.rate) * (SINGLE - rows[SUSTAIN]);
-  synth.drop = ::delta(rows[RELEASE], synth.rate);
-  synth.span = 0;
-  for (Whole at = 0; at < HARMONICS; ++at) synth.span += rows[HARMONIC1 + at];
-  if (synth.span < ::SILENT) synth.span = SINGLE;
+  synth.door = ::envelope(
+    rows[ATTACK], rows[DECAY], rows[SUSTAIN], rows[RELEASE],
+    CORE::ENVELOPE::LINEAR, synth.rate);
+  synth.door.depth = rows[VELOCITY];
+  synth.contour = ::envelope(
+    rows[SWEEP], rows[CLOSE], 0, rows[CLOSE], CORE::ENVELOPE::EXPONENTIAL,
+    synth.rate);
+  ::spread(synth);
 }
