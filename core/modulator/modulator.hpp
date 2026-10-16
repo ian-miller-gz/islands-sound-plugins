@@ -11,6 +11,7 @@ using Seed = std::uint32_t;
 constexpr Seed SEED = 0x9E3779B9u;
 constexpr Float FULL = 1.0f;
 constexpr Float WANDER = 0.57735027f;
+constexpr Float EVEN = 0.5f;
 
 struct Lfo {
   Whole wave = SINE;
@@ -20,7 +21,9 @@ struct Lfo {
   Float fade = 0;
   Float slew = 0;
   Float start = 0;
+  Float skew = EVEN;
   PHASE::Wheel step = 0;
+  Whole split = Whole(PHASE::HALF);
   Float rise = FULL;
   Float glide = FULL;
   PHASE::Wheel phase = 0;

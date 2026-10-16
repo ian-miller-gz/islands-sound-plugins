@@ -27,6 +27,7 @@ void SOUND::PLUGINS::LFO::settle(Module &module) {
   lfo.depth = rows[DEPTH];
   lfo.start = rows[PHASE];
   lfo.fade = rows[FADE];
+  lfo.skew = rows[SKEW];
   tune(module);
 }
 

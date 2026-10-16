@@ -40,6 +40,8 @@ void SOUND::PLUGINS::CORE::MODULATOR::settle(Lfo &lfo, Whole rate) {
                             : PHASE::step(lfo.hertz, rate);
   lfo.rise = delta(lfo.fade, rate);
   lfo.glide = pole(lfo.slew, rate);
+  const Float skew = lfo.skew < 0 ? 0 : lfo.skew > FULL ? FULL : lfo.skew;
+  lfo.split = Whole(skew * PHASE::TURN);
 }
 
 void SOUND::PLUGINS::CORE::MODULATOR::settle(Slew &slew, Whole rate) {
