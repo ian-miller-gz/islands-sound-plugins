@@ -4,6 +4,8 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
+constexpr Float UNITY = 1.0f;
+
 auto side(Whole channel) -> Whole {
   return channel < MIXER::STEREO ? channel : 0;
 }
@@ -13,6 +15,11 @@ void glide(MIXER::Module &module) {
     for (Whole side = 0; side < MIXER::STEREO; ++side)
       CORE::MODULATOR::tick(
         module.smoothers[in][side], module.weights[in][side]);
+}
+
+auto swell(const MIXER::Module &module, Float cv) -> Float {
+  const Float scale = UNITY + module.rows[MIXER::AMOUNT] * cv;
+  return scale > 0 ? scale : 0;
 }
 
 void mix(
@@ -25,7 +32,10 @@ void mix(
     for (Whole in = 0; in < MIXER::INS; ++in)
       sum += CORE::BLOCK::lane(lanes, in, channel, channels)[frame] *
              module.smoothers[in][at].value;
-    CORE::BLOCK::lane(lanes, MIXER::OUT, channel, channels)[frame] = sum;
+    const Float cv =
+      CORE::BLOCK::lane(lanes, MIXER::CV, channel, channels)[frame];
+    CORE::BLOCK::lane(lanes, MIXER::OUT, channel, channels)[frame] =
+      sum * ::swell(module, cv);
   }
 }
 
