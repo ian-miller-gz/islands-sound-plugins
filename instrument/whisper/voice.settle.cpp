@@ -8,22 +8,17 @@ void SOUND::PLUGINS::WHISPER::seed(Hiss &hiss, CORE::NOISE::Register state) {
   CORE::NOISE::seed(hiss.blue, state);
 }
 
-void SOUND::PLUGINS::WHISPER::shape(Mouth &mouth, Whole at) {
-  if (at >= HISSES) return;
-  const Float *rows = mouth.rows;
-  const Float key = Float(mouth.allocator.notes[at].pitch) - CENTRE;
-  const Float shift = CORE::PHASE::ratio(rows[TRACKING] * key * CENT);
-  CORE::FILTER::settle(
-    mouth.hisses[at].formant, rows[VOWEL] + rows[MORPH], shift, mouth.rate);
-}
-
 void SOUND::PLUGINS::WHISPER::settle(Mouth &mouth) {
   const Float *rows = mouth.rows;
+  const Whole pace = mouth.rate / STRIDE;
   mouth.gain = rows[GAIN];
   mouth.colour = Whole(rows[COLOUR]);
   mouth.envelope = CORE::ENVELOPE::ADSR::create(
     rows[ATTACK], rows[DECAY], rows[SUSTAIN], rows[RELEASE]);
   mouth.envelope.depth = CORE::ENVELOPE::FULL;
   CORE::ENVELOPE::shape(mouth.envelope, mouth.rate);
-  for (Whole at = 0; at < HISSES; ++at) shape(mouth, at);
+  mouth.pole = CORE::MODULATOR::pole(GLIDING, pace);
+  mouth.motion.hertz = rows[MOTION];
+  CORE::MODULATOR::settle(mouth.motion, pace);
+  place(mouth);
 }

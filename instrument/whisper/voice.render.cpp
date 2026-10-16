@@ -13,6 +13,7 @@ void SOUND::PLUGINS::WHISPER::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, take);
+    if (CORE::BLOCK::due(mouth.stride, STRIDE)) steer(mouth);
     const Float sample = breathe(mouth) * mouth.gain;
     for (Whole channel = 0; channel < mouth.channels; ++channel)
       lanes[channel][frame] = sample;

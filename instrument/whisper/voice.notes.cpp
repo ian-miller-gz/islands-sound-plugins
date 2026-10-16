@@ -9,7 +9,7 @@ using Change = void (*)(WHISPER::Mouth &, CORE::VOICE::Note &, Whole);
 void kept(WHISPER::Mouth &, CORE::VOICE::Note &, Whole) {}
 
 void struck(WHISPER::Mouth &mouth, CORE::VOICE::Note &note, Whole at) {
-  WHISPER::shape(mouth, at);
+  WHISPER::shape(mouth, at, true);
   CORE::ENVELOPE::strike(mouth.hisses[at].gate, mouth.envelope, note.velocity);
 }
 
@@ -56,6 +56,7 @@ void SOUND::PLUGINS::WHISPER::apply(
   if (row >= PARAMETERS) return;
   mouth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(mouth);
+  CORE::BLOCK::reset(mouth.stride);
 }
 
 auto SOUND::PLUGINS::WHISPER::breathe(Mouth &mouth) -> Float {
