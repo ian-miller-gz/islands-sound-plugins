@@ -18,7 +18,7 @@ constexpr Float FLASH = 0.04f;
 constexpr Float BALANCE = 2.0f;
 constexpr Float ONE = 1.0f;
 constexpr Float EDGE = 2000.0f;
-constexpr Float NOISE = 0.15f;
+constexpr Float HISS = 0.15f;
 constexpr Float CURVE = 0;
 constexpr Float TOUCH = 0.5f;
 constexpr Float FADE = 0.005f;
@@ -41,7 +41,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
     .tone = tone,
     .splash = splash,
     .edge = ::EDGE,
-    .noise = ::NOISE,
+    .noise = ::HISS,
     .curve = ::CURVE,
     .touch = ::TOUCH};
   settle(cymbal, bronze, rate);
