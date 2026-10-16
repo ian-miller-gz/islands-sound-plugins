@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-#include <cmath>
-
 #include "voice.internal.hpp"
+#include "../../core/dynamics/dynamics.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float TEN = 10.0f;
-constexpr Float DECIBELS = 20.0f;
 constexpr Float FLOOR = 10.0f;
 
 auto soft(SHAPER::Stage &stage, Float in) -> Float {
@@ -42,10 +39,22 @@ using Path = auto (*)(SHAPER::Stage &, Float) -> Float;
 constexpr Path PATHS[SHAPER::CURVES] = {soft, hard,  tube,
                                         fold, crush, chebyshev};
 
+auto gain(const SHAPER::Module &module, SHAPER::Stage &stage, Float cv)
+  -> Float {
+  const Float *rows = module.rows;
+  const Float wanted = rows[SHAPER::DRIVE] + rows[SHAPER::AMOUNT] * cv;
+  const Float decibels = wanted < 0                 ? 0
+                         : wanted > SHAPER::LOUDEST ? SHAPER::LOUDEST
+                                                    : wanted;
+  if (decibels == stage.decibels) return stage.gain;
+  stage.decibels = decibels;
+  stage.gain = CORE::DYNAMICS::gain(decibels);
+  return stage.gain;
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::SHAPER::settle(Module &module) {
-  module.gain = std::pow(::TEN, module.rows[DRIVE] / ::DECIBELS);
   for (Stage &stage : module.stages) {
     CORE::SHAPER::settle(
       stage.crusher, module.rows[BITS], module.rows[RATE], module.rate);
@@ -64,10 +73,10 @@ void SOUND::PLUGINS::SHAPER::apply(
 }
 
 auto SOUND::PLUGINS::SHAPER::shaped(
-  const Module &module, Stage &stage, Float in) -> Float {
+  const Module &module, Stage &stage, Float in, Float cv) -> Float {
   const Whole curve = Whole(module.rows[CURVE]);
   const Path path = PATHS[curve < CURVES ? curve : SOFT];
-  const Float wet =
-    CORE::SHAPER::tick(stage.blocker, path(stage, in * module.gain));
+  const Float driven = in * ::gain(module, stage, cv) + module.rows[BIAS];
+  const Float wet = CORE::SHAPER::tick(stage.blocker, path(stage, driven));
   return in + (wet - in) * module.rows[MIX];
 }

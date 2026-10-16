@@ -14,8 +14,10 @@ void SOUND::PLUGINS::SHAPER::render(
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
     for (Whole channel = 0; channel < module.channels; ++channel) {
+      const Float cv =
+        CORE::BLOCK::lane(lanes, CV, channel, module.channels)[frame];
       Float &sample = lanes[channel][frame];
-      sample = shaped(module, module.stages[channel], sample);
+      sample = shaped(module, module.stages[channel], sample, cv);
     }
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
