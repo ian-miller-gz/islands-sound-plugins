@@ -6,11 +6,13 @@
 #include "../../core/table/table.hpp"
 #include "operator.indices.hpp"
 #include "operator.rows.hpp"
+#include "operator.traits.hpp"
 
 namespace SOUND::PLUGINS::OPERATOR {
 
 template <Whole... AT>
-inline constexpr CORE::TABLE::Row LISTED[] = {describe(AT)...};
+inline constexpr CORE::TABLE::Row LISTED[] = {
+  (AT < SECOND ? describe(AT) : extend(AT))...};
 
 template <Whole... AT>
 constexpr auto list(std::index_sequence<AT...>)

@@ -29,10 +29,31 @@ constexpr Whole VELOCITY = TAIL + 6;
 constexpr Whole TUNE = TAIL + 7;
 constexpr Whole BEND = TAIL + 8;
 constexpr Whole VOLUME = TAIL + 9;
-constexpr Whole PARAMETERS = TAIL + 10;
+
+constexpr Whole SENSE = 0;
+constexpr Whole FIXED = 1;
+constexpr Whole BREAK = 2;
+constexpr Whole LOWER = 3;
+constexpr Whole UPPER = 4;
+constexpr Whole CURVE = 5;
+constexpr Whole TRACKING = 6;
+constexpr Whole TRAITS = 7;
+
+constexpr Whole SECOND = VOLUME + 1;
+constexpr Whole SWEEP = SECOND + OPERATORS * TRAITS;
+constexpr Whole PACE = SWEEP + 1;
+constexpr Whole HEIGHT = PACE + STAGES;
+constexpr Whole MODE = HEIGHT + STAGES;
+constexpr Whole GLIDE = MODE + 1;
+constexpr Whole HOLD = GLIDE + 1;
+constexpr Whole PARAMETERS = HOLD + 1;
 
 constexpr auto field(Whole unit, Whole at) -> Whole {
   return FIRST + unit * FIELDS + at;
+}
+
+constexpr auto trait(Whole unit, Whole at) -> Whole {
+  return SECOND + unit * TRAITS + at;
 }
 
 }  // namespace SOUND::PLUGINS::OPERATOR
