@@ -24,7 +24,7 @@ struct Choir {
   Float place = 0;
   Float sway = 0;
   Float scatter = 0;
-  Whole clock = 0;
+  CORE::BLOCK::Stride stride;
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
   CORE::OSCILLATOR::Table table;
   CORE::ENVELOPE::Envelope envelope;
@@ -37,11 +37,12 @@ struct Choir {
 };
 
 void build(Choir &choir);
+void allocate(Choir &choir);
 void settle(Choir &choir);
 void settle(Ensemble &ensemble, Room &room, const Float *rows, Whole rate);
 void apply(Choir &choir, const AUDIO::PLUGIN::Event &event);
 void place(Choir &choir);
-void tune(const Choir &choir, const CORE::VOICE::Note &note, Part &part);
+void tune(Choir &choir, CORE::VOICE::Note &note, Part &part);
 void steer(Choir &choir);
 auto sing(Choir &choir) -> Stereo;
 auto spread(Choir &choir, Stereo dry) -> Stereo;

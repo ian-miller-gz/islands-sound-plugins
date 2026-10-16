@@ -45,6 +45,7 @@ void SOUND::PLUGINS::CHOIR::settle(Choir &choir) {
   choir.gain = rows[GAIN];
   choir.scatter = rows[SCATTER] * Float(choir.rate);
   place(choir);
+  allocate(choir);
   choir.motion.hertz = rows[MOTION];
   CORE::MODULATOR::settle(choir.motion, choir.rate / CONTROL);
   ::envelope(choir);

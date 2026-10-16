@@ -21,8 +21,7 @@ void pour(
 }
 
 auto voiced(CHOIR::Choir &choir) -> CHOIR::Stereo {
-  if (choir.clock == 0) CHOIR::steer(choir);
-  choir.clock = (choir.clock + 1) % CHOIR::CONTROL;
+  if (CORE::BLOCK::due(choir.stride, CHOIR::CONTROL)) CHOIR::steer(choir);
   const CHOIR::Stereo out = CHOIR::spread(choir, CHOIR::sing(choir));
   return {out.left * choir.gain, out.right * choir.gain};
 }
