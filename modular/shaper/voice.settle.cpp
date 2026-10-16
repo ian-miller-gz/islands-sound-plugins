@@ -7,38 +7,6 @@ using namespace SOUND::PLUGINS;
 
 constexpr Float FLOOR = 10.0f;
 
-auto soft(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::tick(stage.oversampler, in, CORE::SHAPER::soft);
-}
-
-auto hard(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::tick(stage.oversampler, in, CORE::SHAPER::hard);
-}
-
-auto tube(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::tick(stage.oversampler, in, CORE::SHAPER::tube);
-}
-
-auto fold(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::tick(stage.oversampler, in, CORE::SHAPER::fold);
-}
-
-auto crush(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::hard(CORE::SHAPER::tick(stage.crusher, in));
-}
-
-auto chebyshev(SHAPER::Stage &stage, Float in) -> Float {
-  const auto shape = [&stage](Float sample) {
-    return CORE::SHAPER::tick(stage.chebyshev, sample);
-  };
-  return CORE::SHAPER::tick(stage.oversampler, in, shape);
-}
-
-using Path = auto (*)(SHAPER::Stage &, Float) -> Float;
-
-constexpr Path PATHS[SHAPER::CURVES] = {soft, hard,  tube,
-                                        fold, crush, chebyshev};
-
 auto gain(const SHAPER::Module &module, SHAPER::Stage &stage, Float cv)
   -> Float {
   const Float *rows = module.rows;
@@ -74,9 +42,8 @@ void SOUND::PLUGINS::SHAPER::apply(
 
 auto SOUND::PLUGINS::SHAPER::shaped(
   const Module &module, Stage &stage, Float in, Float cv) -> Float {
-  const Whole curve = Whole(module.rows[CURVE]);
-  const Path path = PATHS[curve < CURVES ? curve : SOFT];
   const Float driven = in * ::gain(module, stage, cv) + module.rows[BIAS];
-  const Float wet = CORE::SHAPER::tick(stage.blocker, path(stage, driven));
+  const Float wet =
+    CORE::SHAPER::tick(stage.blocker, curved(module, stage, driven));
   return in + (wet - in) * module.rows[MIX];
 }
