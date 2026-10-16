@@ -10,6 +10,8 @@ namespace SOUND::PLUGINS::ENVELOPE {
 static_assert(EXPONENTIAL == CORE::ENVELOPE::EXPONENTIAL);
 static_assert(RESUME == CORE::ENVELOPE::RESUME);
 
+constexpr Whole LEAD = 0;
+
 struct Module {
   Whole rate = 0;
   Whole channels = 0;
@@ -17,6 +19,7 @@ struct Module {
   CORE::VOICE::Allocator allocator;
   CORE::ENVELOPE::Envelope envelope;
   CORE::ENVELOPE::Gate gate;
+  CORE::BLOCK::Edge edge;
   CORE::BLOCK::Meter meter;
 };
 
@@ -24,6 +27,9 @@ void seat(Module &module);
 void settle(Module &module);
 auto shaped(const Float *rows) -> CORE::ENVELOPE::Envelope;
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
+void strike(Module &module, Float velocity);
+void lift(Module &module);
+void follow(Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame);
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,

@@ -9,7 +9,7 @@ constexpr Whole CHANGES = CORE::VOICE::LIFTED + 1;
 void kept(ENVELOPE::Module &, const CORE::VOICE::Note &) {}
 
 void struck(ENVELOPE::Module &module, const CORE::VOICE::Note &note) {
-  CORE::ENVELOPE::strike(module.gate, module.envelope, note.velocity);
+  ENVELOPE::strike(module, note.velocity);
 }
 
 void tied(ENVELOPE::Module &module, const CORE::VOICE::Note &note) {
@@ -17,7 +17,7 @@ void tied(ENVELOPE::Module &module, const CORE::VOICE::Note &note) {
 }
 
 void lifted(ENVELOPE::Module &module, const CORE::VOICE::Note &) {
-  CORE::ENVELOPE::lift(module.gate);
+  if (!module.edge.high) ENVELOPE::lift(module);
 }
 
 using Change = void (*)(ENVELOPE::Module &, const CORE::VOICE::Note &);
