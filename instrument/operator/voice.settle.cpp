@@ -12,6 +12,8 @@ constexpr Float CENT = 100;
 constexpr Float STEP = 1;
 constexpr Float DOWN = -1;
 constexpr Float UP = 1;
+constexpr Float HALF = 0.5f;
+constexpr Float HERTZ = 100;
 
 constexpr CORE::MODULATOR::Wave SHAPES[] = {
   CORE::MODULATOR::TRIANGLE, CORE::MODULATOR::SAW,  CORE::MODULATOR::SAW,
@@ -28,8 +30,12 @@ auto looped(Float feedback) -> Float {
 void prepare(OPERATOR::Synth &synth, Whole unit) {
   const Float *rows = synth.rows;
   const Float detune = rows[OPERATOR::field(unit, OPERATOR::DETUNE)] * STEP;
-  synth.factors[unit] =
+  const Float factor =
     rows[OPERATOR::field(unit, OPERATOR::RATIO)] * CORE::PHASE::ratio(detune);
+  const Flag fixed = rows[OPERATOR::trait(unit, OPERATOR::FIXED)] > HALF;
+  const Float hertz = factor * HERTZ * CORE::PHASE::ratio(rows[OPERATOR::TUNE]);
+  synth.factors[unit] = fixed ? 0 : factor;
+  synth.fixed[unit] = fixed ? hertz : 0;
 }
 
 void swing(OPERATOR::Synth &synth) {
@@ -49,6 +55,7 @@ void SOUND::PLUGINS::OPERATOR::settle(Synth &synth) {
   synth.feedback = ::looped(synth.rows[FEEDBACK]);
   for (Whole unit = 0; unit < OPERATORS; ++unit) ::prepare(synth, unit);
   for (Whole at = 0; at < VOICES; ++at) fit(synth, at);
+  trace(synth);
   ::swing(synth);
   allocate(synth);
   synth.tune = synth.rows[TUNE] / CENT;

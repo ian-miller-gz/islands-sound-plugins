@@ -19,6 +19,7 @@ void struck(OPERATOR::Synth &synth, Whole at) {
     CORE::OSCILLATOR::reset(voice.units[unit], 0);
     voice.outs[unit] = 0;
   }
+  CORE::ENVELOPE::strike(voice.contour, synth.contour, velocity);
   if (synth.rows[OPERATOR::SYNC] > HALF) CORE::MODULATOR::reset(synth.lfo);
   voice.stale = true;
 }
@@ -28,6 +29,7 @@ void tied(OPERATOR::Synth &synth, Whole at) { synth.voices[at].stale = true; }
 void lifted(OPERATOR::Synth &synth, Whole at) {
   for (CORE::ENVELOPE::Walk &walk : synth.voices[at].walks)
     CORE::ENVELOPE::lift(walk);
+  CORE::ENVELOPE::lift(synth.voices[at].contour);
 }
 
 using Visit = void (*)(OPERATOR::Synth &, Whole);
