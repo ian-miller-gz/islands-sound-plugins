@@ -10,6 +10,7 @@ struct Voice {
   Whole rate = 0;
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
+  Whole note = 0;
   CORE::PERCUSSION::Cymbal cymbal;
   CORE::BLOCK::Meter meter;
 };

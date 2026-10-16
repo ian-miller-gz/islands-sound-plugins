@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "percussion.circuit.hpp"
+#include "percussion.choke.hpp"
 
 namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
@@ -36,6 +37,7 @@ struct Cymbal {
   ENVELOPE::Envelope flash;
   ENVELOPE::Gate gates[TAIL::TAILS];
   ENVELOPE::Gate burst;
+  Choke choke;
   Float weights[TAIL::TAILS] = {};
   Float gains[TAIL::TAILS] = {};
   Float airs[TAIL::TAILS] = {};
@@ -52,6 +54,7 @@ void settle(
   Whole rate);
 void settle(Cymbal &cymbal, const Bronze &bronze, Whole rate);
 void strike(Cymbal &cymbal, Whole plate, Float velocity);
+void lift(Cymbal &cymbal);
 auto tick(Cymbal &cymbal) -> Float;
 auto sounding(const Cymbal &cymbal) -> Flag;
 

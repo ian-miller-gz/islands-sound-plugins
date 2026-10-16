@@ -22,4 +22,9 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(
   cymbal.gains[TAIL::SIZZLE] *= ENVELOPE::weigh(cymbal.velocity, cymbal.touch);
   cymbal.flare = SPLASHES[cymbal.plate];
   ENVELOPE::strike(cymbal.burst, cymbal.flash, cymbal.velocity);
+  open(cymbal.choke);
+}
+
+void SOUND::PLUGINS::CORE::PERCUSSION::lift(Cymbal &cymbal) {
+  close(cymbal.choke);
 }

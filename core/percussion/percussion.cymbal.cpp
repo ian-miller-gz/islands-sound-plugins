@@ -21,6 +21,7 @@ constexpr Float EDGE = 2000.0f;
 constexpr Float NOISE = 0.15f;
 constexpr Float CURVE = 0;
 constexpr Float TOUCH = 0.5f;
+constexpr Float FADE = 0.005f;
 
 void balance(PERCUSSION::Cymbal &cymbal, Float tone) {
   namespace TAIL = PERCUSSION::TAIL;
@@ -62,6 +63,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   shape(cymbal.flash, FLASH, rate);
   FILTER::settle(
     cymbal.edge, FILTER::HIGH, bronze.edge, FILTER::FLAT, FLAT, rate);
+  settle(cymbal.choke, ::FADE, rate);
   ::balance(cymbal, bronze.tone);
   cymbal.splash = bronze.splash;
   cymbal.curve = bronze.curve;
