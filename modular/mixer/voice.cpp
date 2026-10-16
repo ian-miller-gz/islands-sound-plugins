@@ -11,6 +11,7 @@ auto create(Whole rate, Whole channels) -> void * {
   auto *module = new MIXER::Module{.rate = rate, .channels = channels};
   CORE::TABLE::rest(MIXER::SHEET, module->rows);
   MIXER::settle(*module);
+  MIXER::prime(*module);
   return module;
 }
 

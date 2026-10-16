@@ -8,6 +8,13 @@ auto side(Whole channel) -> Whole {
   return channel < MIXER::STEREO ? channel : 0;
 }
 
+void glide(MIXER::Module &module) {
+  for (Whole in = 0; in < MIXER::INS; ++in)
+    for (Whole side = 0; side < MIXER::STEREO; ++side)
+      CORE::MODULATOR::tick(
+        module.smoothers[in][side], module.weights[in][side]);
+}
+
 void mix(
   const MIXER::Module &module, AUDIO::PLUGIN::Sample *const *lanes,
   Whole frame) {
@@ -17,7 +24,7 @@ void mix(
     Float sum = 0;
     for (Whole in = 0; in < MIXER::INS; ++in)
       sum += CORE::BLOCK::lane(lanes, in, channel, channels)[frame] *
-             module.weights[in][at];
+             module.smoothers[in][at].value;
     CORE::BLOCK::lane(lanes, MIXER::OUT, channel, channels)[frame] = sum;
   }
 }
@@ -36,6 +43,7 @@ void SOUND::PLUGINS::MIXER::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
+    ::glide(module);
     ::mix(module, lanes, frame);
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;

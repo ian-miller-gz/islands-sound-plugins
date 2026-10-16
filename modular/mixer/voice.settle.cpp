@@ -41,6 +41,16 @@ void SOUND::PLUGINS::MIXER::settle(Module &module) {
   }
 }
 
+void SOUND::PLUGINS::MIXER::prime(Module &module) {
+  for (Whole in = 0; in < INS; ++in)
+    for (Whole side = 0; side < STEREO; ++side) {
+      CORE::MODULATOR::Smoother &smoother = module.smoothers[in][side];
+      smoother.time = GLIDE;
+      CORE::MODULATOR::settle(smoother, module.rate);
+      CORE::MODULATOR::jump(smoother, module.weights[in][side]);
+    }
+}
+
 void SOUND::PLUGINS::MIXER::apply(
   Module &module, const AUDIO::PLUGIN::Event &event) {
   if (event.kind != AUDIO::PLUGIN::Event::CONTROLLER) return;
