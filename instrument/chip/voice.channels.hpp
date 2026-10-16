@@ -22,8 +22,13 @@ struct Steps {
   Flag held = false;
 };
 
+struct Timer {
+  Float debt = 0;
+  Float clocks = 0;
+};
+
 struct Pulse {
-  Clock clock;
+  Whole position = 0;
   Whole duty = 0;
   Whole period = 0;
   Float swept = 1;
@@ -32,15 +37,22 @@ struct Pulse {
 };
 
 struct Wave {
-  Clock clock;
+  Whole position = 0;
   Flag muted = true;
 };
 
 struct Lfsr {
   Whole bits = 1;
   Whole tap = 1;
-  Float clocks = 0;
-  Float debt = 0;
 };
 
 }  // namespace SOUND::PLUGINS::CHIP
+
+namespace SOUND::PLUGINS::CHIP::CHANNEL {
+
+enum Index : Whole { FIRST, SECOND, WAVE, HISS, COUNT };
+
+constexpr Whole SQUARE = 8;
+constexpr Whole RAMP = 32;
+
+}  // namespace SOUND::PLUGINS::CHIP::CHANNEL

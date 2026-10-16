@@ -9,6 +9,7 @@ using namespace SOUND::PLUGINS;
 constexpr Float PULSING = 16;
 constexpr Float WAVING = 32;
 constexpr Whole LOWEST = 2;
+constexpr Float HALF = 0.5f;
 
 auto counted(Float pitch, Float divider, Float scale) -> Whole {
   const Float hertz = CORE::PHASE::hertz(pitch);
@@ -16,9 +17,9 @@ auto counted(Float pitch, Float divider, Float scale) -> Whole {
   return period < 0 ? 0 : Whole(period);
 }
 
-void drive(CHIP::Clock &clock, Float divider, Whole period, Whole rate) {
+auto driven(Float divider, Whole length, Whole period, Whole rate) -> Float {
   const Float hertz = CHIP::CPU / (divider * Float(period + 1));
-  clock.step = CORE::PHASE::step(hertz, rate);
+  return hertz * Float(length) / Float(rate);
 }
 
 auto pitched(const CHIP::Synth &synth) -> Float {
@@ -38,11 +39,16 @@ void SOUND::PLUGINS::CHIP::retune(Synth &synth) {
     Pulse &pulse = synth.pulses[at];
     pulse.period = ::counted(pitches[at], ::PULSING, pulse.swept);
     pulse.muted = silenced(synth, at);
-    ::drive(pulse.clock, ::PULSING, pulse.period, synth.rate);
+    synth.timers[at].clocks =
+      ::driven(::PULSING, CHANNEL::SQUARE, pulse.period, synth.rate);
   }
   Wave &triangle = synth.triangle;
   const Whole period = ::counted(base + synth.rows[OFFSET3], ::WAVING, 1);
   triangle.muted = period < ::LOWEST || period > CEILING;
-  ::drive(triangle.clock, ::WAVING, period, synth.rate);
+  const Flag on = synth.rows[TRIANGLE] > ::HALF && synth.gated;
+  synth.timers[CHANNEL::WAVE].clocks =
+    on && !triangle.muted
+      ? ::driven(::WAVING, CHANNEL::RAMP, period, synth.rate)
+      : 0;
   synth.stale = false;
 }

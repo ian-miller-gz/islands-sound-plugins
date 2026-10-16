@@ -41,7 +41,8 @@ void hiss(CHIP::Synth &synth) {
   const Whole period = Whole(synth.rows[CHIP::PERIOD]);
   const Float cycles = PERIODS[period < std::size(PERIODS) ? period : 0];
   synth.noise.tap = synth.rows[CHIP::MODE] > HALF ? SHORT : LONG;
-  synth.noise.clocks = CHIP::CPU / cycles / Float(synth.rate);
+  synth.timers[CHIP::CHANNEL::HISS].clocks =
+    CHIP::CPU / cycles / Float(synth.rate);
 }
 
 void sway(CHIP::Synth &synth) {

@@ -59,6 +59,7 @@ void SOUND::PLUGINS::CHIP::lift(Synth &synth) {
     if (synth.shapes[at].decay == 0) synth.steps[at].level = 0;
   }
   synth.gated = false;
+  synth.stale = true;
 }
 
 void SOUND::PLUGINS::CHIP::clock(Synth &synth) {
