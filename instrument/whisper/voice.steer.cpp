@@ -33,16 +33,18 @@ void SOUND::PLUGINS::WHISPER::place(Mouth &mouth) {
 void SOUND::PLUGINS::WHISPER::shape(Mouth &mouth, Whole at, Flag leap) {
   if (at >= HISSES) return;
   CORE::VOICE::Note &note = mouth.allocator.notes[at];
-  CORE::FILTER::Formant &formant = mouth.hisses[at].formant;
+  Hiss &hiss = mouth.hisses[at];
   const Float glided = CORE::VOICE::tick(note, mouth.allocator.glide);
   const Float shift = ::shifted(mouth, glided);
   const CORE::FILTER::Tract tract = ::aimed(mouth);
-  formant.breadth = mouth.rows[BREADTH];
-  if (leap) {
-    CORE::FILTER::jump(formant, tract, shift, mouth.rate);
-    return;
-  }
-  CORE::FILTER::glide(formant, tract, mouth.pole, shift, mouth.rate);
+  hiss.formant.breadth = mouth.rows[BREADTH];
+  if (leap)
+    CORE::FILTER::jump(hiss.formant, tract, shift, mouth.rate);
+  else
+    CORE::FILTER::glide(hiss.formant, tract, mouth.pole, shift, mouth.rate);
+  hiss.makeup = CORE::FILTER::makeup(hiss.formant, mouth.rate);
+  const Float hertz = CORE::PHASE::hertz(glided);
+  CORE::GLOTTIS::tune(hiss.source, hertz, mouth.rate);
 }
 
 void SOUND::PLUGINS::WHISPER::steer(Mouth &mouth) {
