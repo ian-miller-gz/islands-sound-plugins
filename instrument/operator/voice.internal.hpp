@@ -50,6 +50,8 @@ struct Synth {
 auto bit(Whole unit) -> Whole;
 auto routed(Float algorithm) -> const Routing &;
 
+auto mode(const Synth &synth) -> Whole;
+void allocate(Synth &synth);
 void settle(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);

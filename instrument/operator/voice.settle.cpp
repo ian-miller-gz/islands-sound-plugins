@@ -61,7 +61,7 @@ void SOUND::PLUGINS::OPERATOR::settle(Synth &synth) {
   synth.feedback = ::looped(synth.rows[FEEDBACK]);
   for (Whole unit = 0; unit < OPERATORS; ++unit) ::prepare(synth, unit);
   ::swing(synth);
-  CORE::VOICE::settle(synth.allocator, synth.rate);
+  allocate(synth);
   synth.tune = synth.rows[TUNE] / CENT;
   for (Voice &voice : synth.voices) voice.stale = true;
 }

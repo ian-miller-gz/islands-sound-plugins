@@ -22,6 +22,8 @@ void struck(OPERATOR::Synth &synth, Whole at) {
   voice.stale = true;
 }
 
+void tied(OPERATOR::Synth &synth, Whole at) { synth.voices[at].stale = true; }
+
 void lifted(OPERATOR::Synth &synth, Whole at) {
   for (CORE::ENVELOPE::Walk &walk : synth.voices[at].walks)
     CORE::ENVELOPE::lift(walk);
@@ -29,13 +31,29 @@ void lifted(OPERATOR::Synth &synth, Whole at) {
 
 using Visit = void (*)(OPERATOR::Synth &, Whole);
 
-constexpr Visit VISITS[] = {kept, struck, struck, lifted};
+constexpr Visit VISITS[] = {kept, struck, tied, lifted};
 static_assert(std::size(VISITS) == CORE::VOICE::LIFTED + 1);
 
 void visit(OPERATOR::Synth &synth, const CORE::VOICE::Note &note) {
   const Whole at = Whole(&note - synth.allocator.notes);
   if (at >= OPERATOR::VOICES || note.change >= std::size(VISITS)) return;
   VISITS[note.change](synth, at);
+}
+
+void release(OPERATOR::Synth &synth) {
+  const auto visitor = [&synth](const CORE::VOICE::Note &note) {
+    ::visit(synth, note);
+  };
+  CORE::VOICE::hold(synth.allocator, false, visitor);
+  for (Whole pitch = 0; pitch < CORE::PHASE::PITCHES; ++pitch)
+    CORE::VOICE::lift(synth.allocator, pitch);
+  CORE::VOICE::drain(synth.allocator, visitor);
+}
+
+void sustain(OPERATOR::Synth &synth) {
+  CORE::VOICE::hold(
+    synth.allocator, synth.rows[OPERATOR::HOLD] > HALF,
+    [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
 }
 
 }  // namespace
@@ -47,5 +65,8 @@ void SOUND::PLUGINS::OPERATOR::apply(
     [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
+  const Flag moved = mode(synth) != synth.allocator.mode;
+  if (moved) ::release(synth);
   settle(synth);
+  if (moved || row == HOLD) ::sustain(synth);
 }
