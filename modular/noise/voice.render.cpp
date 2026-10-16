@@ -22,11 +22,11 @@ auto blue(NOISE::Source &source) -> Float {
 
 using Colour = auto (*)(NOISE::Source &) -> Float;
 
-constexpr Colour COLOURS[NOISE::COLOURS] = {white, pink, brown, blue};
+constexpr Colour COLOURS[] = {white, pink, brown, blue};
 
 auto colour(const NOISE::Module &module) -> Colour {
   const Whole chosen = Whole(module.rows[NOISE::COLOUR]);
-  return COLOURS[chosen < NOISE::COLOURS ? chosen : NOISE::WHITE];
+  return COLOURS[chosen < std::size(COLOURS) ? chosen : NOISE::WHITE];
 }
 
 }  // namespace
