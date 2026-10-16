@@ -43,10 +43,12 @@ void SOUND::PLUGINS::NOISE::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
+    follow(module, lanes, frame);
     const Colour tick = ::colour(module);
     const Float level = CORE::MODULATOR::tick(module.level, module.target);
     for (Whole channel = 0; channel < module.channels; ++channel)
-      lanes[channel][frame] = tick(module.sources[channel]) * level;
+      CORE::BLOCK::lane(lanes, CV, channel, module.channels)[frame] =
+        tick(module.sources[channel]) * level;
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
   }
