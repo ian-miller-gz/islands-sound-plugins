@@ -12,8 +12,8 @@ void struck(SAMPLER::Synth &synth, Whole at) {
   SAMPLER::Voice &voice = synth.voices[at];
   CORE::VOICE::Note &note = synth.allocator.notes[at];
   voice.clip = Whole(synth.rows[SAMPLER::STOCK]);
-  voice.region = SAMPLER::region(synth, synth.clips[voice.clip]);
   voice.along = 0;
+  voice.turned = false;
   voice.held = true;
   CORE::ENVELOPE::strike(voice.loudness, synth.loudness, note.velocity);
   CORE::ENVELOPE::strike(voice.contour, synth.contour, note.velocity);
@@ -31,6 +31,7 @@ void tied(SAMPLER::Synth &synth, Whole at) {
 void lifted(SAMPLER::Synth &synth, Whole at) {
   SAMPLER::Voice &voice = synth.voices[at];
   voice.held = false;
+  voice.region = SAMPLER::region(synth, synth.clips[voice.clip], false);
   CORE::ENVELOPE::lift(voice.loudness);
   CORE::ENVELOPE::lift(voice.contour);
 }

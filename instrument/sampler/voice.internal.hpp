@@ -9,6 +9,7 @@
 namespace SOUND::PLUGINS::SAMPLER {
 
 constexpr Whole STRIDE = 16;
+constexpr Whole ROOTS = 64;
 static_assert(POLYPHONY == CORE::VOICE::VOICES);
 
 struct Clip {
@@ -21,11 +22,22 @@ struct Region {
   Integer origin = 0;
   Integer sign = 1;
   Float length = 0;
+  Integer start = 0;
+  Integer end = 0;
+  Float fade = 0;
+  Whole walk = 0;
+  Flag wraps = false;
+};
+
+struct Blend {
+  Float near = 1;
+  Float far = 0;
 };
 
 struct Voice {
   Whole clip = 0;
   Float along = 0;
+  Flag turned = false;
   Float step = 0;
   Float level = 0;
   Flag held = false;
@@ -46,6 +58,7 @@ struct Synth {
   CORE::ENVELOPE::Envelope contour;
   CORE::MODULATOR::Lfo lfo;
   Float swing = 0;
+  Float roots[ROOTS + 1] = {};
   CORE::BLOCK::Stride stride;
   CORE::BLOCK::Meter meter;
 };
@@ -65,8 +78,10 @@ void steer(Synth &synth, Whole at);
 void land(Synth &synth, Whole row, Float value);
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
-auto region(const Synth &synth, const Clip &clip) -> Region;
+auto region(const Synth &synth, const Clip &clip, Flag sustained) -> Region;
 auto walk(Voice &voice) -> Flag;
+void prepare(Synth &synth);
+auto blend(const Synth &synth, const Region &region, Float along) -> Blend;
 auto read(const Synth &synth, const Voice &voice, Whole lane) -> Float;
 
 void render(

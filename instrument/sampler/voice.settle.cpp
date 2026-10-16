@@ -75,4 +75,5 @@ void SOUND::PLUGINS::SAMPLER::steer(Synth &synth, Whole at) {
   voice.level =
     CORE::ENVELOPE::weigh(note.velocity, rows[VELOCITY]) * rows[GAIN];
   note.level = voice.loudness.level;
+  voice.region = region(synth, synth.clips[voice.clip], voice.held);
 }
