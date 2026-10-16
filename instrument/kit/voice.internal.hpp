@@ -6,6 +6,12 @@
 
 namespace SOUND::PLUGINS::KIT {
 
+struct Pad {
+  Whole pitch;
+  Whole drum;
+  Whole part;
+};
+
 struct Kit {
   Whole rate = 0;
   Whole channels = 0;
@@ -25,6 +31,8 @@ struct Kit {
 auto drummed(Whole index) -> Whole;
 void settle(Kit &kit, Whole drum);
 void settle(Kit &kit);
+
+auto found(Whole pitch) -> const Pad *;
 
 void apply(Kit &kit, const AUDIO::PLUGIN::Event &event);
 
