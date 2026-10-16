@@ -5,6 +5,12 @@ void SOUND::PLUGINS::HAT::settle(Voice &voice) {
   CORE::PERCUSSION::settle(
     voice.hat, voice.rows[TUNE], voice.rows[CLOSED], voice.rows[OPEN],
     voice.rows[TONE], voice.rate);
+  const CORE::PERCUSSION::Setting setting = {
+    .pedal = voice.rows[PEDAL],
+    .noise = voice.rows[NOISE],
+    .metal = Whole(voice.rows[METAL]),
+    .touch = voice.rows[TOUCH]};
+  CORE::PERCUSSION::settle(voice.hat, setting, voice.rate);
 }
 
 void SOUND::PLUGINS::HAT::apply(
