@@ -33,6 +33,14 @@ constexpr Whole RELEASE2 = 25;
 constexpr Whole VELOCITY = 26;
 constexpr Whole GLIDE = 27;
 constexpr Whole VOLUME = 28;
-constexpr Whole PARAMETERS = 29;
+constexpr Whole UNISON = 29;
+constexpr Whole SPREAD = 30;
+constexpr Whole WIDTH = 31;
+constexpr Whole WARP = 32;
+constexpr Whole AMOUNT = 33;
+constexpr Whole MODE = 34;
+constexpr Whole TOUCH = 35;
+constexpr Whole PUSH = 36;
+constexpr Whole PARAMETERS = 37;
 
 }  // namespace SOUND::PLUGINS::WAVETABLE

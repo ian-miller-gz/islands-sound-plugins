@@ -5,10 +5,10 @@
 #include "../../../plugin.hpp"
 #include "../../core/table/table.hpp"
 #include "wavetable.indices.hpp"
+#include "wavetable.words.hpp"
 
 namespace SOUND::PLUGINS::WAVETABLE {
 
-constexpr Whole TABLES = 16;
 constexpr Whole FRAMES = 64;
 constexpr Float LAST = Float(FRAMES - 1);
 constexpr Float CENTS = 200;
@@ -26,21 +26,15 @@ constexpr Float GLIDING = 3;
 constexpr Float LOWEST = 20;
 constexpr Float HIGHEST = 20000;
 constexpr Whole LAYOUTS = TABLES - 1;
-constexpr Whole SHAPES = 5;
 constexpr Float SAW = 2;
 constexpr Float FORMANT = 9;
 constexpr Float OPENED = 8;
 constexpr Float SWEPT = 24;
-
-inline constexpr STRING::Hot NAMES[] = {
-  "Sine",  "Harmonic", "Saw",     "Square",  "Hollow", "Triangle",
-  "Pulse", "Organ",    "Octaves", "Formant", "Vowel",  "Comb",
-  "Sync",  "Prime",    "Scatter", "Resonant"};
-static_assert(std::size(NAMES) == TABLES);
-
-inline constexpr STRING::Hot WAVES[] = {"Sine",   "Triangle", "Saw",
-                                        "Square", "Sample",   "Random"};
-static_assert(std::size(WAVES) == SHAPES + 1);
+constexpr Float SINGLE = 1;
+constexpr Float STACK = 4;
+constexpr Float PAIR = 2;
+constexpr Float CHOICE = 3;
+constexpr Float REACH = 3;
 
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
@@ -71,7 +65,15 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Release2", "s", 0.5f, QUICKEST, LONGEST, 0, nullptr},
   {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
   {"Glide", "s", 0, 0, GLIDING, 0, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Unison", "", PAIR, SINGLE, STACK, STACKS, UNISONS},
+  {"Spread", "ct", 10, 0, BEATING, 0, nullptr},
+  {"Width", "", 0.5f, 0, 1, 0, nullptr},
+  {"Warp", "", 0, 0, CHOICE, CHOICES, WARPS},
+  {"Amount", "", 0, 0, 1, 0, nullptr},
+  {"Mode", "", 0, 0, CHOICE, CHOICES, MODES},
+  {"Touch", "oct", 1, 0, REACH, 0, nullptr},
+  {"Push", "", 8, -LAST, LAST, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
