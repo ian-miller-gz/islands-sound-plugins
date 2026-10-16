@@ -43,6 +43,7 @@ void lift(Module &module);
 auto spanned(const Float *rows, Whole rate) -> Countdown;
 auto step(Module &module) -> Float;
 void follow(Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame);
+void loop(Module &module);
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,

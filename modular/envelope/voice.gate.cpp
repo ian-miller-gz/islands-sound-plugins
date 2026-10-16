@@ -20,6 +20,22 @@ using Cross = void (*)(ENVELOPE::Module &);
 
 constexpr Cross CROSSED[CORE::BLOCK::CROSSINGS] = {still, rose, fell};
 
+constexpr Flag ENDED[CORE::ENVELOPE::STAGES] = {
+  true, false, false, true, false};
+
+auto never(const ENVELOPE::Module &) -> Flag { return false; }
+
+auto pressed(const ENVELOPE::Module &module) -> Flag {
+  return module.edge.high || module.allocator.notes[ENVELOPE::LEAD].held;
+}
+
+auto always(const ENVELOPE::Module &) -> Flag { return true; }
+
+using Rule = auto (*)(const ENVELOPE::Module &) -> Flag;
+
+constexpr Rule LOOPED[] = {never, pressed, always};
+static_assert(std::size(LOOPED) == std::size(ENVELOPE::LOOPS));
+
 }  // namespace
 
 void SOUND::PLUGINS::ENVELOPE::follow(
@@ -34,4 +50,13 @@ void SOUND::PLUGINS::ENVELOPE::follow(
   if (cv == module.cv) return;
   module.cv = cv;
   settle(module);
+}
+
+void SOUND::PLUGINS::ENVELOPE::loop(Module &module) {
+  const Whole stage = module.gate.stage;
+  if (stage >= CORE::ENVELOPE::STAGES || !::ENDED[stage]) return;
+  if (module.left.delay > 0 || module.left.hold > 0) return;
+  const Whole mode = Whole(module.rows[LOOP]);
+  if (mode < std::size(::LOOPED) && ::LOOPED[mode](module))
+    strike(module, module.velocity);
 }

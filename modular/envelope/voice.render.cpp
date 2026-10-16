@@ -15,6 +15,7 @@ void SOUND::PLUGINS::ENVELOPE::render(
     CORE::BLOCK::due(cursor, events, count, frame, applied);
     follow(module, lanes, frame);
     const Float level = step(module) * module.rows[DEPTH];
+    loop(module);
     for (Whole channel = 0; channel < module.channels; ++channel)
       CORE::BLOCK::lane(lanes, IN::GATE, channel, module.channels)[frame] =
         level;
