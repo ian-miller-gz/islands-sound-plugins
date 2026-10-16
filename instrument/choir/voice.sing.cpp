@@ -26,7 +26,8 @@ auto part(CHOIR::Choir &choir, CORE::VOICE::Note &note, CHOIR::Part &part)
   CHOIR::Stereo sum;
   Float loudest = 0;
   Flag alive = false;
-  for (CHOIR::Singer &singer : part.singers) {
+  for (Whole at = 0; at < choir.singers; ++at) {
+    CHOIR::Singer &singer = part.singers[at];
     const Float voice = ::sung(choir, singer, note.velocity);
     sum.left += voice * singer.pan.left;
     sum.right += voice * singer.pan.right;
@@ -49,5 +50,5 @@ auto SOUND::PLUGINS::CHOIR::sing(Choir &choir) -> Stereo {
     sum.left += voiced.left;
     sum.right += voiced.right;
   }
-  return {sum.left * BLEND, sum.right * BLEND};
+  return {sum.left * choir.blend, sum.right * choir.blend};
 }

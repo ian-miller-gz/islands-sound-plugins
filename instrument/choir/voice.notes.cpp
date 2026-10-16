@@ -9,11 +9,13 @@ using Change = void (*)(CHOIR::Choir &, CORE::VOICE::Note &, CHOIR::Part &);
 void kept(CHOIR::Choir &, CORE::VOICE::Note &, CHOIR::Part &) {}
 
 void struck(CHOIR::Choir &choir, CORE::VOICE::Note &note, CHOIR::Part &part) {
-  for (CHOIR::Singer &singer : part.singers) {
+  for (Whole at = 0; at < CHOIR::SEATS; ++at) {
+    CHOIR::Singer &singer = part.singers[at];
     const Float onset = CORE::MODULATOR::draw(choir.seed);
     singer.wait = Whole(CORE::BLOCK::magnitude(onset) * choir.scatter);
-    singer.pending = true;
+    singer.pending = at < choir.singers;
     CORE::MODULATOR::reset(singer.vibrato);
+    if (!singer.pending) CORE::ENVELOPE::choke(singer.gate);
   }
   CHOIR::tune(choir, note, part, true);
 }

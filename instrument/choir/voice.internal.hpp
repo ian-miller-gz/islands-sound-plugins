@@ -14,7 +14,6 @@ namespace SOUND::PLUGINS::CHOIR {
 constexpr Whole NOTES = 6;
 constexpr Whole CONTROL = 64;
 constexpr Float CENT = 100.0f;
-constexpr Float BLEND = 0.35355339f;
 
 struct Choir {
   Whole rate = 0;
@@ -25,6 +24,8 @@ struct Choir {
   Float pole = 0;
   Float sway = 0;
   Float scatter = 0;
+  Whole singers = SEATS;
+  Float blend = 0;
   CORE::BLOCK::Stride stride;
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
   CORE::OSCILLATOR::Table table;

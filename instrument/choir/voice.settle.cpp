@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#include <cmath>
+
 #include "voice.internal.hpp"
 
 namespace {
@@ -50,6 +52,8 @@ void SOUND::PLUGINS::CHOIR::settle(Choir &choir) {
   const Float *rows = choir.rows;
   choir.gain = rows[GAIN];
   choir.scatter = rows[SCATTER] * Float(choir.rate);
+  choir.singers = Whole(rows[SINGERS]);
+  choir.blend = ::FULL / std::sqrt(Float(choir.singers));
   place(choir);
   choir.pole = CORE::MODULATOR::pole(::GLIDING, choir.rate / CONTROL);
   allocate(choir);
