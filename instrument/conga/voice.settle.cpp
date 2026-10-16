@@ -12,9 +12,16 @@ constexpr CORE::PERCUSSION::Key KEYS[] = {
 }  // namespace
 
 void SOUND::PLUGINS::CONGA::settle(Voice &voice) {
-  CORE::PERCUSSION::settle(
-    voice.conga, voice.rows[TUNE], voice.rows[DECAY], voice.rows[BEND],
-    voice.rate);
+  const Float *rows = voice.rows;
+  const CORE::PERCUSSION::Head head = {
+    .tune = rows[TUNE],
+    .decay = rows[DECAY],
+    .bend = rows[BEND],
+    .drop = rows[DROP],
+    .slope = rows[SLOPE],
+    .tone = rows[TONE],
+    .curve = rows[CURVE]};
+  CORE::PERCUSSION::settle(voice.conga, head, voice.rate);
 }
 
 void SOUND::PLUGINS::CONGA::apply(

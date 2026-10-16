@@ -4,6 +4,16 @@
 
 namespace SOUND::PLUGINS::CORE::PERCUSSION {
 
+struct Head {
+  Float tune = 0;
+  Float decay = 0;
+  Float bend = 0;
+  Float drop = 0;
+  Float slope = 0;
+  Float tone = 0;
+  Float curve = 0;
+};
+
 struct Conga {
   Sweep sweep;
   ENVELOPE::Envelope snap;
@@ -16,9 +26,11 @@ struct Conga {
   Float bend = 0;
   Float slap = 0;
   Float velocity = 0;
+  Float curve = 0;
 };
 
 void settle(Conga &conga, Float tune, Float decay, Float bend, Whole rate);
+void settle(Conga &conga, const Head &head, Whole rate);
 void strike(Conga &conga, Whole height, Float velocity);
 auto tick(Conga &conga) -> Float;
 auto sounding(const Conga &conga) -> Flag;

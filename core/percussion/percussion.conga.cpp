@@ -13,6 +13,7 @@ constexpr Float CRISP = 1500.0f;
 constexpr Float SOFT = 0.75f;
 constexpr Float SLAP = 0.5f;
 constexpr Float ONE = 1.0f;
+constexpr Float FLAT = 0;
 
 auto slapped(Float velocity) -> Float {
   const Float over = (velocity - SOFT) / (ONE - SOFT);
@@ -23,19 +24,34 @@ auto slapped(Float velocity) -> Float {
 
 void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Conga &conga, Float tune, Float decay, Float bend, Whole rate) {
+  settle(
+    conga,
+    Head{
+      .tune = tune,
+      .decay = decay,
+      .bend = bend,
+      .drop = SWEEP,
+      .slope = FLAT,
+      .tone = CRISP},
+    rate);
+}
+
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
+  Conga &conga, const Head &head, Whole rate) {
   for (Whole height = 0; height < HEIGHT::HEIGHTS; ++height)
-    conga.bases[height] = turn(tune * RATIOS[height], rate);
-  conga.bend = bend * BEND;
-  settle(conga.sweep, decay, SWEEP, conga.bend, rate);
+    conga.bases[height] = turn(head.tune * RATIOS[height], rate);
+  conga.bend = head.bend * BEND;
+  conga.curve = head.curve;
+  settle(conga.sweep, head.decay, head.drop, conga.bend, head.slope, rate);
   conga.open = conga.sweep.body.damp;
-  conga.muted = fall(decay * MUTE, rate);
+  conga.muted = fall(head.decay * MUTE, rate);
   shape(conga.snap, SNAP, rate);
-  FILTER::settle(conga.crisp, FILTER::HIGH, CRISP, rate);
+  FILTER::settle(conga.crisp, FILTER::HIGH, head.tone, rate);
 }
 
 void SOUND::PLUGINS::CORE::PERCUSSION::strike(
   Conga &conga, Whole height, Float velocity) {
-  conga.velocity = struck(velocity);
+  conga.velocity = struck(velocity, conga.curve);
   conga.slap = ::slapped(conga.velocity);
   const Whole at = height < HEIGHT::HEIGHTS ? height : HEIGHT::MID;
   conga.sweep.depth = conga.bend * (ONE + conga.slap);
