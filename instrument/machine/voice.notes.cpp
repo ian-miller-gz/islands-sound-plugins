@@ -54,8 +54,10 @@ auto found(Whole pitch) -> const Pad * {
 }
 
 auto accented(const MACHINE::Machine &machine, Float velocity) -> Float {
-  return velocity >= ACCENTED ? FULL
-                              : FULL - machine.rows[MACHINE::ACCENT] * SOFTEN;
+  const Float curved =
+    CORE::PERCUSSION::struck(velocity, machine.rows[MACHINE::CURVE]);
+  const Float accent = machine.rows[MACHINE::ACCENT];
+  return velocity >= ACCENTED ? curved : curved * (FULL - accent * SOFTEN);
 }
 
 }  // namespace
