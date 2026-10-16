@@ -3,10 +3,6 @@
 #include "choir.hpp"
 #include "voice.seats.hpp"
 #include "../../core/block/block.hpp"
-#include "../../core/envelope/envelope.hpp"
-#include "../../core/line/line.hpp"
-#include "../../core/modulator/modulator.hpp"
-#include "../../core/reverb/reverb.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::CHOIR {
