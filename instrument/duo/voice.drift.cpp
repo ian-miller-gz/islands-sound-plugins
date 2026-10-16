@@ -7,7 +7,7 @@ using namespace SOUND::PLUGINS;
 constexpr Float CENT = 100;
 constexpr Float TRIMMED = 8;
 constexpr Float WANDERING = 2;
-constexpr CORE::MODULATOR::Seed SCATTER = 0x2545F491u;
+constexpr CORE::MODULATOR::Seed SALT = 0x2545F491u;
 
 }  // namespace
 
@@ -16,7 +16,7 @@ void SOUND::PLUGINS::DUO::seed(Synth &synth) {
   for (Whole part = 0; part < CORE::VOICE::PARTS; ++part)
     CORE::MODULATOR::seed(
       synth.drifts[part],
-      CORE::MODULATOR::SEED ^ (CORE::MODULATOR::Seed(part + 1) * ::SCATTER));
+      CORE::MODULATOR::SEED ^ (CORE::MODULATOR::Seed(part + 1) * ::SALT));
 }
 
 void SOUND::PLUGINS::DUO::wander(Synth &synth) {
