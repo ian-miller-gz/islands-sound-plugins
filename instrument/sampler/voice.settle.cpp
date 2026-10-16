@@ -53,7 +53,21 @@ void swing(SAMPLER::Synth &synth) {
   CORE::MODULATOR::settle(synth.lfo, synth.pace);
 }
 
+auto semitones(const Float *rows, Float key) -> Float {
+  return rows[SAMPLER::TRACK] * (key - rows[SAMPLER::ROOT]) +
+         rows[SAMPLER::COARSE] + rows[SAMPLER::TUNE] / CENT;
+}
+
+auto stepped(const SAMPLER::Synth &synth, Whole clip, Float semis) -> Float {
+  return synth.clips[clip].ratio * CORE::PHASE::ratio(CENT * semis);
+}
+
 }  // namespace
+
+auto SOUND::PLUGINS::SAMPLER::base(
+  const Synth &synth, const Voice &voice, Float key) -> Float {
+  return ::stepped(synth, voice.clip, ::semitones(synth.rows, key));
+}
 
 void SOUND::PLUGINS::SAMPLER::settle(Synth &synth) {
   ::allot(synth);
@@ -67,11 +81,9 @@ void SOUND::PLUGINS::SAMPLER::steer(Synth &synth, Whole at) {
   const Float *rows = synth.rows;
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
   const Float contour = CORE::ENVELOPE::tick(voice.contour, synth.contour);
-  const Float semis = rows[TRACK] * (key - rows[ROOT]) + rows[COARSE] +
-                      rows[TUNE] / ::CENT + rows[DROP] * contour +
-                      rows[VIBRATO] * synth.swing;
-  voice.step =
-    synth.clips[voice.clip].ratio * CORE::PHASE::ratio(::CENT * semis);
+  const Float semis =
+    ::semitones(rows, key) + rows[DROP] * contour + rows[VIBRATO] * synth.swing;
+  voice.step = ::stepped(synth, voice.clip, semis);
   voice.level =
     CORE::ENVELOPE::weigh(note.velocity, rows[VELOCITY]) * rows[GAIN];
   note.level = voice.loudness.level;

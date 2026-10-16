@@ -4,6 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/modulator/modulator.hpp"
+#include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::SAMPLER {
@@ -41,9 +42,11 @@ struct Voice {
   Float step = 0;
   Float level = 0;
   Flag held = false;
+  Whole reader = 0;
   Region region;
   CORE::ENVELOPE::Gate loudness;
   CORE::ENVELOPE::Gate contour;
+  Vector<CORE::SHAPER::Oversampler> downs;
 };
 
 struct Synth {
@@ -75,6 +78,7 @@ auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
 
 void settle(Synth &synth);
 void steer(Synth &synth, Whole at);
+auto base(const Synth &synth, const Voice &voice, Float key) -> Float;
 void land(Synth &synth, Whole row, Float value);
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
@@ -82,7 +86,8 @@ auto region(const Synth &synth, const Clip &clip, Flag sustained) -> Region;
 auto walk(Voice &voice) -> Flag;
 void prepare(Synth &synth);
 auto blend(const Synth &synth, const Region &region, Float along) -> Blend;
-auto read(const Synth &synth, const Voice &voice, Whole lane) -> Float;
+auto reader(const Synth &synth, Float step) -> Whole;
+auto read(const Synth &synth, Voice &voice, Whole lane) -> Float;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,

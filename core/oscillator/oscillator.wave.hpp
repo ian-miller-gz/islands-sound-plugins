@@ -26,6 +26,8 @@ void settle(Oscillator &oscillator, Float hertz, Float width, Whole rate);
 void reset(Oscillator &oscillator, Wheel phase);
 auto tick(Oscillator &oscillator, Whole wave) -> Float;
 
+auto cubic(const Float *points, Float fraction) -> Float;
+
 auto blep(Wheel phase, Wheel step) -> Float;
 auto blamp(Wheel phase, Wheel step) -> Float;
 
