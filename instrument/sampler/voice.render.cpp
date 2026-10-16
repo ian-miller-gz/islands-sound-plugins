@@ -5,12 +5,14 @@ namespace {
 using namespace SOUND::PLUGINS;
 
 void stride(SAMPLER::Synth &synth) {
+  synth.swing = CORE::MODULATOR::tick(synth.lfo);
   for (Whole at = 0; at < SAMPLER::POLYPHONY; ++at)
     if (synth.allocator.notes[at].sounding) SAMPLER::steer(synth, at);
 }
 
 void end(SAMPLER::Synth &synth, Whole at) {
   CORE::ENVELOPE::choke(synth.voices[at].loudness);
+  CORE::ENVELOPE::choke(synth.voices[at].contour);
   synth.allocator.notes[at].sounding = false;
   synth.allocator.notes[at].level = 0;
 }

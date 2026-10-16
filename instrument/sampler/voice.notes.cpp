@@ -16,6 +16,7 @@ void struck(SAMPLER::Synth &synth, Whole at) {
   voice.along = 0;
   voice.held = true;
   CORE::ENVELOPE::strike(voice.loudness, synth.loudness, note.velocity);
+  CORE::ENVELOPE::strike(voice.contour, synth.contour, note.velocity);
   SAMPLER::steer(synth, at);
 }
 
@@ -24,12 +25,14 @@ void tied(SAMPLER::Synth &synth, Whole at) {
   const Float velocity = synth.allocator.notes[at].velocity;
   voice.held = true;
   CORE::ENVELOPE::tie(voice.loudness, synth.loudness, velocity);
+  CORE::ENVELOPE::tie(voice.contour, synth.contour, velocity);
 }
 
 void lifted(SAMPLER::Synth &synth, Whole at) {
   SAMPLER::Voice &voice = synth.voices[at];
   voice.held = false;
   CORE::ENVELOPE::lift(voice.loudness);
+  CORE::ENVELOPE::lift(voice.contour);
 }
 
 using Visit = void (*)(SAMPLER::Synth &, Whole);

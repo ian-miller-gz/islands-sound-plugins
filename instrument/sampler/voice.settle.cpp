@@ -40,6 +40,17 @@ void shape(SAMPLER::Synth &synth) {
     rows[SAMPLER::RELEASE]);
   loudness.curve = Whole(rows[SAMPLER::CURVE]);
   CORE::ENVELOPE::shape(loudness, synth.rate);
+  CORE::ENVELOPE::Envelope &contour = synth.contour;
+  contour = CORE::ENVELOPE::ADSR::create(
+    rows[SAMPLER::SWEEP], rows[SAMPLER::CLOSE], 0, rows[SAMPLER::CLOSE]);
+  contour.curve = CORE::ENVELOPE::EXPONENTIAL;
+  CORE::ENVELOPE::shape(contour, synth.pace);
+}
+
+void swing(SAMPLER::Synth &synth) {
+  synth.lfo.wave = CORE::MODULATOR::SINE;
+  synth.lfo.hertz = synth.rows[SAMPLER::SPEED];
+  CORE::MODULATOR::settle(synth.lfo, synth.pace);
 }
 
 }  // namespace
@@ -47,6 +58,7 @@ void shape(SAMPLER::Synth &synth) {
 void SOUND::PLUGINS::SAMPLER::settle(Synth &synth) {
   ::allot(synth);
   ::shape(synth);
+  ::swing(synth);
 }
 
 void SOUND::PLUGINS::SAMPLER::steer(Synth &synth, Whole at) {
@@ -54,8 +66,10 @@ void SOUND::PLUGINS::SAMPLER::steer(Synth &synth, Whole at) {
   CORE::VOICE::Note &note = synth.allocator.notes[at];
   const Float *rows = synth.rows;
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
-  const Float semis =
-    rows[TRACK] * (key - rows[ROOT]) + rows[COARSE] + rows[TUNE] / ::CENT;
+  const Float contour = CORE::ENVELOPE::tick(voice.contour, synth.contour);
+  const Float semis = rows[TRACK] * (key - rows[ROOT]) + rows[COARSE] +
+                      rows[TUNE] / ::CENT + rows[DROP] * contour +
+                      rows[VIBRATO] * synth.swing;
   voice.step =
     synth.clips[voice.clip].ratio * CORE::PHASE::ratio(::CENT * semis);
   voice.level =

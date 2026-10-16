@@ -3,6 +3,7 @@
 #include "sampler.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
+#include "../../core/modulator/modulator.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::SAMPLER {
@@ -30,6 +31,7 @@ struct Voice {
   Flag held = false;
   Region region;
   CORE::ENVELOPE::Gate loudness;
+  CORE::ENVELOPE::Gate contour;
 };
 
 struct Synth {
@@ -41,6 +43,9 @@ struct Synth {
   CORE::VOICE::Allocator allocator = {.steal = CORE::VOICE::QUIETEST};
   Voice voices[POLYPHONY];
   CORE::ENVELOPE::Envelope loudness;
+  CORE::ENVELOPE::Envelope contour;
+  CORE::MODULATOR::Lfo lfo;
+  Float swing = 0;
   CORE::BLOCK::Stride stride;
   CORE::BLOCK::Meter meter;
 };
