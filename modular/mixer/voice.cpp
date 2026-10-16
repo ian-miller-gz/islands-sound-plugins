@@ -35,6 +35,7 @@ const AUDIO::PLUGIN::Plug surface = {
      {AUDIO::PLUGIN::Port::AUDIO, "2"},
      {AUDIO::PLUGIN::Port::AUDIO, "3"},
      {AUDIO::PLUGIN::Port::AUDIO, "4"},
+     {AUDIO::PLUGIN::Port::AUDIO, "cv"},
      {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
