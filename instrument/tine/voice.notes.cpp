@@ -15,7 +15,8 @@ void wake(TINE::Voice &voice) {
 
 void struck(TINE::Synth &synth, Whole at) {
   TINE::Voice &voice = synth.voices[at];
-  const Float velocity = synth.allocator.notes[at].velocity;
+  const Float velocity = TINE::curve(synth, synth.allocator.notes[at].velocity);
+  voice.velocity = velocity;
   ::wake(voice);
   TINE::shape(synth, at);
   TINE::tune(synth, at);

@@ -22,6 +22,7 @@ struct Voice {
   CORE::ENVELOPE::Gate ring;
   CORE::SHAPER::Blocker blocker;
   Float chime = 0;
+  Float velocity = 0;
 };
 
 struct Pair {
@@ -50,6 +51,8 @@ void tune(Synth &synth, Whole at);
 void shape(Synth &synth, Whole at);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
+
+auto curve(const Synth &synth, Float velocity) -> Float;
 
 auto pick(const Synth &synth, Float displacement) -> Float;
 auto sound(Synth &synth) -> Pair;
