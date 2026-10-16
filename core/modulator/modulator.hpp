@@ -36,8 +36,11 @@ struct Lfo {
 struct Slew {
   Float rise = 0;
   Float fall = 0;
+  Float shape = 0;
   Float up = FULL;
   Float down = FULL;
+  Float lift = FULL;
+  Float drop = FULL;
   Float value = 0;
 };
 
