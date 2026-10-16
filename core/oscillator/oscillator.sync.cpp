@@ -15,14 +15,13 @@ auto jump(const OSCILLATOR::Oscillator &slave, OSCILLATOR::Wheel at, Whole wave)
 
 }  // namespace
 
-auto SOUND::PLUGINS::CORE::OSCILLATOR::tick(
-  Sync &sync, const Oscillator &master, Whole wave) -> Float {
+auto SOUND::PLUGINS::CORE::OSCILLATOR::tick(Sync &sync, Float since, Whole wave)
+  -> Float {
   Oscillator &slave = sync.slave;
   Float value = shaped(slave, wave) + sync.pending;
   sync.pending = 0;
   slave.phase += slave.step;
-  if (master.step == 0 || master.phase >= master.step) return value;
-  const Float since = Float(master.phase) / Float(master.step);
+  if (since < 0) return value;
   const Float until = UNIT - since;
   const Wheel at = slave.phase - Wheel(Float(slave.step) * since);
   const Float step = ::jump(slave, at, wave);
@@ -31,4 +30,11 @@ auto SOUND::PLUGINS::CORE::OSCILLATOR::tick(
   sync.pending = -(step - natural) * HALF * until * until;
   slave.phase = Wheel(Float(slave.step) * since);
   return value;
+}
+
+auto SOUND::PLUGINS::CORE::OSCILLATOR::tick(
+  Sync &sync, const Oscillator &master, Whole wave) -> Float {
+  const Flag wrapped = master.step != 0 && master.phase < master.step;
+  if (!wrapped) return tick(sync, NONE, wave);
+  return tick(sync, Float(master.phase) / Float(master.step), wave);
 }

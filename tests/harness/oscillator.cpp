@@ -3,6 +3,10 @@
 
 #include "../../core/oscillator/oscillator.hpp"
 
+namespace SOUND::PLUGINS::HARNESS::OSCILLATOR {
+void synced();
+}  // namespace SOUND::PLUGINS::HARNESS::OSCILLATOR
+
 namespace {
 using namespace SOUND::PLUGINS;
 
@@ -44,6 +48,7 @@ namespace SOUND::PLUGINS::HARNESS::OSCILLATOR {
 void run() {
   for (const Float fraction : ::FRACTIONS) ::step(fraction);
   ::blip();
+  synced();
 }
 
 }  // namespace SOUND::PLUGINS::HARNESS::OSCILLATOR

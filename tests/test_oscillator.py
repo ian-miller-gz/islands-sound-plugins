@@ -30,3 +30,16 @@ def test_a_step_at_the_coming_sample_end_reads_its_midpoint_next(oscillator):
 def test_a_blip_keeps_its_area_and_leaves_nothing_behind(oscillator):
   assert oscillator['sum'] == pytest.approx([WIDTH])
   assert oscillator['blip'][-1] == pytest.approx(0)
+
+
+def test_a_sync_with_no_edge_ticks_as_the_free_oscillator(oscillator):
+  assert oscillator['plain'] == pytest.approx([0, 0, 0], abs=1e-6)
+
+
+def test_the_master_driven_sync_is_the_edge_driven_one_at_its_crossing(oscillator):
+  assert oscillator['driven'] == pytest.approx([0, 0, 0], abs=1e-6)
+
+
+def test_an_edge_resets_the_slave_at_its_sub_sample_place(oscillator):
+  assert oscillator['placed'] == pytest.approx([1, 1, 1], rel=1e-3)
+

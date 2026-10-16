@@ -42,11 +42,14 @@ auto shaped(Wheel phase, Wheel edge, Whole wave) -> Float;
 auto tick(Oscillator &oscillator, Whole wave) -> Float;
 }  // namespace NAIVE
 
+constexpr Float NONE = -1.0f;
+
 struct Sync {
   Oscillator slave;
   Float pending = 0;
 };
 
+auto tick(Sync &sync, Float since, Whole wave) -> Float;
 auto tick(Sync &sync, const Oscillator &master, Whole wave) -> Float;
 
 }  // namespace SOUND::PLUGINS::CORE::OSCILLATOR
