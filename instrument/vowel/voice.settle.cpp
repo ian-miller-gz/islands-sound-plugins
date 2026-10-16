@@ -12,6 +12,7 @@ void voice(const VOWEL::Singer &singer, VOWEL::Throat &throat) {
   throat.vibrato.depth = rows[VOWEL::DEPTH];
   throat.vibrato.fade = rows[VOWEL::DELAY];
   CORE::MODULATOR::settle(throat.vibrato, singer.pace);
+  throat.pan = CORE::STEREO::pan(throat.place * rows[VOWEL::WIDTH]);
   CORE::MODULATOR::settle(throat.wobble, VOWEL::WOBBLE::TIME, singer.pace);
   CORE::MODULATOR::settle(throat.jitter, VOWEL::JITTER::TIME, singer.pace);
 }
@@ -24,6 +25,7 @@ void SOUND::PLUGINS::VOWEL::seat(Singer &singer, Whole at) {
     CORE::NOISE::SEED ^ (CORE::NOISE::Register(at + 1) * SCATTER);
   CORE::GLOTTIS::seed(throat.source, state);
   CORE::MODULATOR::Seed seed = state * SCATTER;
+  throat.place = CORE::MODULATOR::draw(seed);
   CORE::MODULATOR::seed(throat.wobble, seed);
   CORE::MODULATOR::seed(throat.jitter, seed * SCATTER);
 }

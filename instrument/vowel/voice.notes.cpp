@@ -53,12 +53,14 @@ void SOUND::PLUGINS::VOWEL::apply(
   settle(singer);
 }
 
-auto SOUND::PLUGINS::VOWEL::sing(Singer &singer) -> Float {
+auto SOUND::PLUGINS::VOWEL::sing(Singer &singer) -> CORE::STEREO::Pair {
   if (CORE::BLOCK::due(singer.stride, STRIDE)) steer(singer);
-  Float sum = 0;
+  CORE::STEREO::Pair sum;
   for (Whole at = 0; at < THROATS; ++at) {
     CORE::VOICE::Note &note = singer.allocator.notes[at];
-    if (note.sounding) sum += ::sung(singer, note, singer.throats[at]);
+    Throat &throat = singer.throats[at];
+    if (note.sounding)
+      CORE::STEREO::add(sum, ::sung(singer, note, throat), throat.pan);
   }
   return sum;
 }

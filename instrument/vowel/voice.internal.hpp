@@ -4,6 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/modulator/modulator.hpp"
+#include "../../core/stereo/stereo.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::VOWEL {
@@ -33,6 +34,8 @@ struct Throat {
   CORE::MODULATOR::Drift wobble;
   CORE::MODULATOR::Drift jitter;
   CORE::ENVELOPE::Gate gate;
+  Float place = 0;
+  CORE::STEREO::Pair pan;
 };
 
 struct Singer {
@@ -64,7 +67,7 @@ void apply(Singer &singer, const AUDIO::PLUGIN::Event &event);
 void aim(Singer &singer);
 void steer(Singer &singer);
 void steer(Singer &singer, Whole at, Flag struck);
-auto sing(Singer &singer) -> Float;
+auto sing(Singer &singer) -> CORE::STEREO::Pair;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
