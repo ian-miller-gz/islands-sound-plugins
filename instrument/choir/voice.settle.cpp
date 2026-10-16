@@ -15,15 +15,11 @@ constexpr Float GLIDING = 0.02f;
 constexpr Float WOBBLE = 0.4f;
 constexpr Float JITTER = 0.01f;
 
-auto panned(Float pan) -> CHOIR::Stereo {
-  return {pan > 0 ? FULL - pan : FULL, pan < 0 ? FULL + pan : FULL};
-}
-
 void seat(const CHOIR::Choir &choir, CHOIR::Singer &singer, Float sex) {
   const Float *rows = choir.rows;
   const Float fan = singer.seat.shift * rows[CHOIR::SPREAD] * ::FAN;
   singer.shift = sex * CORE::PHASE::ratio(fan);
-  singer.pan = ::panned(singer.seat.pan * ::WIDTH);
+  singer.pan = CORE::STEREO::pan(singer.seat.pan * ::WIDTH);
   CORE::GLOTTIS::settle(
     singer.source, rows[CHOIR::TENSION], rows[CHOIR::BREATH], choir.rate);
   const Float pace = FULL + singer.seat.pace * ::PACE;

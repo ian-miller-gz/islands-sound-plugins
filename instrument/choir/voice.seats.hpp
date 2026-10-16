@@ -5,13 +5,14 @@
 #include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/reverb/reverb.hpp"
+#include "../../core/stereo/stereo.hpp"
 
 namespace SOUND::PLUGINS::CHOIR {
 
 constexpr Whole TAPS = 3;
 constexpr Whole SIDES = CORE::REVERB::SIDES;
 
-using Stereo = CORE::REVERB::Stereo;
+using Stereo = CORE::STEREO::Pair;
 
 struct Seat {
   Float detune = 0;

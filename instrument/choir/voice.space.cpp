@@ -53,6 +53,7 @@ auto SOUND::PLUGINS::CHOIR::spread(Choir &choir, Stereo dry) -> Stereo {
     ::side(ensemble.sides[1], dry.right, swings, ::SIGNS[1])};
   const Stereo sung = ::blend(dry, wet, ensemble.mix);
   const Float mid = (sung.left + sung.right) * ::HALF;
-  const Stereo room = CORE::REVERB::tick(choir.room.network, mid);
+  const CORE::REVERB::Stereo tail = CORE::REVERB::tick(choir.room.network, mid);
+  const Stereo room = {tail.left, tail.right};
   return ::blend(sung, room, choir.room.mix);
 }

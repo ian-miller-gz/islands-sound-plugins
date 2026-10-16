@@ -29,8 +29,7 @@ auto part(CHOIR::Choir &choir, CORE::VOICE::Note &note, CHOIR::Part &part)
   for (Whole at = 0; at < choir.singers; ++at) {
     CHOIR::Singer &singer = part.singers[at];
     const Float voice = ::sung(choir, singer, note.velocity);
-    sum.left += voice * singer.pan.left;
-    sum.right += voice * singer.pan.right;
+    CORE::STEREO::add(sum, voice, singer.pan);
     alive = alive || singer.pending || CORE::ENVELOPE::sounding(singer.gate);
     if (singer.gate.level > loudest) loudest = singer.gate.level;
   }
