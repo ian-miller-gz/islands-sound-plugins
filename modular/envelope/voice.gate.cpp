@@ -29,4 +29,9 @@ void SOUND::PLUGINS::ENVELOPE::follow(
     CORE::BLOCK::lane(lanes, IN::GATE, ::FIRST, channels)[frame];
   const Whole crossing = CORE::BLOCK::crossed(module.edge, gate);
   if (crossing < CORE::BLOCK::CROSSINGS) ::CROSSED[crossing](module);
+  if (!CORE::BLOCK::due(module.stride, STRIDE)) return;
+  const Float cv = CORE::BLOCK::lane(lanes, IN::CV, ::FIRST, channels)[frame];
+  if (cv == module.cv) return;
+  module.cv = cv;
+  settle(module);
 }

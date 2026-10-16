@@ -11,6 +11,7 @@ static_assert(EXPONENTIAL == CORE::ENVELOPE::EXPONENTIAL);
 static_assert(RESUME == CORE::ENVELOPE::RESUME);
 
 constexpr Whole LEAD = 0;
+constexpr Whole STRIDE = 16;
 
 struct Countdown {
   Whole delay = 0;
@@ -22,12 +23,14 @@ struct Module {
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
   Float velocity = CORE::ENVELOPE::FULL;
+  Float cv = 0;
   Countdown spans;
   Countdown left;
   CORE::VOICE::Allocator allocator;
   CORE::ENVELOPE::Envelope envelope;
   CORE::ENVELOPE::Gate gate;
   CORE::BLOCK::Edge edge;
+  CORE::BLOCK::Stride stride;
   CORE::BLOCK::Meter meter;
 };
 

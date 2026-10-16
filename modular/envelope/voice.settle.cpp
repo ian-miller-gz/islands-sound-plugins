@@ -25,6 +25,21 @@ using Change = void (*)(ENVELOPE::Module &, const CORE::VOICE::Note &);
 
 constexpr Change CHANGED[CHANGES] = {kept, struck, tied, lifted};
 
+constexpr Whole TIMES[] = {
+  ENVELOPE::ATTACK, ENVELOPE::DECAY, ENVELOPE::RELEASE, ENVELOPE::DELAY,
+  ENVELOPE::HOLD};
+
+void stretch(const ENVELOPE::Module &module, Float *timed) {
+  const Float *rows = module.rows;
+  const Float octaves = -rows[ENVELOPE::TIME];
+  for (Whole row = 0; row < ENVELOPE::PARAMETERS; ++row) timed[row] = rows[row];
+  for (const Whole row : TIMES) {
+    const CORE::TABLE::Row &described = ENVELOPE::ROWS[row];
+    timed[row] = CORE::BLOCK::scaled(
+      rows[row], module.cv, octaves, described.least, described.most);
+  }
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::ENVELOPE::seat(Module &module) {
@@ -37,9 +52,11 @@ void SOUND::PLUGINS::ENVELOPE::seat(Module &module) {
 }
 
 void SOUND::PLUGINS::ENVELOPE::settle(Module &module) {
-  module.envelope = shaped(module.rows);
+  Float timed[PARAMETERS] = {};
+  ::stretch(module, timed);
+  module.envelope = shaped(timed);
   CORE::ENVELOPE::shape(module.envelope, module.rate);
-  module.spans = spanned(module.rows, module.rate);
+  module.spans = spanned(timed, module.rate);
 }
 
 void SOUND::PLUGINS::ENVELOPE::apply(
