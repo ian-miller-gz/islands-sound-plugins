@@ -1,14 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-#include <cmath>
-
 #include "voice.internal.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
-constexpr Float DRIVE = 1;
 constexpr Float LEVEL = 0.3f;
 constexpr Float FULL = 1;
 
@@ -22,34 +18,23 @@ constexpr Source SOURCES[] = {
   {WAVETABLE::TABLE2, WAVETABLE::POSITION2}};
 static_assert(std::size(SOURCES) == WAVETABLE::SOURCES);
 
-void tune(
-  WAVETABLE::Synth &synth, WAVETABLE::Voice &voice, Float pitch, Float key,
-  Float contour) {
-  const Float *rows = synth.rows;
-  const Float second =
-    pitch + rows[WAVETABLE::INTERVAL] + rows[WAVETABLE::DETUNE] / CENT;
-  const Float pitches[] = {pitch, second};
-  for (Whole at = 0; at < WAVETABLE::SOURCES; ++at)
-    CORE::OSCILLATOR::settle(
-      voice.oscillators[at], CORE::PHASE::hertz(pitches[at]),
-      CORE::OSCILLATOR::SQUARE, synth.rate);
-  Float octaves =
-    rows[WAVETABLE::KEYBOARD] * (key - WAVETABLE::REFERENCE) / OCTAVE;
-  octaves += rows[WAVETABLE::ENVELOPE] * contour;
-  CORE::FILTER::settle(
-    voice.ladder, rows[WAVETABLE::CUTOFF] * std::exp2(octaves),
-    rows[WAVETABLE::RESONANCE], DRIVE, synth.rate);
-}
-
 auto table(const WAVETABLE::Synth &synth, Whole at)
   -> const CORE::OSCILLATOR::Table & {
   const Whole layout = Whole(synth.rows[::SOURCES[at].table]);
   return synth.tables[layout < WAVETABLE::TABLES ? layout : 0];
 }
 
-void choose(WAVETABLE::Synth &synth, WAVETABLE::Voice &voice) {
+void tune(WAVETABLE::Synth &synth, WAVETABLE::Voice &voice, Float pitch) {
+  const Float *rows = synth.rows;
+  const Float second =
+    pitch + rows[WAVETABLE::INTERVAL] + rows[WAVETABLE::DETUNE] / CENT;
+  const Float pitches[] = {pitch, second};
   for (Whole at = 0; at < WAVETABLE::SOURCES; ++at) {
-    const Float step = CORE::PHASE::fraction(voice.oscillators[at].step);
+    CORE::OSCILLATOR::Oscillator &oscillator = voice.oscillators[at];
+    CORE::OSCILLATOR::settle(
+      oscillator, CORE::PHASE::hertz(pitches[at]), CORE::OSCILLATOR::SQUARE,
+      synth.rate);
+    const Float step = CORE::PHASE::fraction(oscillator.step);
     voice.levels[at] = CORE::OSCILLATOR::level(::table(synth, at), step);
   }
 }
@@ -73,11 +58,11 @@ auto play(WAVETABLE::Synth &synth, Whole at, Float lfo) -> Float {
   const Float contour = CORE::ENVELOPE::tick(voice.contour, synth.contour);
   const Float loud = CORE::ENVELOPE::tick(voice.door, synth.door);
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
-  const Float pitch = key + note.cents / CENT + synth.tune +
-                      rows[WAVETABLE::BEND] + rows[WAVETABLE::VIBRATO] * lfo;
   if (CORE::BLOCK::due(voice.stride, WAVETABLE::STRIDE)) {
-    ::tune(synth, voice, pitch, key, contour);
-    ::choose(synth, voice);
+    const Float pitch = key + note.cents / CENT + synth.tune +
+                        rows[WAVETABLE::BEND] + rows[WAVETABLE::VIBRATO] * lfo;
+    ::tune(synth, voice, pitch);
+    WAVETABLE::settle(synth, voice, note, key, contour);
   }
   const Float shift =
     rows[WAVETABLE::SWEEP] * contour + rows[WAVETABLE::SCAN] * lfo;
@@ -85,7 +70,7 @@ auto play(WAVETABLE::Synth &synth, Whole at, Float lfo) -> Float {
   const Float first = ::take(synth, voice, 0, shift);
   const Float second = ::take(synth, voice, 1, shift);
   const Float mixed = LEVEL * ((FULL - mix) * first + mix * second);
-  const Float out = CORE::FILTER::tick(voice.ladder, mixed) * loud;
+  const Float out = WAVETABLE::filter(synth, voice, mixed) * loud;
   if (!CORE::ENVELOPE::sounding(voice.door)) note.sounding = false;
   return out;
 }

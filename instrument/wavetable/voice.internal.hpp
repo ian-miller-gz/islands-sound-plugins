@@ -23,6 +23,7 @@ struct Voice {
   CORE::OSCILLATOR::Oscillator oscillators[SOURCES];
   Whole levels[SOURCES] = {};
   CORE::FILTER::Ladder ladder;
+  CORE::FILTER::Variable variable;
   CORE::ENVELOPE::Gate contour;
   CORE::ENVELOPE::Gate door;
   CORE::BLOCK::Stride stride;
@@ -50,6 +51,11 @@ void build(CORE::OSCILLATOR::Table &table, Whole layout);
 void settle(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
+
+void settle(
+  const Synth &synth, Voice &voice, const CORE::VOICE::Note &note, Float key,
+  Float contour);
+auto filter(const Synth &synth, Voice &voice, Float in) -> Float;
 
 auto sound(Synth &synth) -> Float;
 
