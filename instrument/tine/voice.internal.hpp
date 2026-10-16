@@ -8,6 +8,7 @@
 #include "../../core/noise/noise.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/shaper/shaper.hpp"
+#include "../../core/stereo/stereo.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::TINE {
@@ -26,16 +27,11 @@ struct Voice {
   CORE::NOISE::Burst hammer;
   CORE::NOISE::Burst damper;
   CORE::SHAPER::Blocker blocker;
+  CORE::STEREO::Pair sides;
   Float chime = 0;
   Float velocity = 0;
   Float taper = 1;
   Float hertz = 0;
-};
-
-struct Pair {
-  Float left = 0;
-  Float right = 0;
-  Float whole = 0;
 };
 
 struct Synth {
@@ -64,7 +60,7 @@ void touch(Synth &synth, Whole at);
 void seed(Synth &synth);
 
 auto pick(const Synth &synth, Float displacement) -> Float;
-auto sound(Synth &synth) -> Pair;
+auto sound(Synth &synth) -> CORE::STEREO::Pair;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,

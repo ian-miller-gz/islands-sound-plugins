@@ -49,15 +49,15 @@ auto SOUND::PLUGINS::TINE::pick(const Synth &synth, Float displacement)
   return (CORE::SHAPER::soft(driven) - CORE::SHAPER::soft(bias)) / synth.drive;
 }
 
-auto SOUND::PLUGINS::TINE::sound(Synth &synth) -> Pair {
-  Float sum = 0;
-  for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at);
-  sum *= MIX;
+auto SOUND::PLUGINS::TINE::sound(Synth &synth) -> CORE::STEREO::Pair {
+  CORE::STEREO::Pair sum;
+  for (Whole at = 0; at < VOICES; ++at)
+    CORE::STEREO::add(sum, MIX * ::play(synth, at), synth.voices[at].sides);
   const Float *rows = synth.rows;
   const Float swing = CORE::MODULATOR::tick(synth.tremolo);
   const Float depth = HALF * rows[DEPTH];
   const Float mirrored = (FULL - TWICE * rows[STEREO]) * swing;
-  const Float left = sum * (FULL - depth * (FULL + swing));
-  const Float right = sum * (FULL - depth * (FULL + mirrored));
-  return {left, right, HALF * (left + right)};
+  const Float left = sum.left * (FULL - depth * (FULL + swing));
+  const Float right = sum.right * (FULL - depth * (FULL + mirrored));
+  return {left, right};
 }

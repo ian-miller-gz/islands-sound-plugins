@@ -47,6 +47,8 @@ void SOUND::PLUGINS::TINE::touch(Synth &synth, Whole at) {
   voice.taper = ::taper(synth, key);
   ::darken(synth, voice);
   ::knock(synth, voice);
+  const Float place = CORE::STEREO::place(key, synth.rows[WIDTH]);
+  voice.sides = CORE::STEREO::pan(place);
 }
 
 void SOUND::PLUGINS::TINE::seed(Synth &synth) {
