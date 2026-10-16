@@ -24,5 +24,8 @@ void SOUND::PLUGINS::PERCUSSIVE::apply(
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
   const Whole slot = CORE::PERCUSSION::keyed(::KEYS, event.index, SLOTS);
-  if (slot < SLOTS) CORE::PERCUSSION::strike(machine.pads[slot], event.value);
+  if (slot >= SLOTS) return;
+  const Float velocity =
+    CORE::PERCUSSION::struck(event.value, machine.rows[CURVE]);
+  CORE::PERCUSSION::strike(machine.pads[slot], velocity);
 }
