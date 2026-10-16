@@ -12,9 +12,17 @@ constexpr CORE::PERCUSSION::Key KEYS[] = {
 }  // namespace
 
 void SOUND::PLUGINS::CYMBAL::settle(Voice &voice) {
-  CORE::PERCUSSION::settle(
-    voice.cymbal, voice.rows[TUNE], voice.rows[DECAY], voice.rows[TONE],
-    voice.rows[SPLASH], voice.rate);
+  const Float *rows = voice.rows;
+  const CORE::PERCUSSION::Bronze bronze = {
+    .tune = rows[TUNE],
+    .decay = rows[DECAY],
+    .tone = rows[TONE],
+    .splash = rows[SPLASH],
+    .edge = rows[EDGE],
+    .noise = rows[NOISE],
+    .curve = rows[CURVE],
+    .touch = rows[TOUCH]};
+  CORE::PERCUSSION::settle(voice.cymbal, bronze, voice.rate);
 }
 
 void SOUND::PLUGINS::CYMBAL::apply(
