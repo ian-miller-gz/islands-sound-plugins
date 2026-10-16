@@ -21,6 +21,10 @@ struct Box {
   CORE::PERCUSSION::Snare snare;
   CORE::PERCUSSION::Hat hat;
   CORE::PERCUSSION::Cymbal cymbal;
+  CORE::PERCUSSION::Tom tom;
+  CORE::PERCUSSION::Clap clap;
+  CORE::PERCUSSION::Clave rim;
+  CORE::PERCUSSION::Cowbell cowbell;
   CORE::CLOCK::Clock clock;
   CORE::BLOCK::Meter meter;
 };

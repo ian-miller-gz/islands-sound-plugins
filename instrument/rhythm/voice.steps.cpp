@@ -11,8 +11,14 @@ constexpr Float HIT = 1.0f;
 constexpr Float ROLL = 0.7f;
 
 constexpr Whole PARTS[RHYTHM::VOICES] = {
-  WHOLE, WHOLE, CORE::PERCUSSION::OPENING::CLOSED,
-  CORE::PERCUSSION::PLATE::RIDE};
+  WHOLE,
+  WHOLE,
+  CORE::PERCUSSION::OPENING::CLOSED,
+  CORE::PERCUSSION::PLATE::RIDE,
+  CORE::PERCUSSION::HEIGHT::LOW,
+  WHOLE,
+  CORE::PERCUSSION::CLICK::RIM,
+  WHOLE};
 
 auto filling(const RHYTHM::Box &box, Whole bar) -> Flag {
   return box.rows[RHYTHM::FILL] > 0 && bar % ::FILLS == ::FILLS - ::ONE;
@@ -33,25 +39,10 @@ void play(RHYTHM::Box &box, Whole edge) {
     RHYTHM::strike(box, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::CRASH, ::HIT);
 }
 
-using Tick = auto (*)(RHYTHM::Box &box) -> Float;
-
-constexpr Tick TICKS[RHYTHM::VOICES] = {
-  [](RHYTHM::Box &box) -> Float { return CORE::PERCUSSION::tick(box.kick); },
-  [](RHYTHM::Box &box) -> Float { return CORE::PERCUSSION::tick(box.snare); },
-  [](RHYTHM::Box &box) -> Float { return CORE::PERCUSSION::tick(box.hat); },
-  [](RHYTHM::Box &box) -> Float { return CORE::PERCUSSION::tick(box.cymbal); }};
-
 }  // namespace
 
 void SOUND::PLUGINS::RHYTHM::pulse(Box &box) {
   CORE::CLOCK::Edge edge;
   if (CORE::CLOCK::advance(box.clock, ::ONE, &edge, ::ONE) == ::ONE)
     ::play(box, edge.step);
-}
-
-auto SOUND::PLUGINS::RHYTHM::mix(Box &box) -> Float {
-  Float sum = 0;
-  for (Whole voice = 0; voice < VOICES; ++voice)
-    sum += ::TICKS[voice](box) * box.rows[LEVELS + voice];
-  return CORE::SHAPER::soft(sum);
 }

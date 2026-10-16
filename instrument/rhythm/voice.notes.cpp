@@ -3,7 +3,10 @@
 
 namespace {
 using namespace SOUND::PLUGINS;
-using CORE::PERCUSSION::strike;
+using CORE::PERCUSSION::CLICK::RIM;
+using CORE::PERCUSSION::HEIGHT::HIGH;
+using CORE::PERCUSSION::HEIGHT::LOW;
+using CORE::PERCUSSION::HEIGHT::MID;
 
 constexpr Whole WHOLE = 0;
 
@@ -16,27 +19,24 @@ struct Pad {
 constexpr Pad PADS[] = {
   {35, RHYTHM::KICK, WHOLE},
   {36, RHYTHM::KICK, WHOLE},
+  {37, RHYTHM::RIM, RIM},
   {38, RHYTHM::SNARE, WHOLE},
+  {39, RHYTHM::CLAP, WHOLE},
   {40, RHYTHM::SNARE, WHOLE},
+  {41, RHYTHM::TOM, LOW},
   {42, RHYTHM::HAT, CORE::PERCUSSION::OPENING::CLOSED},
+  {43, RHYTHM::TOM, LOW},
   {44, RHYTHM::HAT, CORE::PERCUSSION::OPENING::CLOSED},
+  {45, RHYTHM::TOM, MID},
   {46, RHYTHM::HAT, CORE::PERCUSSION::OPENING::OPEN},
+  {47, RHYTHM::TOM, MID},
+  {48, RHYTHM::TOM, HIGH},
   {49, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::CRASH},
+  {50, RHYTHM::TOM, HIGH},
   {51, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::RIDE},
+  {56, RHYTHM::COWBELL, WHOLE},
   {57, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::CRASH},
   {59, RHYTHM::CYMBAL, CORE::PERCUSSION::PLATE::RIDE}};
-
-using Strike = void (*)(RHYTHM::Box &box, Whole part, Float velocity);
-
-constexpr Strike STRIKES[RHYTHM::VOICES] = {
-  [](RHYTHM::Box &box, Whole, Float velocity) { strike(box.kick, velocity); },
-  [](RHYTHM::Box &box, Whole, Float velocity) { strike(box.snare, velocity); },
-  [](RHYTHM::Box &box, Whole part, Float velocity) {
-    strike(box.hat, part, velocity);
-  },
-  [](RHYTHM::Box &box, Whole part, Float velocity) {
-    strike(box.cymbal, part, velocity);
-  }};
 
 auto found(Whole pitch) -> const Pad * {
   for (const Pad &pad : PADS)
@@ -51,11 +51,6 @@ void run(RHYTHM::Box &box) {
 }
 
 }  // namespace
-
-void SOUND::PLUGINS::RHYTHM::strike(
-  Box &box, Whole voice, Whole part, Float velocity) {
-  if (voice < VOICES) ::STRIKES[voice](box, part, velocity);
-}
 
 void SOUND::PLUGINS::RHYTHM::apply(
   Box &box, const AUDIO::PLUGIN::Event &event) {
