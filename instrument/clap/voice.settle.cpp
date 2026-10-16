@@ -7,6 +7,7 @@ void SOUND::PLUGINS::CLAP::settle(Voice &voice) {
     .spread = rows[SPREAD],
     .decay = rows[DECAY],
     .tone = rows[TONE],
+    .tail = rows[TAIL],
     .bursts = Whole(rows[BURSTS]),
     .scatter = rows[SCATTER],
     .curve = rows[CURVE],

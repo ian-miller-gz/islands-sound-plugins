@@ -10,6 +10,7 @@ struct Hand {
   Float spread = 0;
   Float decay = 0;
   Float tone = 0;
+  Float tail = 0;
   Whole bursts = BURSTS;
   Float scatter = 0;
   Float curve = 0;
@@ -19,6 +20,7 @@ struct Hand {
 struct Clap {
   NOISE::White white;
   FILTER::Biquad band;
+  FILTER::Biquad ring;
   ENVELOPE::Envelope tail;
   ENVELOPE::Gate gate;
   Hand hand;
