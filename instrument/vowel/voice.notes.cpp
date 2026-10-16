@@ -4,19 +4,21 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-using Change = void (*)(VOWEL::Singer &, CORE::VOICE::Note &, VOWEL::Throat &);
+using Change = void (*)(VOWEL::Singer &, Whole);
 
-void kept(VOWEL::Singer &, CORE::VOICE::Note &, VOWEL::Throat &) {}
+void kept(VOWEL::Singer &, Whole) {}
 
-void struck(
-  VOWEL::Singer &singer, CORE::VOICE::Note &note, VOWEL::Throat &throat) {
-  CORE::ENVELOPE::strike(throat.gate, singer.envelope, note.velocity);
+void struck(VOWEL::Singer &singer, Whole at) {
+  VOWEL::Throat &throat = singer.throats[at];
+  const Float velocity = singer.allocator.notes[at].velocity;
+  CORE::ENVELOPE::strike(throat.gate, singer.envelope, velocity);
   CORE::MODULATOR::reset(throat.vibrato);
   CORE::GLOTTIS::reset(throat.source);
+  VOWEL::steer(singer, at, true);
 }
 
-void lifted(VOWEL::Singer &, CORE::VOICE::Note &, VOWEL::Throat &throat) {
-  CORE::ENVELOPE::lift(throat.gate);
+void lifted(VOWEL::Singer &singer, Whole at) {
+  CORE::ENVELOPE::lift(singer.throats[at].gate);
 }
 
 constexpr Change CHANGES[] = {kept, struck, kept, lifted};
@@ -25,7 +27,7 @@ static_assert(sizeof(CHANGES) / sizeof(CHANGES[0]) == CORE::VOICE::LIFTED + 1);
 void voice(VOWEL::Singer &singer, CORE::VOICE::Note &note) {
   const Whole at = Whole(&note - singer.allocator.notes);
   if (at >= VOWEL::THROATS || note.change > CORE::VOICE::LIFTED) return;
-  CHANGES[note.change](singer, note, singer.throats[at]);
+  CHANGES[note.change](singer, at);
 }
 
 auto sung(VOWEL::Singer &singer, CORE::VOICE::Note &note, VOWEL::Throat &throat)
@@ -33,9 +35,6 @@ auto sung(VOWEL::Singer &singer, CORE::VOICE::Note &note, VOWEL::Throat &throat)
   const Float level = CORE::ENVELOPE::tick(throat.gate, singer.envelope);
   note.level = level;
   if (!CORE::ENVELOPE::sounding(throat.gate)) note.sounding = false;
-  const Float cents = CORE::MODULATOR::tick(throat.vibrato);
-  const Float pitch = Float(note.pitch) + cents / VOWEL::CENT;
-  CORE::GLOTTIS::tune(throat.source, CORE::PHASE::hertz(pitch), singer.rate);
   const Float pulse = CORE::GLOTTIS::tick(throat.source, singer.table);
   return CORE::FILTER::tick(throat.formant, pulse) * level;
 }
@@ -53,6 +52,7 @@ void SOUND::PLUGINS::VOWEL::apply(
 }
 
 auto SOUND::PLUGINS::VOWEL::sing(Singer &singer) -> Float {
+  if (CORE::BLOCK::due(singer.stride, STRIDE)) steer(singer);
   Float sum = 0;
   for (Whole at = 0; at < THROATS; ++at) {
     CORE::VOICE::Note &note = singer.allocator.notes[at];
