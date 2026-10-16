@@ -31,7 +31,7 @@ static_assert(sizeof(NOISES) / sizeof(NOISES[0]) == WHISPER::COLOURS);
 
 void voice(WHISPER::Mouth &mouth, CORE::VOICE::Note &note) {
   const Whole at = Whole(&note - mouth.allocator.notes);
-  if (at >= WHISPER::VOICES || note.change > CORE::VOICE::LIFTED) return;
+  if (at >= WHISPER::HISSES || note.change > CORE::VOICE::LIFTED) return;
   CHANGES[note.change](mouth, note, at);
 }
 
@@ -60,7 +60,7 @@ void SOUND::PLUGINS::WHISPER::apply(
 
 auto SOUND::PLUGINS::WHISPER::breathe(Mouth &mouth) -> Float {
   Float sum = 0;
-  for (Whole at = 0; at < VOICES; ++at) {
+  for (Whole at = 0; at < HISSES; ++at) {
     CORE::VOICE::Note &note = mouth.allocator.notes[at];
     if (note.sounding) sum += ::hissed(mouth, note, mouth.hisses[at]);
   }

@@ -8,7 +8,7 @@
 
 namespace SOUND::PLUGINS::WHISPER {
 
-constexpr Whole VOICES = 8;
+constexpr Whole HISSES = 8;
 constexpr Float LOUDNESS = 8.0f;
 constexpr Float CENTRE = 60.0f;
 constexpr Float CENT = 100.0f;
@@ -31,7 +31,7 @@ struct Mouth {
   Whole colour = WHITE;
   CORE::ENVELOPE::Envelope envelope;
   CORE::VOICE::Allocator allocator;
-  Hiss hisses[VOICES];
+  Hiss hisses[HISSES];
   CORE::BLOCK::Meter meter;
 };
 

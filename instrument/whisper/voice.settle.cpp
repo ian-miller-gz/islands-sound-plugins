@@ -9,7 +9,7 @@ void SOUND::PLUGINS::WHISPER::seed(Hiss &hiss, CORE::NOISE::Register state) {
 }
 
 void SOUND::PLUGINS::WHISPER::shape(Mouth &mouth, Whole at) {
-  if (at >= VOICES) return;
+  if (at >= HISSES) return;
   const Float *rows = mouth.rows;
   const Float key = Float(mouth.allocator.notes[at].pitch) - CENTRE;
   const Float shift = CORE::PHASE::ratio(rows[TRACKING] * key * CENT);
@@ -25,5 +25,5 @@ void SOUND::PLUGINS::WHISPER::settle(Mouth &mouth) {
     rows[ATTACK], rows[DECAY], rows[SUSTAIN], rows[RELEASE]);
   mouth.envelope.depth = CORE::ENVELOPE::FULL;
   CORE::ENVELOPE::shape(mouth.envelope, mouth.rate);
-  for (Whole at = 0; at < VOICES; ++at) shape(mouth, at);
+  for (Whole at = 0; at < HISSES; ++at) shape(mouth, at);
 }
