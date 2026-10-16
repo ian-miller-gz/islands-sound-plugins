@@ -32,6 +32,11 @@ struct Blue {
   Float last = 0;
 };
 
+struct Violet {
+  White white;
+  Float last = 0;
+};
+
 struct Hold {
   PHASE::Wheel phase = 0;
   PHASE::Wheel step = 0;
@@ -50,12 +55,16 @@ void seed(White &white, Register state);
 void seed(Pink &pink, Register state);
 void seed(Brown &brown, Register state);
 void seed(Blue &blue, Register state);
+void seed(Violet &violet, Register state);
 void seed(Burst &burst, Register state);
 
 auto tick(White &white) -> Float;
 auto tick(Pink &pink) -> Float;
 auto tick(Brown &brown) -> Float;
 auto tick(Blue &blue) -> Float;
+auto tick(Violet &violet) -> Float;
+
+auto audible(Float hertz, Whole rate) -> Float;
 
 void settle(Hold &hold, Float hertz, Whole rate);
 void reset(Hold &hold);
@@ -66,3 +75,5 @@ void strike(Burst &burst, Float level);
 auto tick(Burst &burst) -> Float;
 
 }  // namespace SOUND::PLUGINS::CORE::NOISE
+
+#include "noise.paced.hpp"

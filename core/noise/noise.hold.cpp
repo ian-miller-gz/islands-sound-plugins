@@ -10,15 +10,15 @@ constexpr Float HALF = 0.5f;
 constexpr Float UNIT = 1.0f;
 constexpr Float TAU = 6.2831853f;
 
-auto audible(Float hertz, Whole rate) -> Float {
-  const Float top = Float(rate) * HALF;
+}  // namespace
+
+auto SOUND::PLUGINS::CORE::NOISE::audible(Float hertz, Whole rate) -> Float {
+  const Float top = Float(rate) * ::HALF;
   return hertz < 0 ? 0 : hertz > top ? top : hertz;
 }
 
-}  // namespace
-
 void SOUND::PLUGINS::CORE::NOISE::settle(Hold &hold, Float hertz, Whole rate) {
-  hold.step = PHASE::step(::audible(hertz, rate), rate);
+  hold.step = PHASE::step(audible(hertz, rate), rate);
 }
 
 void SOUND::PLUGINS::CORE::NOISE::reset(Hold &hold) { hold.phase = 0; }
@@ -33,7 +33,7 @@ void SOUND::PLUGINS::CORE::NOISE::settle(
   Burst &burst, Float seconds, Float hertz, Whole rate) {
   const Float frames = seconds * Float(rate);
   burst.decay = frames <= UNIT ? 0 : std::exp(-UNIT / frames);
-  const Float turn = TAU * ::audible(hertz, rate) / Float(rate);
+  const Float turn = TAU * audible(hertz, rate) / Float(rate);
   burst.colour = UNIT - std::exp(-turn);
 }
 
