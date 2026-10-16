@@ -32,7 +32,7 @@ constexpr Float WOOD = 2500;
 constexpr Float KNOCK = 0.06f;
 constexpr Float PITCH = 0;
 constexpr Float BELL = 0.35f;
-constexpr Float STRAIGHT = 0;
+constexpr Float EVEN = 0;
 
 }  // namespace
 
@@ -51,8 +51,7 @@ void SOUND::PLUGINS::RHYTHM::settle(Box &box) {
 
 void SOUND::PLUGINS::RHYTHM::pace(Box &box) {
   const Pattern &chosen = pattern(Whole(box.rows[PATTERN]));
-  const Float swing =
-    chosen.division == SIXTEENTHS ? box.rows[SWING] : ::STRAIGHT;
+  const Float swing = chosen.division == SIXTEENTHS ? box.rows[SWING] : ::EVEN;
   CORE::CLOCK::settle(
     box.clock, box.rows[TEMPO], Float(chosen.division), swing, box.rate);
 }

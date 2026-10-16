@@ -14,6 +14,7 @@ struct Pattern {
   Whole beats = 0;
   Whole division = 0;
   Whole lanes[VOICES] = {};
+  Whole accent = 0;
 };
 
 struct Box {
@@ -32,9 +33,22 @@ struct Box {
   CORE::BLOCK::Meter meter;
 };
 
+namespace STRAIGHT {
+
+auto pattern(Whole at) -> const Pattern &;
+
+}  // namespace STRAIGHT
+
+namespace TRIPLE {
+
+auto pattern(Whole at) -> const Pattern &;
+
+}  // namespace TRIPLE
+
 auto pattern(Whole index) -> const Pattern &;
 auto length(const Pattern &pattern) -> Whole;
 auto struck(const Pattern &pattern, Whole voice, Whole step) -> Flag;
+auto accented(const Pattern &pattern, Whole step) -> Flag;
 
 void settle(Box &box);
 void pace(Box &box);
