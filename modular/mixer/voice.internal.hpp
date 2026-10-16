@@ -2,6 +2,7 @@
 #pragma once
 #include "mixer.hpp"
 #include "../../core/block/block.hpp"
+#include "../../core/stereo/stereo.hpp"
 
 namespace SOUND::PLUGINS::MIXER {
 

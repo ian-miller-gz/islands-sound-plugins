@@ -10,8 +10,6 @@ using Shape = auto (*)(Float level) -> Float;
 constexpr Float UNITY = 1.0f;
 constexpr Float SPAN = 60.0f;
 
-auto capped(Float gain) -> Float { return gain > UNITY ? UNITY : gain; }
-
 auto linear(Float level) -> Float { return level; }
 
 auto logarithmic(Float level) -> Float {
@@ -36,9 +34,10 @@ void SOUND::PLUGINS::MIXER::settle(Module &module) {
   const Flag panned = module.channels == STEREO;
   for (Whole in = 0; in < INS; ++in) {
     const Float level = ::level(module, in) * rows[GAIN];
-    const Float pan = panned ? rows[PAN + in] : 0;
-    module.weights[in][0] = level * ::capped(UNITY - pan);
-    module.weights[in][1] = level * ::capped(UNITY + pan);
+    const auto gains = CORE::STEREO::pan(panned ? rows[PAN + in] : 0);
+    const Float sides[STEREO] = {gains.left, gains.right};
+    for (Whole side = 0; side < STEREO; ++side)
+      module.weights[in][side] = level * sides[side];
   }
 }
 
