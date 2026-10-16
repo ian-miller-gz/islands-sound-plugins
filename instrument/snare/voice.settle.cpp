@@ -2,9 +2,17 @@
 #include "voice.internal.hpp"
 
 void SOUND::PLUGINS::SNARE::settle(Voice &voice) {
+  const Float *rows = voice.rows;
   CORE::PERCUSSION::settle(
-    voice.snare, voice.rows[TUNE], voice.rows[TONE], voice.rows[SNAPPY],
-    voice.rows[DECAY], voice.rate);
+    voice.snare,
+    CORE::PERCUSSION::SNARE::Setting{
+      .tune = rows[TUNE],
+      .tone = rows[TONE],
+      .snappy = rows[SNAPPY],
+      .decay = rows[DECAY],
+      .bend = rows[BEND],
+      .drop = rows[DROP]},
+    voice.rate);
 }
 
 void SOUND::PLUGINS::SNARE::apply(
