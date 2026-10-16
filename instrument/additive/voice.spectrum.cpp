@@ -59,9 +59,10 @@ void ramp(ADDITIVE::Bank &bank, const Float *targets, Float total) {
 void SOUND::PLUGINS::ADDITIVE::shape(
   Synth &synth, Voice &voice, const CORE::VOICE::Note &note) {
   const Float *rows = synth.rows;
-  const Float root = CORE::PHASE::hertz(voice.key);
+  const Float pitch = voice.key + synth.tune + rows[BEND];
+  const Float root = CORE::PHASE::hertz(pitch + rows[VIBRATO] * synth.swing);
   const Float cut = ::cutoff(rows, voice, note.velocity);
-  const Float centre = rows[CENTRE];
+  const Float centre = rows[CENTRE] + rows[SCAN] * synth.swing;
   Float targets[BANK] = {};
   Float total = 0;
   for (Whole at = 0; at < ::count(rows); ++at) {

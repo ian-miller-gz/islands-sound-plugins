@@ -10,6 +10,7 @@ using namespace SOUND::PLUGINS;
 constexpr Float DECIBELS = 6.02f;
 constexpr Whole PARITY = 2;
 constexpr Float FULL = 1;
+constexpr Float CENT = 100;
 
 auto envelope(
   Float attack, Float decay, Float sustain, Float release, Whole curve,
@@ -44,6 +45,18 @@ void spread(ADDITIVE::Synth &synth) {
   }
 }
 
+void swing(ADDITIVE::Synth &synth) {
+  synth.lfo.wave = Whole(synth.rows[ADDITIVE::WAVE]);
+  synth.lfo.hertz = synth.rows[ADDITIVE::RATE];
+  CORE::MODULATOR::settle(synth.lfo, synth.rate);
+}
+
+void glide(ADDITIVE::Synth &synth) {
+  synth.allocator.glide.time = synth.rows[ADDITIVE::GLIDE];
+  synth.allocator.glide.slide = CORE::VOICE::ALWAYS;
+  CORE::VOICE::settle(synth.allocator, synth.rate);
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::ADDITIVE::settle(Synth &synth) {
@@ -56,4 +69,7 @@ void SOUND::PLUGINS::ADDITIVE::settle(Synth &synth) {
     rows[SWEEP], rows[CLOSE], 0, rows[CLOSE], CORE::ENVELOPE::EXPONENTIAL,
     synth.rate);
   ::spread(synth);
+  ::swing(synth);
+  ::glide(synth);
+  synth.tune = rows[TUNE] / ::CENT;
 }
