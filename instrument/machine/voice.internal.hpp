@@ -3,6 +3,7 @@
 #include "machine.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/percussion/percussion.hpp"
+#include "../../core/stereo/stereo.hpp"
 
 namespace SOUND::PLUGINS::MACHINE {
 
@@ -17,6 +18,7 @@ struct Machine {
   CORE::PERCUSSION::HYBRID::Tom tom;
   CORE::PERCUSSION::HYBRID::Cymbal cymbal;
   CORE::PERCUSSION::Clave rim;
+  CORE::STEREO::Pair gains[DRUMS];
   CORE::BLOCK::Meter meter;
 };
 
@@ -25,7 +27,7 @@ void settle(Machine &machine);
 
 void apply(Machine &machine, const AUDIO::PLUGIN::Event &event);
 
-auto mix(Machine &machine) -> Float;
+auto mix(Machine &machine) -> CORE::STEREO::Pair;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,

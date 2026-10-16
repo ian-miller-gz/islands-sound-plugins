@@ -70,7 +70,9 @@ inline constexpr Seat SEATS[DRUMS] = {seat(KICK), seat(SNARE), seat(HAT),
 constexpr auto owner(Whole index) -> Whole {
   for (Whole drum = 0; drum < DRUMS; ++drum) {
     const Seat &held = SEATS[drum];
-    if (index == held.tune || index == held.decay || index == held.timbre)
+    if (
+      index == held.tune || index == held.decay || index == held.timbre ||
+      index == held.pan)
       return drum;
   }
   return DRUMS;

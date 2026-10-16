@@ -31,11 +31,14 @@ constexpr Tick TICKS[MACHINE::DRUMS] = {
 
 }  // namespace
 
-auto SOUND::PLUGINS::MACHINE::mix(Machine &machine) -> Float {
-  Float sum = 0;
-  for (Whole drum = 0; drum < DRUMS; ++drum)
-    sum += ::TICKS[drum](machine) * machine.rows[SEATS[drum].level];
-  return CORE::SHAPER::soft(sum);
+auto SOUND::PLUGINS::MACHINE::mix(Machine &machine) -> CORE::STEREO::Pair {
+  CORE::STEREO::Pair sum;
+  for (Whole drum = 0; drum < DRUMS; ++drum) {
+    const Float sample =
+      ::TICKS[drum](machine) * machine.rows[SEATS[drum].level];
+    CORE::STEREO::add(sum, sample, machine.gains[drum]);
+  }
+  return {CORE::SHAPER::soft(sum.left), CORE::SHAPER::soft(sum.right)};
 }
 
 void SOUND::PLUGINS::MACHINE::render(

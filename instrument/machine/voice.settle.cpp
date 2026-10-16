@@ -77,6 +77,7 @@ auto knobs(const MACHINE::Machine &machine, Whole drum) -> Knobs {
 
 void SOUND::PLUGINS::MACHINE::settle(Machine &machine, Whole drum) {
   if (drum >= DRUMS) return;
+  machine.gains[drum] = CORE::STEREO::pan(machine.rows[SEATS[drum].pan]);
   ::SETTLES[drum](machine, ::VOICINGS[drum], ::knobs(machine, drum));
 }
 
