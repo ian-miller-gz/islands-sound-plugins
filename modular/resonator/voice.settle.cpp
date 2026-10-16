@@ -32,7 +32,7 @@ void SOUND::PLUGINS::RESONATOR::sweep(
       rows[CUTOFF] * std::exp2(swing), cv, rows[DEPTH], LOWEST, HIGHEST),
     .emphasis = rows[EMPHASIS],
     .drive = rows[DRIVE],
-    .rate = module.rate};
+    .rate = module.rate * TWICE};
   model(module).settle(module.stages[channel], tone);
 }
 

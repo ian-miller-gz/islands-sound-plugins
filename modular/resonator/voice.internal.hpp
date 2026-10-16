@@ -4,17 +4,20 @@
 #include "../../core/block/block.hpp"
 #include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
+#include "../../core/shaper/shaper.hpp"
 
 namespace SOUND::PLUGINS::RESONATOR {
 
 constexpr Whole STRIDE = 4;
 constexpr Float BOOST = 7.0f;
+constexpr Whole TWICE = 2;
 
 struct Stage {
   CORE::FILTER::Variable variable;
   CORE::FILTER::Ladder ladder;
   CORE::FILTER::Diode diode;
   CORE::FILTER::Sallen sallen;
+  CORE::SHAPER::Oversampler oversampler;
 };
 
 struct Tone {

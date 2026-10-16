@@ -18,6 +18,14 @@ void step(
   }
 }
 
+auto filtered(const RESONATOR::Model &model, RESONATOR::Stage &stage, Float in)
+  -> Float {
+  const CORE::SHAPER::Pair pair = CORE::SHAPER::up(stage.oversampler, in);
+  const CORE::SHAPER::Pair out = {
+    model.tick(stage, pair.early), model.tick(stage, pair.late)};
+  return CORE::SHAPER::down(stage.oversampler, out);
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::RESONATOR::render(
@@ -37,7 +45,7 @@ void SOUND::PLUGINS::RESONATOR::render(
     for (Whole channel = 0; channel < module.channels; ++channel) {
       Float &sample = CORE::BLOCK::lane(
         lanes, RESONATOR::IN, channel, module.channels)[frame];
-      sample = model.tick(module.stages[channel], sample);
+      sample = ::filtered(model, module.stages[channel], sample);
     }
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
