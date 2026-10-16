@@ -29,3 +29,10 @@ void render(
   const AUDIO::PLUGIN::Event *events, Whole count);
 
 }  // namespace SOUND::PLUGINS::ENVELOPE
+
+namespace SOUND::PLUGINS::ENVELOPE::IN {
+
+constexpr Whole GATE = 0;
+constexpr Whole CV = 1;
+
+}  // namespace SOUND::PLUGINS::ENVELOPE::IN

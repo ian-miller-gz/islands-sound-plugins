@@ -33,7 +33,11 @@ const AUDIO::PLUGIN::Plug surface = {
   .reading = Surface::reading,
   .held = Surface::held,
   .control = Surface::control,
-  .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
+  .ins =
+    {{AUDIO::PLUGIN::Port::AUDIO, "gate"},
+     {AUDIO::PLUGIN::Port::AUDIO, "cv"},
+     {AUDIO::PLUGIN::Port::NOTES},
+     {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO, "cv"}}};
 
 [[maybe_unused]] const Flag offered = SOUND::PLUGIN::offer(
