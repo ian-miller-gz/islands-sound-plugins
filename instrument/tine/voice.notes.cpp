@@ -20,6 +20,7 @@ void struck(TINE::Synth &synth, Whole at) {
   ::wake(voice);
   TINE::shape(synth, at);
   TINE::tune(synth, at);
+  TINE::touch(synth, at);
   CORE::ENVELOPE::strike(voice.door, voice.loudness, velocity);
   CORE::ENVELOPE::strike(voice.strike, synth.strike, velocity);
   CORE::ENVELOPE::strike(voice.ring, synth.ring, velocity);

@@ -70,5 +70,6 @@ void SOUND::PLUGINS::TINE::settle(Synth &synth) {
     if (!synth.allocator.notes[at].sounding) continue;
     shape(synth, at);
     tune(synth, at);
+    touch(synth, at);
   }
 }

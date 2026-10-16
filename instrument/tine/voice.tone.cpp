@@ -19,13 +19,13 @@ auto play(TINE::Synth &synth, Whole at) -> Float {
   const Float loud = CORE::ENVELOPE::tick(voice.door, voice.loudness);
   const Float strike = CORE::ENVELOPE::tick(voice.strike, synth.strike);
   const Float ring = CORE::ENVELOPE::tick(voice.ring, synth.ring);
-  const Float index = rows[TINE::TONE] * (strike + FLOOR);
+  const Float index = rows[TINE::TONE] * (strike + FLOOR) * voice.taper;
   const Float bar = CORE::OSCILLATOR::tick(voice.bar, sine, 0, FULL);
   const Float coupling = rows[TINE::COUPLING];
   const Float tine =
     CORE::OSCILLATOR::tick(voice.tine, sine, index * bar, FULL);
   const Float coupled = tine * (FULL + coupling * bar) / (FULL + coupling);
-  const Float chime = rows[TINE::BELL] * voice.chime * ring;
+  const Float chime = rows[TINE::BELL] * voice.chime * ring * voice.taper;
   const Float bell = CORE::OSCILLATOR::tick(voice.bell, sine, 0, chime);
   const Float heard = TINE::pick(synth, (coupled + bell) * loud);
   if (!CORE::ENVELOPE::sounding(voice.door)) note.sounding = false;
