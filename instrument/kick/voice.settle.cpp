@@ -9,6 +9,10 @@ void SOUND::PLUGINS::KICK::settle(Voice &voice) {
     .attack = rows[ATTACK],
     .drive = rows[DRIVE],
     .tone = rows[TONE],
+    .bend = rows[BEND],
+    .drop = rows[DROP],
+    .slope = rows[SLOPE],
+    .sigh = rows[SIGH],
     .curve = rows[CURVE],
     .touch = rows[TOUCH]};
   CORE::PERCUSSION::settle(voice.kick, batter, voice.rate);

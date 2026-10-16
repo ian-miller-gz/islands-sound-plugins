@@ -16,7 +16,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(
   kick.base = turn(held, kick.rate);
   kick.velocity = struck(velocity, kick.curve);
   darken(kick);
-  ENVELOPE::strike(kick.bend, kick.sweep, kick.velocity);
   ENVELOPE::strike(kick.click, kick.snap, kick.velocity);
-  strike(kick.body, kick.velocity);
+  kick.breath = 0;
+  strike(kick.body, kick.base, kick.velocity);
 }
