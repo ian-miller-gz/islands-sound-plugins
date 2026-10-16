@@ -20,9 +20,9 @@ void SOUND::PLUGINS::OSCILLATOR::settle(Module &module) {
 
 void SOUND::PLUGINS::OSCILLATOR::tune(Module &module, Float pitch) {
   const Float hertz = CORE::PHASE::hertz(pitch);
-  const Float width = module.rows[WIDTH];
-  CORE::OSCILLATOR::settle(module.oscillator, hertz, width, module.rate);
-  CORE::OSCILLATOR::settle(module.super, hertz, width, MIX, module.rate);
+  const Float *rows = module.rows;
+  CORE::OSCILLATOR::settle(module.oscillator, hertz, rows[WIDTH], module.rate);
+  CORE::OSCILLATOR::settle(module.super, hertz, rows[DETUNE], MIX, module.rate);
   module.pitch = pitch;
   module.stale = false;
 }
