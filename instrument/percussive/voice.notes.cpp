@@ -27,5 +27,6 @@ void SOUND::PLUGINS::PERCUSSIVE::apply(
   if (slot >= SLOTS) return;
   const Float velocity =
     CORE::PERCUSSION::struck(event.value, machine.rows[CURVE]);
+  choke(machine, slot);
   CORE::PERCUSSION::strike(machine.pads[slot], velocity);
 }

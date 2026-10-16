@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
+namespace {
+
+constexpr Float FADE = 0.005f;
+
+}  // namespace
+
 auto SOUND::PLUGINS::PERCUSSIVE::slotted(Whole index) -> Whole {
   if (index < GAIN) return index % KNOBS == DECAY ? index / KNOBS : SLOTS;
   if (index >= TUNES && index < CURVE) return (index - TUNES) % SLOTS;
@@ -20,4 +26,11 @@ void SOUND::PLUGINS::PERCUSSIVE::settle(Machine &machine, Whole slot) {
 
 void SOUND::PLUGINS::PERCUSSIVE::settle(Machine &machine) {
   for (Whole slot = 0; slot < SLOTS; ++slot) settle(machine, slot);
+  CORE::PERCUSSION::settle(machine.choke, ::FADE, machine.rate);
+}
+
+void SOUND::PLUGINS::PERCUSSIVE::choke(Machine &machine, Whole slot) {
+  if (slot == OPEN) CORE::PERCUSSION::open(machine.choke);
+  if (slot == CLOSED && machine.rows[CHOKE] != 0)
+    CORE::PERCUSSION::close(machine.choke);
 }

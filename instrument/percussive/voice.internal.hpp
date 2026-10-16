@@ -11,6 +11,7 @@ struct Machine {
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
   CORE::PERCUSSION::Pad pads[SLOTS];
+  CORE::PERCUSSION::Choke choke;
   CORE::BLOCK::Meter meter;
 };
 
@@ -18,6 +19,7 @@ auto slotted(Whole index) -> Whole;
 void settle(Machine &machine, Whole slot);
 void settle(Machine &machine);
 
+void choke(Machine &machine, Whole slot);
 void apply(Machine &machine, const AUDIO::PLUGIN::Event &event);
 
 auto sound(Machine &machine) -> Float;
