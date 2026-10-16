@@ -9,8 +9,6 @@ constexpr Float CENTRE = 0.012f;
 constexpr Float SWING = 0.004f;
 constexpr Float GLIDE = 0;
 constexpr Float PACE = 0.7f;
-constexpr Float SIZE = 0.8f;
-constexpr Float DECAY = 1.4f;
 constexpr Float DAMP = 5000.0f;
 constexpr Float SIGNS[CHOIR::SIDES] = {1.0f, -1.0f};
 
@@ -42,7 +40,7 @@ void SOUND::PLUGINS::CHOIR::settle(
     CORE::MODULATOR::settle(lfo, rate);
   }
   room.mix = rows[ROOM];
-  CORE::REVERB::settle(room.network, ::SIZE, ::DECAY, ::DAMP);
+  CORE::REVERB::settle(room.network, rows[SIZE], rows[TAIL], ::DAMP);
 }
 
 auto SOUND::PLUGINS::CHOIR::spread(Choir &choir, Stereo dry) -> Stereo {
