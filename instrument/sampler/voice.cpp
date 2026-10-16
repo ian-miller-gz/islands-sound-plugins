@@ -13,7 +13,10 @@ auto create(Whole rate, Whole channels) -> void * {
   SAMPLER::take(*synth);
   SAMPLER::tone(*synth);
   SAMPLER::prepare(*synth);
-  for (SAMPLER::Voice &voice : synth->voices) voice.downs.resize(channels);
+  for (SAMPLER::Voice &voice : synth->voices) {
+    voice.downs.resize(channels);
+    voice.filters.resize(channels);
+  }
   SAMPLER::settle(*synth);
   return synth;
 }

@@ -26,7 +26,9 @@ void sound(
   const Whole reads = synth.clips[voice.clip].lanes.size();
   Float last = 0;
   for (Whole channel = 0; channel < synth.channels; ++channel) {
-    if (channel < reads) last = SAMPLER::read(synth, voice, channel);
+    if (channel < reads)
+      last = SAMPLER::filtered(
+        synth, voice, channel, SAMPLER::read(synth, voice, channel));
     lanes[channel][frame] += last * gain;
   }
   const Flag walking = SAMPLER::walk(voice);

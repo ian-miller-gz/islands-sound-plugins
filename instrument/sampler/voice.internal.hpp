@@ -3,6 +3,7 @@
 #include "sampler.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
+#include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/shaper/shaper.hpp"
 #include "../../core/voice/voice.hpp"
@@ -47,6 +48,7 @@ struct Voice {
   CORE::ENVELOPE::Gate loudness;
   CORE::ENVELOPE::Gate contour;
   Vector<CORE::SHAPER::Oversampler> downs;
+  Vector<CORE::FILTER::Variable> filters;
 };
 
 struct Synth {
@@ -88,6 +90,8 @@ void prepare(Synth &synth);
 auto blend(const Synth &synth, const Region &region, Float along) -> Blend;
 auto reader(const Synth &synth, Float step) -> Whole;
 auto read(const Synth &synth, Voice &voice, Whole lane) -> Float;
+void shade(Synth &synth, Whole at, Float key, Float contour);
+auto filtered(const Synth &synth, Voice &voice, Whole lane, Float in) -> Float;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,

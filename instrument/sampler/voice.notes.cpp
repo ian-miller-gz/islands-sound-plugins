@@ -18,6 +18,7 @@ void struck(SAMPLER::Synth &synth, Whole at) {
   voice.reader =
     SAMPLER::reader(synth, SAMPLER::base(synth, voice, Float(note.pitch)));
   for (CORE::SHAPER::Oversampler &down : voice.downs) down = {};
+  for (CORE::FILTER::Variable &filter : voice.filters) filter = {};
   CORE::ENVELOPE::strike(voice.loudness, synth.loudness, note.velocity);
   CORE::ENVELOPE::strike(voice.contour, synth.contour, note.velocity);
   SAMPLER::steer(synth, at);

@@ -84,6 +84,7 @@ void SOUND::PLUGINS::SAMPLER::steer(Synth &synth, Whole at) {
   const Float semis =
     ::semitones(rows, key) + rows[DROP] * contour + rows[VIBRATO] * synth.swing;
   voice.step = ::stepped(synth, voice.clip, semis);
+  shade(synth, at, key, contour);
   voice.level =
     CORE::ENVELOPE::weigh(note.velocity, rows[VELOCITY]) * rows[GAIN];
   note.level = voice.loudness.level;
