@@ -15,12 +15,17 @@ constexpr Float STICK = 0.3f;
 
 void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::settle(
   Tom &tom, Float tune, Float decay, Whole rate) {
+  settle(tom, tune, decay, ::DULL, rate);
+}
+
+void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::settle(
+  Tom &tom, Float tune, Float decay, Float tone, Whole rate) {
   settle(tom.body, DROP, rate);
   for (Whole height = 0; height < HEIGHT::HEIGHTS; ++height)
     tom.paces[height] = pace(tune * RATIOS[height], rate);
   shape(tom.decay, decay, rate);
   shape(tom.skin, SKIN, rate);
-  FILTER::settle(tom.tone, FILTER::LOW, DULL, rate);
+  FILTER::settle(tom.tone, FILTER::LOW, tone, rate);
 }
 
 void SOUND::PLUGINS::CORE::PERCUSSION::HYBRID::strike(

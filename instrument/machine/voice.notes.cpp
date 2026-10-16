@@ -68,8 +68,7 @@ void SOUND::PLUGINS::MACHINE::apply(
     if (event.index >= PARAMETERS) return;
     machine.rows[event.index] =
       CORE::TABLE::clamped(SHEET, event.index, event.value);
-    if (event.index < ACCENT && event.index % KNOBS == TUNE)
-      settle(machine, event.index / KNOBS);
+    settle(machine, owner(event.index));
     return;
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;

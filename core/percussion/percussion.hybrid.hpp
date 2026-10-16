@@ -84,6 +84,7 @@ struct Tom {
 };
 
 void settle(Tom &tom, Float tune, Float decay, Whole rate);
+void settle(Tom &tom, Float tune, Float decay, Float tone, Whole rate);
 void strike(Tom &tom, Whole height, Float velocity);
 auto tick(Tom &tom) -> Float;
 auto sounding(const Tom &tom) -> Flag;
