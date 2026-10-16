@@ -8,13 +8,25 @@ constexpr Float WIDTH = 1.2f;
 constexpr Float FLAT = 0;
 constexpr Float TAIL = 0.6f;
 constexpr Float GAIN = 2.0f;
+constexpr Float SPAN = 0.5f;
+constexpr Float ONE = 1.0f;
 constexpr Whole SHORTEST = 1;
+constexpr Whole SINGLE = 1;
+
+void space(PERCUSSION::Clap &clap) {
+  const Float scatter = clap.hand.scatter;
+  const Float drawn = scatter > 0 ? NOISE::tick(clap.white) : 0;
+  const Float frames = clap.span * (ONE + scatter * SPAN * drawn);
+  const Whole gap = Whole(frames);
+  clap.next = gap < SHORTEST ? SHORTEST : gap;
+}
 
 void advance(PERCUSSION::Clap &clap) {
   clap.burst *= clap.fall;
-  if (clap.left == 0 || ++clap.clock < clap.gap) return;
+  if (clap.left == 0 || ++clap.clock < clap.next) return;
   clap.clock = 0;
   clap.burst = clap.velocity;
+  ::space(clap);
   if (--clap.left == 0) ENVELOPE::strike(clap.gate, clap.tail, clap.velocity);
 }
 
@@ -22,19 +34,29 @@ void advance(PERCUSSION::Clap &clap) {
 
 void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Clap &clap, Float spread, Float decay, Float tone, Whole rate) {
-  const Whole gap = Whole(spread * Float(rate));
+  settle(clap, Hand{.spread = spread, .decay = decay, .tone = tone}, rate);
+}
+
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
+  Clap &clap, const Hand &hand, Whole rate) {
+  const Whole gap = Whole(hand.spread * Float(rate));
+  clap.hand = hand;
+  clap.hand.bursts = hand.bursts < SINGLE ? SINGLE : hand.bursts;
   clap.gap = gap < SHORTEST ? SHORTEST : gap;
-  clap.fall = fall(spread, rate);
-  shape(clap.tail, decay, rate);
-  FILTER::settle(clap.band, FILTER::BAND, tone, WIDTH, FLAT, rate);
+  clap.fall = fall(hand.spread, rate);
+  shape(clap.tail, hand.decay, rate);
+  FILTER::settle(clap.band, FILTER::BAND, hand.tone, WIDTH, FLAT, rate);
 }
 
 void SOUND::PLUGINS::CORE::PERCUSSION::strike(Clap &clap, Float velocity) {
-  clap.velocity = struck(velocity);
+  clap.velocity = struck(velocity, clap.hand.curve);
   clap.burst = clap.velocity;
   clap.clock = 0;
-  clap.left = BURSTS - 1;
+  clap.span = touched(Float(clap.gap), clap.velocity, -clap.hand.touch);
+  ::space(clap);
+  clap.left = clap.hand.bursts - SINGLE;
   ENVELOPE::choke(clap.gate);
+  if (clap.left == 0) ENVELOPE::strike(clap.gate, clap.tail, clap.velocity);
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Clap &clap) -> Float {
