@@ -11,9 +11,12 @@ struct Voice {
   Whole rate = 0;
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
+  Float shift = 0;
   CORE::PERCUSSION::Cowbell cowbell;
   CORE::BLOCK::Meter meter;
 };
+
+auto keyed(const Voice &voice) -> Flag;
 
 void settle(Voice &voice);
 
