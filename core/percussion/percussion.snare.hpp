@@ -7,6 +7,9 @@ namespace SOUND::PLUGINS::CORE::PERCUSSION {
 namespace SNARE {
 
 constexpr Float DROP = 0.02f;
+constexpr Whole MODES = 5;
+constexpr Float RATIOS[MODES] = {1.0f, 1.59f, 2.14f, 2.30f, 2.65f};
+constexpr Float WEIGHTS[MODES] = {1.0f, 0.8f, 0.65f, 0.55f, 0.45f};
 
 struct Setting {
   Float tune = 0;
@@ -16,6 +19,7 @@ struct Setting {
   Float bend = 0;
   Float drop = DROP;
   Float hold = 0;
+  Float body = 0;
 };
 
 }  // namespace SNARE
@@ -23,6 +27,7 @@ struct Setting {
 struct Snare {
   Sweep low;
   Sweep high;
+  Sweep modes[SNARE::MODES];
   NOISE::White white;
   FILTER::Biquad band;
   FILTER::Pole floor;

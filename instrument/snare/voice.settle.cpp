@@ -12,7 +12,8 @@ void SOUND::PLUGINS::SNARE::settle(Voice &voice) {
       .decay = rows[DECAY],
       .bend = rows[BEND],
       .drop = rows[DROP],
-      .hold = rows[HOLD]},
+      .hold = rows[HOLD],
+      .body = rows[BODY]},
     voice.rate);
 }
 

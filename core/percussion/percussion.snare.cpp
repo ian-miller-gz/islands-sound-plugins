@@ -9,7 +9,6 @@ using namespace SOUND::PLUGINS::CORE;
 constexpr Float DETUNE = 1.8333f;
 constexpr Float BODY = 0.6f;
 constexpr Float UPPER = 0.6f;
-constexpr Float TONES = 0.7f;
 constexpr Float WIDTH = 0.8f;
 constexpr Float FLOOR = 500.0f;
 constexpr Float FLAT = 0;
@@ -24,12 +23,6 @@ void tune(
   PERCUSSION::settle(
     sweep, seconds, setting.drop, deepened(setting.bend), rate);
   sweep.base = PERCUSSION::turn(hertz, rate);
-}
-
-auto rattled(PERCUSSION::Snare &snare) -> Float {
-  if (snare.holding == 0) return ENVELOPE::tick(snare.gate, snare.rattle);
-  --snare.holding;
-  return ENVELOPE::FULL * snare.gate.scale;
 }
 
 }  // namespace
@@ -48,6 +41,10 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   const Float seconds = setting.decay * BODY;
   ::tune(snare.low, setting.tune, seconds, setting, rate);
   ::tune(snare.high, setting.tune * DETUNE, seconds, setting, rate);
+  for (Whole at = 0; at < SNARE::MODES; ++at)
+    ::tune(
+      snare.modes[at], setting.tune * SNARE::RATIOS[at],
+      seconds / SNARE::RATIOS[at], setting, rate);
   FILTER::settle(snare.band, FILTER::BAND, setting.tone, WIDTH, FLAT, rate);
   FILTER::settle(snare.floor, FILTER::HIGH, ::FLOOR, rate);
   shape(snare.rattle, setting.decay, rate);
@@ -60,16 +57,10 @@ void SOUND::PLUGINS::CORE::PERCUSSION::strike(Snare &snare, Float velocity) {
   snare.velocity = struck(velocity);
   strike(snare.low, snare.low.base, snare.velocity);
   strike(snare.high, snare.high.base, snare.velocity * UPPER);
+  for (Whole at = 0; at < SNARE::MODES; ++at)
+    strike(
+      snare.modes[at], snare.modes[at].base,
+      snare.velocity * SNARE::WEIGHTS[at]);
   ENVELOPE::strike(snare.gate, snare.rattle, snare.velocity);
   snare.holding = snare.hold;
-}
-
-auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Snare &snare) -> Float {
-  if (!sounding(snare)) return 0;
-  const Float tones = (tick(snare.low) + tick(snare.high)) * TONES;
-  const Float banded = FILTER::tick(snare.band, NOISE::tick(snare.white));
-  const Float noise = FILTER::tick(snare.floor, banded);
-  const Float level = ::rattled(snare);
-  const Float rattle = noise * level * snare.setting.snappy * snare.velocity;
-  return SHAPER::soft(tones + rattle);
 }
