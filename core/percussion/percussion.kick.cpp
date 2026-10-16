@@ -10,24 +10,52 @@ constexpr Float SWEEP = 0.03f;
 constexpr Float SNAP = 0.005f;
 constexpr Float CRISP = 2000.0f;
 constexpr Float DRIVE = 8.0f;
+constexpr Float LINEAR = 0;
+constexpr Float FIXED = 0;
+
+void darken(PERCUSSION::Kick &kick) {
+  const Float tone =
+    PERCUSSION::touched(kick.colour, kick.velocity, kick.touch);
+  FILTER::settle(kick.tone, FILTER::LOW, tone, kick.rate);
+}
 
 }  // namespace
 
 void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Kick &kick, Float tune, Float decay, Float attack, Float drive, Float tone,
   Whole rate) {
-  settle(kick.body, tune, decay, rate);
+  settle(
+    kick,
+    Batter{
+      .tune = tune,
+      .decay = decay,
+      .attack = attack,
+      .drive = drive,
+      .tone = tone,
+      .curve = LINEAR,
+      .touch = FIXED},
+    rate);
+}
+
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
+  Kick &kick, const Batter &batter, Whole rate) {
+  settle(kick.body, batter.tune, batter.decay, rate);
   kick.base = kick.body.turn;
   shape(kick.sweep, SWEEP, rate);
   shape(kick.snap, SNAP, rate);
   FILTER::settle(kick.crisp, FILTER::HIGH, CRISP, rate);
-  FILTER::settle(kick.tone, FILTER::LOW, tone, rate);
-  kick.attack = attack;
-  kick.drive = ONE + drive * DRIVE;
+  kick.attack = batter.attack;
+  kick.drive = ONE + batter.drive * DRIVE;
+  kick.colour = batter.tone;
+  kick.curve = batter.curve;
+  kick.touch = batter.touch;
+  kick.rate = rate;
+  ::darken(kick);
 }
 
 void SOUND::PLUGINS::CORE::PERCUSSION::strike(Kick &kick, Float velocity) {
-  kick.velocity = struck(velocity);
+  kick.velocity = struck(velocity, kick.curve);
+  ::darken(kick);
   ENVELOPE::strike(kick.bend, kick.sweep, kick.velocity);
   ENVELOPE::strike(kick.click, kick.snap, kick.velocity);
   strike(kick.body, kick.velocity);

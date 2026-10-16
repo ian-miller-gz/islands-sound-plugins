@@ -2,9 +2,16 @@
 #include "voice.internal.hpp"
 
 void SOUND::PLUGINS::KICK::settle(Voice &voice) {
-  CORE::PERCUSSION::settle(
-    voice.kick, voice.rows[TUNE], voice.rows[DECAY], voice.rows[ATTACK],
-    voice.rows[DRIVE], voice.rows[TONE], voice.rate);
+  const Float *rows = voice.rows;
+  const CORE::PERCUSSION::Batter batter = {
+    .tune = rows[TUNE],
+    .decay = rows[DECAY],
+    .attack = rows[ATTACK],
+    .drive = rows[DRIVE],
+    .tone = rows[TONE],
+    .curve = rows[CURVE],
+    .touch = rows[TOUCH]};
+  CORE::PERCUSSION::settle(voice.kick, batter, voice.rate);
 }
 
 void SOUND::PLUGINS::KICK::apply(
