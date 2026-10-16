@@ -3,6 +3,7 @@
 #include "chip.hpp"
 #include "voice.channels.hpp"
 #include "../../core/block/block.hpp"
+#include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/phase/phase.hpp"
@@ -36,6 +37,7 @@ struct Synth {
   Lfsr noise;
   Shape shapes[ENVELOPES];
   Steps steps[ENVELOPES];
+  Float weight = 1;
   Clock frame;
   Whole quarters = 0;
   Clock arpeggio;
