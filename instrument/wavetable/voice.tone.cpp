@@ -34,7 +34,7 @@ void tune(WAVETABLE::Synth &synth, WAVETABLE::Voice &voice, Float pitch) {
     CORE::OSCILLATOR::settle(
       oscillator, CORE::PHASE::hertz(pitches[at]), CORE::OSCILLATOR::SQUARE,
       synth.rate);
-    const Float step = CORE::PHASE::fraction(oscillator.step);
+    const Float step = CORE::PHASE::fraction(oscillator.step) * synth.slope;
     voice.levels[at] = CORE::OSCILLATOR::level(::table(synth, at), step);
   }
 }
@@ -45,7 +45,8 @@ auto take(
   CORE::OSCILLATOR::Oscillator &oscillator = voice.oscillators[at];
   const Float position = synth.rows[::SOURCES[at].position] + shift;
   const Float value = CORE::OSCILLATOR::morph(
-    ::table(synth, at), position, voice.levels[at], oscillator.phase);
+    ::table(synth, at), position, voice.levels[at],
+    WAVETABLE::warp(synth, oscillator.phase));
   oscillator.phase += oscillator.step;
   return value;
 }
@@ -64,8 +65,9 @@ auto play(WAVETABLE::Synth &synth, Whole at, Float lfo) -> Float {
     ::tune(synth, voice, pitch);
     WAVETABLE::settle(synth, voice, note, key, contour);
   }
-  const Float shift =
-    rows[WAVETABLE::SWEEP] * contour + rows[WAVETABLE::SCAN] * lfo;
+  const Float shift = rows[WAVETABLE::SWEEP] * contour +
+                      rows[WAVETABLE::SCAN] * lfo +
+                      rows[WAVETABLE::PUSH] * note.velocity;
   const Float mix = rows[WAVETABLE::MIX];
   const Float first = ::take(synth, voice, 0, shift);
   const Float second = ::take(synth, voice, 1, shift);

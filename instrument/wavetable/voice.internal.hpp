@@ -49,6 +49,8 @@ struct Synth {
   CORE::MODULATOR::Lfo lfo;
   Float tune = 0;
   Float weight = 1;
+  Whole warp = 0;
+  Float slope = 1;
   CORE::BLOCK::Meter meter;
 };
 
@@ -64,6 +66,9 @@ void settle(
   const Synth &synth, Voice &voice, const CORE::VOICE::Note &note, Float key,
   Float contour);
 auto filter(const Synth &synth, Voice &voice, Float in) -> Float;
+
+auto slope(Whole kind, Float amount) -> Float;
+auto warp(const Synth &synth, CORE::PHASE::Wheel phase) -> CORE::PHASE::Wheel;
 
 auto sound(Synth &synth) -> Sum;
 

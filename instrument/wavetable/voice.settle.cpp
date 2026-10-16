@@ -61,6 +61,8 @@ void SOUND::PLUGINS::WAVETABLE::settle(Synth &synth) {
   synth.door = ::contour(rows, ::LOUDNESS, rows[VELOCITY], synth.rate);
   ::stack(synth);
   ::swing(synth);
+  synth.warp = Whole(rows[WARP]);
+  synth.slope = WAVETABLE::slope(synth.warp, rows[AMOUNT]);
   synth.tune = rows[TUNE] / CENT;
   for (Voice &voice : synth.voices) CORE::BLOCK::reset(voice.stride);
 }
