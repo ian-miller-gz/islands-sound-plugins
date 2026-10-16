@@ -6,6 +6,8 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
+using Surface = CORE::TABLE::Surface<ADDITIVE::Synth, ADDITIVE::SHEET>;
+
 constexpr Float TAU = 6.2831853f;
 constexpr Whole NOTES = 128;
 
@@ -24,9 +26,8 @@ auto create(Whole rate, Whole channels) -> void * {
   synth->steps.resize(NOTES);
   for (Whole pitch = 0; pitch < NOTES; ++pitch)
     synth->steps[pitch] = increment(pitch, rate);
-  for (Whole id = 0; id < ADDITIVE::PARAMETERS; ++id)
-    ADDITIVE::apply(
-      *synth, {AUDIO::PLUGIN::Event::CONTROLLER, 0, id, ADDITIVE::resting(id)});
+  CORE::TABLE::rest(ADDITIVE::SHEET, synth->rows);
+  ADDITIVE::settle(*synth);
   return synth;
 }
 
@@ -44,11 +45,11 @@ const AUDIO::PLUGIN::Plug surface = {
   .render = ADDITIVE::render,
   .meter = meter,
   .destroy = destroy,
-  .parameters = ADDITIVE::SURFACE::parameters,
-  .name = ADDITIVE::SURFACE::name,
-  .reading = ADDITIVE::SURFACE::reading,
-  .held = ADDITIVE::SURFACE::held,
-  .control = ADDITIVE::SURFACE::control,
+  .parameters = Surface::parameters,
+  .name = Surface::name,
+  .reading = Surface::reading,
+  .held = Surface::held,
+  .control = Surface::control,
   .ins = {{AUDIO::PLUGIN::Port::NOTES}, {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 
@@ -59,14 +60,3 @@ const AUDIO::PLUGIN::Plug surface = {
    .surface = &surface});
 
 }  // namespace
-
-auto SOUND::PLUGINS::ADDITIVE::delta(Float span, Whole rate) -> Float {
-  const Float frames = span * Float(rate);
-  return frames <= 1.0f ? 1.0f : 1.0f / frames;
-}
-
-void SOUND::PLUGINS::ADDITIVE::shape(Synth &synth) {
-  synth.rise = delta(synth.attack, synth.rate);
-  synth.fall = delta(synth.decay, synth.rate) * (1.0f - synth.sustain);
-  synth.drop = delta(synth.release, synth.rate);
-}

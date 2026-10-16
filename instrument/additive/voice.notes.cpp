@@ -31,32 +31,9 @@ void lift(ADDITIVE::Synth &synth, Whole pitch) {
 }
 
 void steer(ADDITIVE::Synth &synth, Whole id, Float value) {
-  const Float held = ADDITIVE::clamped(id, value);
-  switch (id) {
-    case ADDITIVE::GAIN:
-      synth.gain = held;
-      return;
-    case ADDITIVE::ATTACK:
-      synth.attack = held;
-      break;
-    case ADDITIVE::DECAY:
-      synth.decay = held;
-      break;
-    case ADDITIVE::SUSTAIN:
-      synth.sustain = held;
-      break;
-    case ADDITIVE::RELEASE:
-      synth.release = held;
-      break;
-    default:
-      if (id < ADDITIVE::PARTIAL || id >= ADDITIVE::PARAMETERS) return;
-      synth.amplitudes[id - ADDITIVE::PARTIAL] = held;
-      synth.span = 0;
-      for (Float amplitude : synth.amplitudes) synth.span += amplitude;
-      if (synth.span < 0.000001f) synth.span = 1;
-      return;
-  }
-  ADDITIVE::shape(synth);
+  if (id >= ADDITIVE::PARAMETERS) return;
+  synth.rows[id] = CORE::TABLE::clamped(ADDITIVE::SHEET, id, value);
+  ADDITIVE::settle(synth);
 }
 
 }  // namespace

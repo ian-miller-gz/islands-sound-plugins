@@ -18,12 +18,12 @@ void breathe(const ADDITIVE::Synth &synth, ADDITIVE::Note &note) {
       return;
     case ADDITIVE::FALLING:
       note.level -= synth.fall;
-      if (synth.fall > 0 && note.level > synth.sustain) return;
-      note.level = synth.sustain;
+      if (synth.fall > 0 && note.level > synth.rows[ADDITIVE::SUSTAIN]) return;
+      note.level = synth.rows[ADDITIVE::SUSTAIN];
       note.stage = ADDITIVE::HELD;
       return;
     case ADDITIVE::HELD:
-      note.level = synth.sustain;
+      note.level = synth.rows[ADDITIVE::SUSTAIN];
       return;
     case ADDITIVE::LEAVING:
       note.level -= synth.drop;
@@ -39,8 +39,8 @@ void breathe(const ADDITIVE::Synth &synth, ADDITIVE::Note &note) {
 auto sound(const ADDITIVE::Synth &synth, ADDITIVE::Note &note) -> Float {
   if (note.stage == ADDITIVE::IDLE) return 0;
   Float mix = 0;
-  for (Whole partial = 0; partial < ADDITIVE::PARTIALS; ++partial) {
-    const Float amplitude = synth.amplitudes[partial];
+  for (Whole partial = 0; partial < ADDITIVE::HARMONICS; ++partial) {
+    const Float amplitude = synth.rows[ADDITIVE::HARMONIC1 + partial];
     if (amplitude == 0) continue;
     const uint32_t phase = note.phase * static_cast<uint32_t>(partial + 1);
     mix += amplitude * synth.table[phase >> ADDITIVE::TURN];
@@ -72,7 +72,7 @@ void SOUND::PLUGINS::ADDITIVE::render(
       ::breathe(synth, note);
       sample += ::sound(synth, note);
     }
-    sample *= synth.gain;
+    sample *= synth.rows[GAIN];
     for (Whole channel = 0; channel < synth.channels; ++channel)
       outputs[channel][frame] = sample;
     const Float magnitude = sample < 0 ? -sample : sample;

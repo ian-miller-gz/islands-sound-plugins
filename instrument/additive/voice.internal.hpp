@@ -8,6 +8,7 @@
 
 namespace SOUND::PLUGINS::ADDITIVE {
 
+constexpr Whole VOICES = 8;
 constexpr Whole TABLE = 4096;
 constexpr Whole TURN = 20;
 
@@ -28,13 +29,8 @@ struct Synth {
   Whole channels = 0;
   Vector<Float> table;
   Vector<uint32_t> steps;
-  Float amplitudes[PARTIALS] = {};
+  Float rows[PARAMETERS] = {};
   Float span = 1;
-  Float gain = 0;
-  Float attack = 0;
-  Float decay = 0;
-  Float release = 0;
-  Float sustain = 0;
   Float rise = 0;
   Float fall = 0;
   Float drop = 0;
@@ -44,9 +40,7 @@ struct Synth {
   THREADS::Shared<Whole> face{0};
 };
 
-auto delta(Float seconds, Whole rate) -> Float;
-
-void shape(Synth &synth);
+void settle(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
@@ -55,11 +49,3 @@ void render(
   const AUDIO::PLUGIN::Event *events, Whole count);
 
 }  // namespace SOUND::PLUGINS::ADDITIVE
-
-namespace SOUND::PLUGINS::ADDITIVE::SURFACE {
-auto parameters(void *instance) -> Whole;
-auto name(void *instance, Whole index) -> String;
-auto reading(void *instance, Whole index) -> String;
-auto held(void *instance, Whole index) -> Float;
-auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::PLUGINS::ADDITIVE::SURFACE
