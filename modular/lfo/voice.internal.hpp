@@ -26,6 +26,7 @@ struct Module {
 void settle(Module &module);
 void tune(Module &module);
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
+void follow(Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame);
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
