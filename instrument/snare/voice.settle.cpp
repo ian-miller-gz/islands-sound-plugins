@@ -28,6 +28,5 @@ void SOUND::PLUGINS::SNARE::apply(
     return;
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
-  CORE::PERCUSSION::strike(
-    voice.snare, CORE::PERCUSSION::struck(event.value, voice.rows[CURVE]));
+  strike(voice, event);
 }

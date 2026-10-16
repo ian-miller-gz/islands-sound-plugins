@@ -5,7 +5,7 @@ namespace {
 using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float TONES = 0.7f;
-constexpr Float MODAL = 0.35f;
+constexpr Float MODAL = 0.5f;
 constexpr Float ONE = 1.0f;
 
 auto toned(PERCUSSION::Snare &snare) -> Float {
@@ -14,7 +14,9 @@ auto toned(PERCUSSION::Snare &snare) -> Float {
   Float modes = 0;
   for (PERCUSSION::Sweep &mode : snare.modes) modes += PERCUSSION::tick(mode);
   const Float body = snare.setting.body;
-  return heads * (ONE - body) + modes * MODAL * body;
+  const Float strokes =
+    PERCUSSION::tick(snare.ping) + PERCUSSION::tick(snare.click);
+  return heads * (ONE - body) + modes * MODAL * body + strokes;
 }
 
 auto rattled(PERCUSSION::Snare &snare) -> Float {
@@ -30,7 +32,7 @@ auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Snare &snare) -> Float {
   const Float tones = ::toned(snare);
   const Float banded = FILTER::tick(snare.band, NOISE::tick(snare.white));
   const Float noise = FILTER::tick(snare.floor, banded);
-  const Float level = ::rattled(snare);
-  const Float rattle = noise * level * snare.setting.snappy * snare.velocity;
+  const Float swell = ::rattled(snare);
+  const Float rattle = noise * swell * snare.setting.snappy * snare.level;
   return SHAPER::soft(tones + rattle);
 }
