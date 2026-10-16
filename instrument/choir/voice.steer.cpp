@@ -7,6 +7,7 @@ using namespace SOUND::PLUGINS;
 constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1.0f;
 constexpr Float EFFORT = 0.5f;
+constexpr Float JITTERED = 5.0f;
 
 auto aimed(
   const CHOIR::Choir &choir, const CORE::VOICE::Note &note,
@@ -19,6 +20,15 @@ auto aimed(
   const Float effort = note.velocity * ::EFFORT;
   CORE::FILTER::bend(tract, CORE::PHASE::hertz(glided), effort);
   return tract;
+}
+
+auto cents(const CHOIR::Choir &choir, CHOIR::Singer &singer) -> Float {
+  const Float *rows = choir.rows;
+  const Float vibrato = CORE::MODULATOR::tick(singer.vibrato);
+  const Float wobble = CORE::MODULATOR::tick(singer.wobble);
+  const Float jitter = CORE::MODULATOR::tick(singer.jitter) / ::JITTERED;
+  const Float detune = singer.seat.detune * rows[CHOIR::DETUNE];
+  return detune + vibrato + rows[CHOIR::DRIFT] * (wobble + jitter);
 }
 
 void shape(
@@ -42,11 +52,8 @@ void SOUND::PLUGINS::CHOIR::tune(
   Choir &choir, CORE::VOICE::Note &note, Part &part, Flag leap) {
   const Float glided = CORE::VOICE::tick(note, choir.allocator.glide);
   const CORE::FILTER::Tract tract = ::aimed(choir, note, glided);
-  const Float detune = choir.rows[DETUNE];
   for (Singer &singer : part.singers) {
-    const Float vibrato = CORE::MODULATOR::tick(singer.vibrato);
-    const Float cents = singer.seat.detune * detune + vibrato;
-    const Float pitch = glided + cents / CENT;
+    const Float pitch = glided + ::cents(choir, singer) / CENT;
     CORE::GLOTTIS::tune(singer.source, CORE::PHASE::hertz(pitch), choir.rate);
     ::shape(choir, singer, tract, leap);
   }

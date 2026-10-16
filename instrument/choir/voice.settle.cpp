@@ -5,12 +5,13 @@ namespace {
 using namespace SOUND::PLUGINS;
 
 constexpr Float FULL = 1.0f;
-constexpr Float OPEN = 0.6f;
 constexpr Float SPAN = 400.0f;
 constexpr Float FAN = 200.0f;
 constexpr Float PACE = 0.2f;
 constexpr Float WIDTH = 0.8f;
 constexpr Float GLIDING = 0.02f;
+constexpr Float WOBBLE = 0.4f;
+constexpr Float JITTER = 0.01f;
 
 auto panned(Float pan) -> CHOIR::Stereo {
   return {pan > 0 ? FULL - pan : FULL, pan < 0 ? FULL + pan : FULL};
@@ -21,11 +22,16 @@ void seat(const CHOIR::Choir &choir, CHOIR::Singer &singer, Float sex) {
   const Float fan = singer.seat.shift * rows[CHOIR::SPREAD] * ::FAN;
   singer.shift = sex * CORE::PHASE::ratio(fan);
   singer.pan = ::panned(singer.seat.pan * ::WIDTH);
-  CORE::GLOTTIS::settle(singer.source, ::OPEN, rows[CHOIR::BREATH]);
+  CORE::GLOTTIS::settle(
+    singer.source, rows[CHOIR::TENSION], rows[CHOIR::BREATH], choir.rate);
   const Float pace = FULL + singer.seat.pace * ::PACE;
   singer.vibrato.hertz = rows[CHOIR::RATE] * pace;
   singer.vibrato.depth = rows[CHOIR::DEPTH];
-  CORE::MODULATOR::settle(singer.vibrato, choir.rate / CHOIR::CONTROL);
+  singer.vibrato.fade = rows[CHOIR::DELAY];
+  const Whole stride = choir.rate / CHOIR::CONTROL;
+  CORE::MODULATOR::settle(singer.vibrato, stride);
+  CORE::MODULATOR::settle(singer.wobble, ::WOBBLE, stride);
+  CORE::MODULATOR::settle(singer.jitter, ::JITTER, stride);
 }
 
 void envelope(CHOIR::Choir &choir) {

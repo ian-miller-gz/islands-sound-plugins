@@ -24,6 +24,8 @@ struct Singer {
   CORE::GLOTTIS::Source source;
   CORE::FILTER::Formant formant;
   CORE::MODULATOR::Lfo vibrato;
+  CORE::MODULATOR::Drift wobble;
+  CORE::MODULATOR::Drift jitter;
   CORE::ENVELOPE::Gate gate;
   Seat seat;
   Float shift = 1;

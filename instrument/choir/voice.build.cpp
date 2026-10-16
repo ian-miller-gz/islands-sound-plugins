@@ -23,6 +23,9 @@ void seat(CHOIR::Choir &choir, CHOIR::Singer &singer, Whole at) {
   singer.seat.pan = CORE::MODULATOR::draw(seed);
   singer.seat.pace = CORE::MODULATOR::draw(seed);
   singer.vibrato.start = ::fraction(seed);
+  CORE::MODULATOR::seed(singer.wobble, seed);
+  CORE::MODULATOR::draw(seed);
+  CORE::MODULATOR::seed(singer.jitter, seed);
 }
 
 void space(CHOIR::Choir &choir) {
