@@ -8,6 +8,8 @@ void SOUND::PLUGINS::CLAP::settle(Voice &voice) {
     .decay = rows[DECAY],
     .tone = rows[TONE],
     .tail = rows[TAIL],
+    .cutoff = rows[CUTOFF],
+    .emphasis = rows[EMPHASIS],
     .bursts = Whole(rows[BURSTS]),
     .scatter = rows[SCATTER],
     .curve = rows[CURVE],

@@ -30,6 +30,10 @@ void advance(PERCUSSION::Clap &clap) {
   if (--clap.left == 0) ENVELOPE::strike(clap.gate, clap.tail, clap.velocity);
 }
 
+auto low(PERCUSSION::Clap &clap, Float in) -> Float {
+  return clap.open ? in : FILTER::tick(clap.low, in);
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::CORE::PERCUSSION::settle(
@@ -37,6 +41,7 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   settle(
     clap, Hand{.spread = spread, .decay = decay, .tone = tone, .tail = tone},
     rate);
+  clap.open = true;
 }
 
 void SOUND::PLUGINS::CORE::PERCUSSION::settle(
@@ -49,6 +54,8 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   shape(clap.tail, hand.decay, rate);
   FILTER::settle(clap.band, FILTER::BAND, hand.tone, WIDTH, FLAT, rate);
   FILTER::settle(clap.ring, FILTER::BAND, hand.tail, WIDTH, FLAT, rate);
+  FILTER::settle(clap.low, FILTER::LOW, hand.cutoff, hand.emphasis, rate);
+  clap.open = false;
 }
 
 void SOUND::PLUGINS::CORE::PERCUSSION::strike(Clap &clap, Float velocity) {
@@ -70,5 +77,5 @@ auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Clap &clap) -> Float {
   const Float noise = NOISE::tick(clap.white);
   const Float bursts = FILTER::tick(clap.band, noise) * burst;
   const Float ring = FILTER::tick(clap.ring, noise) * tail * clap.velocity;
-  return SHAPER::soft((bursts + ring) * GAIN);
+  return SHAPER::soft(::low(clap, bursts + ring) * GAIN);
 }

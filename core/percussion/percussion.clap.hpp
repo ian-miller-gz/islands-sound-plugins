@@ -11,6 +11,8 @@ struct Hand {
   Float decay = 0;
   Float tone = 0;
   Float tail = 0;
+  Float cutoff = 0;
+  Float emphasis = 0;
   Whole bursts = BURSTS;
   Float scatter = 0;
   Float curve = 0;
@@ -21,9 +23,11 @@ struct Clap {
   NOISE::White white;
   FILTER::Biquad band;
   FILTER::Biquad ring;
+  FILTER::Variable low;
   ENVELOPE::Envelope tail;
   ENVELOPE::Gate gate;
   Hand hand;
+  Flag open = true;
   Whole gap = 0;
   Whole next = 0;
   Whole clock = 0;
