@@ -10,15 +10,11 @@ constexpr Float CORNER = 500.0f;
 constexpr Float OCTAVES = 4.0f;
 constexpr Float FALL = 0.5f;
 
-auto bounded(Float tension) -> Float {
-  return tension < 0 ? 0 : tension > GLOTTIS::FULL ? GLOTTIS::FULL : tension;
-}
-
 }  // namespace
 
 void SOUND::PLUGINS::CORE::GLOTTIS::settle(
   Source &source, Float tension, Float breath, Whole rate) {
-  const Float held = ::bounded(tension);
+  const Float held = FILTER::bounded(tension);
   const Float open = WIDEST - held * (WIDEST - CLOSEST);
   settle(source, open, breath * (FULL - FALL * held));
   const Float corner = CORNER * std::exp2(OCTAVES * held);
