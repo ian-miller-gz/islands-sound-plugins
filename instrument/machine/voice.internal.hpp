@@ -15,6 +15,8 @@ struct Machine {
   CORE::PERCUSSION::HYBRID::Hat hat;
   CORE::PERCUSSION::Clap clap;
   CORE::PERCUSSION::HYBRID::Tom tom;
+  CORE::PERCUSSION::HYBRID::Cymbal cymbal;
+  CORE::PERCUSSION::Clave rim;
   CORE::BLOCK::Meter meter;
 };
 

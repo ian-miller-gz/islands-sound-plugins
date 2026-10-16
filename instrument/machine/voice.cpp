@@ -11,6 +11,7 @@ auto create(Whole rate, Whole channels) -> void * {
   auto *machine = new MACHINE::Machine{.rate = rate, .channels = channels};
   CORE::TABLE::rest(MACHINE::SHEET, machine->rows);
   CORE::PERCUSSION::HYBRID::build(machine->hat, rate);
+  CORE::PERCUSSION::HYBRID::build(machine->cymbal, rate);
   MACHINE::settle(*machine);
   return machine;
 }

@@ -3,9 +3,12 @@
 
 namespace {
 using namespace SOUND::PLUGINS;
+using CORE::PERCUSSION::CLICK::RIM;
 using CORE::PERCUSSION::HEIGHT::HIGH;
 using CORE::PERCUSSION::HEIGHT::LOW;
 using CORE::PERCUSSION::HEIGHT::MID;
+using CORE::PERCUSSION::HYBRID::STROKE::CRASH;
+using CORE::PERCUSSION::HYBRID::STROKE::RIDE;
 using CORE::PERCUSSION::OPENING::CLOSED;
 using CORE::PERCUSSION::OPENING::OPEN;
 
@@ -20,13 +23,18 @@ struct Pad {
   Whole part;
 };
 
-constexpr Pad PADS[] = {{35, MACHINE::KICK, WHOLE},  {36, MACHINE::KICK, WHOLE},
-                        {38, MACHINE::SNARE, WHOLE}, {39, MACHINE::CLAP, WHOLE},
-                        {40, MACHINE::SNARE, WHOLE}, {41, MACHINE::TOM, LOW},
-                        {42, MACHINE::HAT, CLOSED},  {43, MACHINE::TOM, LOW},
-                        {44, MACHINE::HAT, CLOSED},  {45, MACHINE::TOM, MID},
-                        {46, MACHINE::HAT, OPEN},    {47, MACHINE::TOM, MID},
-                        {48, MACHINE::TOM, HIGH},    {50, MACHINE::TOM, HIGH}};
+constexpr Pad PADS[] = {
+  {35, MACHINE::KICK, WHOLE},   {36, MACHINE::KICK, WHOLE},
+  {37, MACHINE::RIM, RIM},      {38, MACHINE::SNARE, WHOLE},
+  {39, MACHINE::CLAP, WHOLE},   {40, MACHINE::SNARE, WHOLE},
+  {41, MACHINE::TOM, LOW},      {42, MACHINE::HAT, CLOSED},
+  {43, MACHINE::TOM, LOW},      {44, MACHINE::HAT, CLOSED},
+  {45, MACHINE::TOM, MID},      {46, MACHINE::HAT, OPEN},
+  {47, MACHINE::TOM, MID},      {48, MACHINE::TOM, HIGH},
+  {49, MACHINE::CYMBAL, CRASH}, {50, MACHINE::TOM, HIGH},
+  {51, MACHINE::CYMBAL, RIDE},  {52, MACHINE::CYMBAL, CRASH},
+  {53, MACHINE::CYMBAL, RIDE},  {55, MACHINE::CYMBAL, CRASH},
+  {57, MACHINE::CYMBAL, CRASH}, {59, MACHINE::CYMBAL, RIDE}};
 
 using Strike = void (*)(MACHINE::Machine &machine, Whole part, Float velocity);
 
@@ -45,6 +53,12 @@ constexpr Strike STRIKES[MACHINE::DRUMS] = {
   },
   [](MACHINE::Machine &machine, Whole part, Float velocity) {
     CORE::PERCUSSION::HYBRID::strike(machine.tom, part, velocity);
+  },
+  [](MACHINE::Machine &machine, Whole part, Float velocity) {
+    CORE::PERCUSSION::HYBRID::strike(machine.cymbal, part, velocity);
+  },
+  [](MACHINE::Machine &machine, Whole part, Float velocity) {
+    CORE::PERCUSSION::strike(machine.rim, part, velocity);
   }};
 
 auto found(Whole pitch) -> const Pad * {

@@ -14,11 +14,10 @@ struct Voicing {
 };
 
 constexpr Voicing VOICINGS[MACHINE::DRUMS] = {
-  {.tune = 50},
-  {.tune = 185, .snappy = 0.7f},
-  {.closed = 0.05f},
-  {.spread = 0.009f},
-  {.tune = 100}};
+  {.tune = 50},      {.tune = 185, .snappy = 0.7f},
+  {.closed = 0.05f}, {.spread = 0.009f},
+  {.tune = 100},     {},
+  {.tune = 2500}};
 
 struct Knobs {
   Float shift = 0;
@@ -57,6 +56,14 @@ constexpr Settle SETTLES[MACHINE::DRUMS] = {
     CORE::PERCUSSION::HYBRID::settle(
       machine.tom, tuned(made.tune, knobs.shift), knobs.decay, knobs.timbre,
       machine.rate);
+  },
+  [](MACHINE::Machine &machine, const Voicing &, const Knobs &knobs) {
+    CORE::PERCUSSION::HYBRID::settle(
+      machine.cymbal, knobs.shift, knobs.decay, machine.rate);
+  },
+  [](MACHINE::Machine &machine, const Voicing &made, const Knobs &knobs) {
+    CORE::PERCUSSION::settle(
+      machine.rim, tuned(made.tune, knobs.shift), knobs.decay, machine.rate);
   }};
 
 auto knobs(const MACHINE::Machine &machine, Whole drum) -> Knobs {
@@ -69,10 +76,10 @@ auto knobs(const MACHINE::Machine &machine, Whole drum) -> Knobs {
 }  // namespace
 
 void SOUND::PLUGINS::MACHINE::settle(Machine &machine, Whole drum) {
-  if (drum >= STANDING) return;
+  if (drum >= DRUMS) return;
   ::SETTLES[drum](machine, ::VOICINGS[drum], ::knobs(machine, drum));
 }
 
 void SOUND::PLUGINS::MACHINE::settle(Machine &machine) {
-  for (Whole drum = 0; drum < STANDING; ++drum) settle(machine, drum);
+  for (Whole drum = 0; drum < DRUMS; ++drum) settle(machine, drum);
 }
