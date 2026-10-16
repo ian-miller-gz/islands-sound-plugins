@@ -22,6 +22,7 @@ struct Kit {
   CORE::BLOCK::Meter meter;
 };
 
+auto drummed(Whole index) -> Whole;
 void settle(Kit &kit, Whole drum);
 void settle(Kit &kit);
 
