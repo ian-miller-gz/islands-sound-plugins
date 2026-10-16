@@ -58,10 +58,10 @@ constexpr Settle SETTLES[MACHINE::DRUMS] = {
 }  // namespace
 
 void SOUND::PLUGINS::MACHINE::settle(Machine &machine, Whole drum) {
-  if (drum >= DRUMS) return;
-  ::SETTLES[drum](machine, ::VOICINGS[drum], machine.rows[place(drum, TUNE)]);
+  if (drum >= STANDING) return;
+  ::SETTLES[drum](machine, ::VOICINGS[drum], machine.rows[SEATS[drum].tune]);
 }
 
 void SOUND::PLUGINS::MACHINE::settle(Machine &machine) {
-  for (Whole drum = 0; drum < DRUMS; ++drum) settle(machine, drum);
+  for (Whole drum = 0; drum < STANDING; ++drum) settle(machine, drum);
 }

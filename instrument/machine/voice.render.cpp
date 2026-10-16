@@ -27,8 +27,8 @@ constexpr Tick TICKS[MACHINE::DRUMS] = {
 
 auto SOUND::PLUGINS::MACHINE::mix(Machine &machine) -> Float {
   Float sum = 0;
-  for (Whole drum = 0; drum < DRUMS; ++drum)
-    sum += ::TICKS[drum](machine) * machine.rows[place(drum, LEVEL)];
+  for (Whole drum = 0; drum < STANDING; ++drum)
+    sum += ::TICKS[drum](machine) * machine.rows[SEATS[drum].level];
   return CORE::SHAPER::soft(sum);
 }
 
