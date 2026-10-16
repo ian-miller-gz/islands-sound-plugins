@@ -14,7 +14,7 @@ auto create(Whole rate, Whole channels) -> void * {
   module->lfo.wave = CORE::MODULATOR::SINE;
   RESONATOR::settle(*module);
   for (Whole channel = 0; channel < channels; ++channel)
-    RESONATOR::sweep(*module, channel, 0);
+    RESONATOR::sweep(*module, channel, 0, 0);
   return module;
 }
 

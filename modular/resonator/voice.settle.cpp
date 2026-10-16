@@ -20,13 +20,14 @@ auto kind(const RESONATOR::Module &module) -> Whole {
 void SOUND::PLUGINS::RESONATOR::settle(Module &module) {
   module.lfo.hertz = module.rows[RATE];
   CORE::MODULATOR::settle(module.lfo, module.rate);
-  module.countdown = 0;
+  CORE::BLOCK::reset(module.stride);
 }
 
 void SOUND::PLUGINS::RESONATOR::sweep(
-  Module &module, Whole channel, Float octaves) {
+  Module &module, Whole channel, Float swing, Float cv) {
   const Float *rows = module.rows;
-  const Float hertz = rows[CUTOFF] * std::exp2(octaves);
+  const Float hertz = CORE::BLOCK::scaled(
+    rows[CUTOFF] * std::exp2(swing), cv, rows[DEPTH], LOWEST, HIGHEST);
   CORE::FILTER::settle(
     module.filters[channel], ::kind(module), hertz, rows[EMPHASIS],
     module.rate);

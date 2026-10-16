@@ -7,7 +7,7 @@
 
 namespace SOUND::PLUGINS::RESONATOR {
 
-constexpr Whole STRIDE = 16;
+constexpr Whole STRIDE = 4;
 
 struct Module {
   Whole rate = 0;
@@ -15,12 +15,12 @@ struct Module {
   Float rows[PARAMETERS] = {};
   Vector<CORE::FILTER::Variable> filters;
   CORE::MODULATOR::Lfo lfo;
-  Whole countdown = 0;
+  CORE::BLOCK::Stride stride;
   CORE::BLOCK::Meter meter;
 };
 
 void settle(Module &module);
-void sweep(Module &module, Whole channel, Float octaves);
+void sweep(Module &module, Whole channel, Float swing, Float cv);
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
 
 void render(
