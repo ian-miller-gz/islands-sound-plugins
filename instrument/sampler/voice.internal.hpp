@@ -48,6 +48,7 @@ struct Synth {
 using Surface = CORE::TABLE::Surface<Synth, SHEET>;
 
 void take(Synth &synth);
+void tone(Synth &synth);
 auto frames(const Clip &clip) -> Whole;
 
 auto picked(const Synth &synth, Float value) -> Float;

@@ -11,6 +11,7 @@ auto create(Whole rate, Whole channels) -> void * {
   synth->pace = pace == 0 ? 1 : pace;
   CORE::TABLE::rest(SAMPLER::SHEET, synth->rows);
   SAMPLER::take(*synth);
+  SAMPLER::tone(*synth);
   SAMPLER::settle(*synth);
   return synth;
 }

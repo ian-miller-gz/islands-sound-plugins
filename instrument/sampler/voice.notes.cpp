@@ -11,7 +11,6 @@ void kept(SAMPLER::Synth &, Whole) {}
 void struck(SAMPLER::Synth &synth, Whole at) {
   SAMPLER::Voice &voice = synth.voices[at];
   CORE::VOICE::Note &note = synth.allocator.notes[at];
-  if (synth.clips.empty()) return (void)(note.sounding = false);
   voice.clip = Whole(synth.rows[SAMPLER::STOCK]);
   voice.region = SAMPLER::region(synth, synth.clips[voice.clip]);
   voice.along = 0;
