@@ -83,5 +83,8 @@ void SOUND::PLUGINS::KIT::settle(Kit &kit, Whole drum) {
 }
 
 void SOUND::PLUGINS::KIT::settle(Kit &kit) {
-  for (Whole drum = 0; drum < DRUMS; ++drum) settle(kit, drum);
+  for (Whole drum = 0; drum < DRUMS; ++drum) {
+    settle(kit, drum);
+    pan(kit, drum);
+  }
 }

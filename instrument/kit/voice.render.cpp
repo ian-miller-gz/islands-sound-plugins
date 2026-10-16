@@ -32,12 +32,14 @@ constexpr Sounding SOUNDINGS[KIT::DRUMS] = {
 
 }  // namespace
 
-auto SOUND::PLUGINS::KIT::mix(Kit &kit) -> Float {
-  Float sum = 0;
+auto SOUND::PLUGINS::KIT::mix(Kit &kit) -> CORE::STEREO::Pair {
+  CORE::STEREO::Pair sum;
   for (Whole drum = 0; drum < DRUMS; ++drum)
-    if (::SOUNDINGS[drum](kit))
-      sum += ::TICKS[drum](kit) * kit.rows[place(drum, LEVEL)];
-  return CORE::SHAPER::soft(sum);
+    if (::SOUNDINGS[drum](kit)) {
+      const Float hit = ::TICKS[drum](kit) * kit.rows[place(drum, LEVEL)];
+      CORE::STEREO::add(sum, hit, kit.sides[drum]);
+    }
+  return {CORE::SHAPER::soft(sum.left), CORE::SHAPER::soft(sum.right)};
 }
 
 void SOUND::PLUGINS::KIT::render(

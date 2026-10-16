@@ -46,6 +46,7 @@ void SOUND::PLUGINS::KIT::apply(Kit &kit, const AUDIO::PLUGIN::Event &event) {
     kit.rows[event.index] =
       CORE::TABLE::clamped(SHEET, event.index, event.value);
     settle(kit, drummed(event.index));
+    pan(kit, panned(event.index));
     return;
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
