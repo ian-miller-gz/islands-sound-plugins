@@ -12,10 +12,18 @@ static_assert(RESUME == CORE::ENVELOPE::RESUME);
 
 constexpr Whole LEAD = 0;
 
+struct Countdown {
+  Whole delay = 0;
+  Whole hold = 0;
+};
+
 struct Module {
   Whole rate = 0;
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
+  Float velocity = CORE::ENVELOPE::FULL;
+  Countdown spans;
+  Countdown left;
   CORE::VOICE::Allocator allocator;
   CORE::ENVELOPE::Envelope envelope;
   CORE::ENVELOPE::Gate gate;
@@ -29,6 +37,8 @@ auto shaped(const Float *rows) -> CORE::ENVELOPE::Envelope;
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
 void strike(Module &module, Float velocity);
 void lift(Module &module);
+auto spanned(const Float *rows, Whole rate) -> Countdown;
+auto step(Module &module) -> Float;
 void follow(Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame);
 
 void render(

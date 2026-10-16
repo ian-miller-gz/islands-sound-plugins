@@ -13,6 +13,7 @@ void struck(ENVELOPE::Module &module, const CORE::VOICE::Note &note) {
 }
 
 void tied(ENVELOPE::Module &module, const CORE::VOICE::Note &note) {
+  if (module.left.delay > 0) return;
   CORE::ENVELOPE::tie(module.gate, module.envelope, note.velocity);
 }
 
@@ -38,6 +39,7 @@ void SOUND::PLUGINS::ENVELOPE::seat(Module &module) {
 void SOUND::PLUGINS::ENVELOPE::settle(Module &module) {
   module.envelope = shaped(module.rows);
   CORE::ENVELOPE::shape(module.envelope, module.rate);
+  module.spans = spanned(module.rows, module.rate);
 }
 
 void SOUND::PLUGINS::ENVELOPE::apply(
