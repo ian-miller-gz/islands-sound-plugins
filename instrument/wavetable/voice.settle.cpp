@@ -49,5 +49,5 @@ void SOUND::PLUGINS::WAVETABLE::settle(Synth &synth) {
   CORE::VOICE::settle(synth.allocator, synth.rate);
   ::swing(synth);
   synth.tune = rows[TUNE] / CENT;
-  for (Voice &voice : synth.voices) voice.stale = true;
+  for (Voice &voice : synth.voices) CORE::BLOCK::reset(voice.stride);
 }

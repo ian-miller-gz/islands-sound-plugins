@@ -39,20 +39,28 @@ void tune(
   CORE::FILTER::settle(
     voice.ladder, rows[WAVETABLE::CUTOFF] * std::exp2(octaves),
     rows[WAVETABLE::RESONANCE], DRIVE, synth.rate);
-  voice.stale = false;
+}
+
+auto table(const WAVETABLE::Synth &synth, Whole at)
+  -> const CORE::OSCILLATOR::Table & {
+  const Whole layout = Whole(synth.rows[::SOURCES[at].table]);
+  return synth.tables[layout < WAVETABLE::TABLES ? layout : 0];
+}
+
+void choose(WAVETABLE::Synth &synth, WAVETABLE::Voice &voice) {
+  for (Whole at = 0; at < WAVETABLE::SOURCES; ++at) {
+    const Float step = CORE::PHASE::fraction(voice.oscillators[at].step);
+    voice.levels[at] = CORE::OSCILLATOR::level(::table(synth, at), step);
+  }
 }
 
 auto take(
   WAVETABLE::Synth &synth, WAVETABLE::Voice &voice, Whole at,
   Float shift) -> Float {
-  const Source &source = ::SOURCES[at];
-  const Whole layout = Whole(synth.rows[source.table]);
-  const CORE::OSCILLATOR::Table &table =
-    synth.tables[layout < WAVETABLE::TABLES ? layout : 0];
   CORE::OSCILLATOR::Oscillator &oscillator = voice.oscillators[at];
-  const Float position = synth.rows[source.position] + shift;
-  const Float value =
-    CORE::OSCILLATOR::morph(table, position, oscillator.phase);
+  const Float position = synth.rows[::SOURCES[at].position] + shift;
+  const Float value = CORE::OSCILLATOR::morph(
+    ::table(synth, at), position, voice.levels[at], oscillator.phase);
   oscillator.phase += oscillator.step;
   return value;
 }
@@ -67,8 +75,10 @@ auto play(WAVETABLE::Synth &synth, Whole at, Float lfo) -> Float {
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
   const Float pitch = key + note.cents / CENT + synth.tune +
                       rows[WAVETABLE::BEND] + rows[WAVETABLE::VIBRATO] * lfo;
-  if (voice.stale || synth.clock == 0)
+  if (CORE::BLOCK::due(voice.stride, WAVETABLE::STRIDE)) {
     ::tune(synth, voice, pitch, key, contour);
+    ::choose(synth, voice);
+  }
   const Float shift =
     rows[WAVETABLE::SWEEP] * contour + rows[WAVETABLE::SCAN] * lfo;
   const Float mix = rows[WAVETABLE::MIX];
@@ -86,6 +96,5 @@ auto SOUND::PLUGINS::WAVETABLE::sound(Synth &synth) -> Float {
   const Float lfo = CORE::MODULATOR::tick(synth.lfo);
   Float sum = 0;
   for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at, lfo);
-  synth.clock = (synth.clock + 1) % CONTROL;
   return sum;
 }

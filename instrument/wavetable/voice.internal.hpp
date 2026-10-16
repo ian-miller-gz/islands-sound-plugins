@@ -12,8 +12,8 @@ namespace SOUND::PLUGINS::WAVETABLE {
 
 constexpr Whole VOICES = 8;
 constexpr Whole SOURCES = 2;
-constexpr Whole CONTROL = 16;
-constexpr Whole PARTIALS = 32;
+constexpr Whole STRIDE = 16;
+constexpr Whole PARTIALS = CORE::OSCILLATOR::TOP;
 constexpr Whole KEYS = 8;
 constexpr Whole SPAN = (FRAMES - 1) / (KEYS - 1);
 constexpr Float REFERENCE = 60;
@@ -21,10 +21,11 @@ static_assert(SPAN * (KEYS - 1) == FRAMES - 1);
 
 struct Voice {
   CORE::OSCILLATOR::Oscillator oscillators[SOURCES];
+  Whole levels[SOURCES] = {};
   CORE::FILTER::Ladder ladder;
   CORE::ENVELOPE::Gate contour;
   CORE::ENVELOPE::Gate door;
-  Flag stale = true;
+  CORE::BLOCK::Stride stride;
 };
 
 struct Synth {
@@ -39,7 +40,6 @@ struct Synth {
   CORE::ENVELOPE::Envelope door;
   CORE::MODULATOR::Lfo lfo;
   Float tune = 0;
-  Whole clock = 0;
   CORE::BLOCK::Meter meter;
 };
 

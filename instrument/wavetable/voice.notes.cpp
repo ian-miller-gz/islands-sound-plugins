@@ -11,7 +11,7 @@ void struck(WAVETABLE::Synth &synth, Whole at) {
   const Float velocity = synth.allocator.notes[at].velocity;
   CORE::ENVELOPE::strike(voice.contour, synth.contour, velocity);
   CORE::ENVELOPE::strike(voice.door, synth.door, velocity);
-  voice.stale = true;
+  CORE::BLOCK::reset(voice.stride);
 }
 
 void lifted(WAVETABLE::Synth &synth, Whole at) {
