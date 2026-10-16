@@ -9,6 +9,7 @@ namespace SOUND::PLUGINS::SHAPER {
 struct Stage {
   CORE::SHAPER::Oversampler oversampler;
   CORE::SHAPER::Crusher crusher;
+  CORE::SHAPER::Chebyshev chebyshev;
   CORE::SHAPER::Blocker blocker;
 };
 

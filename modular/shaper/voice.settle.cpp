@@ -30,9 +30,17 @@ auto crush(SHAPER::Stage &stage, Float in) -> Float {
   return CORE::SHAPER::hard(CORE::SHAPER::tick(stage.crusher, in));
 }
 
+auto chebyshev(SHAPER::Stage &stage, Float in) -> Float {
+  const auto shape = [&stage](Float sample) {
+    return CORE::SHAPER::tick(stage.chebyshev, sample);
+  };
+  return CORE::SHAPER::tick(stage.oversampler, in, shape);
+}
+
 using Path = auto (*)(SHAPER::Stage &, Float) -> Float;
 
-constexpr Path PATHS[SHAPER::CURVES] = {soft, hard, tube, fold, crush};
+constexpr Path PATHS[SHAPER::CURVES] = {soft, hard,  tube,
+                                        fold, crush, chebyshev};
 
 }  // namespace
 
@@ -42,6 +50,7 @@ void SOUND::PLUGINS::SHAPER::settle(Module &module) {
     CORE::SHAPER::settle(
       stage.crusher, module.rows[BITS], module.rows[RATE], module.rate);
     CORE::SHAPER::settle(stage.blocker, ::FLOOR, module.rate);
+    CORE::SHAPER::settle(stage.chebyshev, module.rows[EVEN], module.rows[ODD]);
   }
 }
 
