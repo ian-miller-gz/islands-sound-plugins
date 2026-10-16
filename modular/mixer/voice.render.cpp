@@ -16,8 +16,9 @@ void mix(
     const Whole at = ::side(channel);
     Float sum = 0;
     for (Whole in = 0; in < MIXER::INS; ++in)
-      sum += lanes[in * channels + channel][frame] * module.weights[in][at];
-    lanes[channel][frame] = sum;
+      sum += CORE::BLOCK::lane(lanes, in, channel, channels)[frame] *
+             module.weights[in][at];
+    CORE::BLOCK::lane(lanes, MIXER::OUT, channel, channels)[frame] = sum;
   }
 }
 

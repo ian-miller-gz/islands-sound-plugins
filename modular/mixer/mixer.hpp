@@ -8,6 +8,7 @@
 namespace SOUND::PLUGINS::MIXER {
 
 constexpr Whole INS = 4;
+constexpr Whole OUT = 0;
 constexpr Whole CV = INS;
 constexpr Whole LEVEL = 0;
 constexpr Whole PAN = LEVEL + INS;
