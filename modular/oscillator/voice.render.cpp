@@ -31,14 +31,12 @@ using Shape = auto (*)(OSCILLATOR::Module &) -> Float;
 
 constexpr Shape SHAPES[OSCILLATOR::WAVES] = {saw, pulse, triangle, sine, super};
 
-auto sound(OSCILLATOR::Module &module) -> Float {
+auto sound(OSCILLATOR::Module &module, const OSCILLATOR::Ins &ins) -> Float {
   if (!module.sounding) return 0;
   const Float *rows = module.rows;
-  CORE::VOICE::Note &lead = module.allocator.notes[0];
-  const Float glided = CORE::VOICE::tick(lead, module.allocator.glide);
-  const Float pitch = glided + rows[OSCILLATOR::COARSE] +
-                      rows[OSCILLATOR::FINE] / OSCILLATOR::CENTS;
-  if (module.stale || pitch != module.pitch) OSCILLATOR::tune(module, pitch);
+  const Float pitch = OSCILLATOR::pitched(module, ins);
+  const Flag moved = pitch != module.pitch || ins.fm != module.fm;
+  if (module.stale || moved) OSCILLATOR::tune(module, pitch, ins.fm);
   const Whole wave = Whole(rows[OSCILLATOR::WAVE]);
   return SHAPES[wave < OSCILLATOR::WAVES ? wave : OSCILLATOR::SAW](module) *
          rows[OSCILLATOR::GAIN];
@@ -58,9 +56,11 @@ void SOUND::PLUGINS::OSCILLATOR::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
-    const Float sample = ::sound(module);
+    const Ins ins = read(module, lanes, frame);
+    const Float sample = ::sound(module, ins);
     for (Whole channel = 0; channel < module.channels; ++channel)
-      lanes[channel][frame] = sample;
+      CORE::BLOCK::lane(lanes, IN::PITCH, channel, module.channels)[frame] =
+        sample;
     const Float size = CORE::BLOCK::magnitude(sample);
     if (size > peak) peak = size;
   }

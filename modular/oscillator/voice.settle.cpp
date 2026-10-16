@@ -18,12 +18,13 @@ void SOUND::PLUGINS::OSCILLATOR::settle(Module &module) {
   module.stale = true;
 }
 
-void SOUND::PLUGINS::OSCILLATOR::tune(Module &module, Float pitch) {
-  const Float hertz = CORE::PHASE::hertz(pitch);
+void SOUND::PLUGINS::OSCILLATOR::tune(Module &module, Float pitch, Float fm) {
+  const Float hertz = modulated(module, pitch, fm);
   const Float *rows = module.rows;
   CORE::OSCILLATOR::settle(module.oscillator, hertz, rows[WIDTH], module.rate);
   CORE::OSCILLATOR::settle(module.super, hertz, rows[DETUNE], MIX, module.rate);
   module.pitch = pitch;
+  module.fm = fm;
   module.stale = false;
 }
 
