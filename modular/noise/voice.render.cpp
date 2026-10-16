@@ -20,9 +20,18 @@ auto blue(NOISE::Source &source) -> Float {
   return CORE::NOISE::tick(source.blue);
 }
 
+auto violet(NOISE::Source &source) -> Float {
+  return CORE::NOISE::tick(source.violet);
+}
+
+auto velvet(NOISE::Source &source) -> Float {
+  return CORE::NOISE::tick(source.velvet);
+}
+
 using Colour = auto (*)(NOISE::Source &) -> Float;
 
-constexpr Colour COLOURS[] = {white, pink, brown, blue};
+constexpr Colour COLOURS[] = {white, pink, brown, blue, violet, velvet};
+static_assert(std::size(COLOURS) == NOISE::COLOURS);
 
 auto colour(const NOISE::Module &module) -> Colour {
   const Whole chosen = Whole(module.rows[NOISE::COLOUR]);
