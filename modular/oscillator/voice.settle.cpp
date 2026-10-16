@@ -38,7 +38,7 @@ void SOUND::PLUGINS::OSCILLATOR::settle(Module &module) {
 void SOUND::PLUGINS::OSCILLATOR::tune(Module &module, Float pitch, Float fm) {
   const Float hertz = modulated(module, pitch, fm);
   const Float *rows = module.rows;
-  CORE::OSCILLATOR::settle(module.oscillator, hertz, rows[WIDTH], module.rate);
+  CORE::OSCILLATOR::settle(module.sync.slave, hertz, rows[WIDTH], module.rate);
   CORE::OSCILLATOR::settle(module.super, hertz, rows[DETUNE], MIX, module.rate);
   module.pitch = pitch;
   module.fm = fm;

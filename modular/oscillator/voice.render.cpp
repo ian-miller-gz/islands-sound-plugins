@@ -4,30 +4,31 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-auto saw(OSCILLATOR::Module &module) -> Float {
-  return CORE::OSCILLATOR::tick(module.oscillator, CORE::OSCILLATOR::SAW);
+auto saw(OSCILLATOR::Module &module, Float since) -> Float {
+  return CORE::OSCILLATOR::tick(module.sync, since, CORE::OSCILLATOR::SAW);
 }
 
-auto pulse(OSCILLATOR::Module &module) -> Float {
-  return CORE::OSCILLATOR::tick(module.oscillator, CORE::OSCILLATOR::PULSE);
+auto pulse(OSCILLATOR::Module &module, Float since) -> Float {
+  return CORE::OSCILLATOR::tick(module.sync, since, CORE::OSCILLATOR::PULSE);
 }
 
-auto triangle(OSCILLATOR::Module &module) -> Float {
-  return CORE::OSCILLATOR::tick(module.oscillator, CORE::OSCILLATOR::TRIANGLE);
+auto triangle(OSCILLATOR::Module &module, Float since) -> Float {
+  return CORE::OSCILLATOR::tick(module.sync, since, CORE::OSCILLATOR::TRIANGLE);
 }
 
-auto sine(OSCILLATOR::Module &module) -> Float {
-  CORE::OSCILLATOR::Oscillator &oscillator = module.oscillator;
+auto sine(OSCILLATOR::Module &module, Float since) -> Float {
+  CORE::OSCILLATOR::Oscillator &oscillator = module.sync.slave;
   const Float value = CORE::OSCILLATOR::sine(module.table, oscillator.phase);
   oscillator.phase += oscillator.step;
+  if (since >= 0) CORE::OSCILLATOR::reset(oscillator, 0);
   return value;
 }
 
-auto super(OSCILLATOR::Module &module) -> Float {
+auto super(OSCILLATOR::Module &module, Float) -> Float {
   return CORE::OSCILLATOR::tick(module.super);
 }
 
-using Shape = auto (*)(OSCILLATOR::Module &) -> Float;
+using Shape = auto (*)(OSCILLATOR::Module &, Float) -> Float;
 
 constexpr Shape SHAPES[OSCILLATOR::WAVES] = {saw, pulse, triangle, sine, super};
 
@@ -38,8 +39,8 @@ auto sound(OSCILLATOR::Module &module, const OSCILLATOR::Ins &ins) -> Float {
   const Flag moved = pitch != module.pitch || ins.fm != module.fm;
   if (module.stale || moved) OSCILLATOR::tune(module, pitch, ins.fm);
   const Whole wave = Whole(rows[OSCILLATOR::WAVE]);
-  return SHAPES[wave < OSCILLATOR::WAVES ? wave : OSCILLATOR::SAW](module) *
-         rows[OSCILLATOR::GAIN];
+  const Shape shape = SHAPES[wave < OSCILLATOR::WAVES ? wave : OSCILLATOR::SAW];
+  return shape(module, ins.since) * rows[OSCILLATOR::GAIN];
 }
 
 }  // namespace

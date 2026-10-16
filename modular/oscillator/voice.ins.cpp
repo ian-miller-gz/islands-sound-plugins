@@ -13,12 +13,20 @@ auto at(
   return CORE::BLOCK::lane(lanes, in, FIRST, module.channels)[frame];
 }
 
+auto edged(OSCILLATOR::Module &module, Float sync) -> Float {
+  const Flag rose =
+    CORE::BLOCK::crossed(module.edge, sync) == CORE::BLOCK::ROSE;
+  return rose ? module.edge.since : CORE::OSCILLATOR::NONE;
+}
+
 }  // namespace
 
 auto SOUND::PLUGINS::OSCILLATOR::read(
   Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame) -> Ins {
-  return {
-    ::at(module, lanes, IN::PITCH, frame), ::at(module, lanes, IN::FM, frame)};
+  const Float pitch = ::at(module, lanes, IN::PITCH, frame);
+  const Float fm = ::at(module, lanes, IN::FM, frame);
+  const Float sync = ::at(module, lanes, IN::SYNC, frame);
+  return {pitch, fm, ::edged(module, sync)};
 }
 
 auto SOUND::PLUGINS::OSCILLATOR::pitched(Module &module, const Ins &ins)

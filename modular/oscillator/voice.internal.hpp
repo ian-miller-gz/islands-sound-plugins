@@ -14,6 +14,7 @@ constexpr Whole MIDDLE = 60;
 struct Ins {
   Float pitch = 0;
   Float fm = 0;
+  Float since = CORE::OSCILLATOR::NONE;
 };
 
 struct Module {
@@ -21,9 +22,10 @@ struct Module {
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
   CORE::VOICE::Allocator allocator;
-  CORE::OSCILLATOR::Oscillator oscillator;
+  CORE::OSCILLATOR::Sync sync;
   CORE::OSCILLATOR::Super super;
   CORE::OSCILLATOR::Table table;
+  CORE::BLOCK::Edge edge;
   Float pitch = 0;
   Float fm = 0;
   Flag stale = true;
