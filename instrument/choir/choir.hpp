@@ -3,7 +3,9 @@
 #include "../../../plugin.hpp"
 #include "../../core/filter/filter.hpp"
 #include "../../core/glottis/glottis.hpp"
+#include "../../core/reverb/reverb.hpp"
 #include "../../core/table/table.hpp"
+#include "choir.words.hpp"
 
 namespace SOUND::PLUGINS::CHOIR {
 
@@ -24,25 +26,17 @@ constexpr Whole ATTACK = 13;
 constexpr Whole DECAY = 14;
 constexpr Whole SUSTAIN = 15;
 constexpr Whole RELEASE = 16;
-constexpr Whole PARAMETERS = 17;
-
-constexpr Whole STEPS = CORE::FILTER::VOWELS - 1;
-constexpr Float LAST = Float(STEPS);
-constexpr Float QUICKEST = 0.001f;
-constexpr Float SLOWEST = 4.0f;
-constexpr Float STILLEST = 0.01f;
-constexpr Float RESTLESS = 2.0f;
-constexpr Float WIDEST = 50.0f;
-constexpr Float LATEST = 0.25f;
-
-namespace VIBRATO {
-constexpr Float SLOWEST = 0.1f;
-constexpr Float FASTEST = 12.0f;
-constexpr Float WIDEST = 100.0f;
-}  // namespace VIBRATO
-
-inline constexpr STRING::Hot VOWELS[] = {"A", "E", "I", "O", "U"};
-static_assert(sizeof(VOWELS) / sizeof(VOWELS[0]) == CORE::FILTER::VOWELS);
+constexpr Whole VOICE = 17;
+constexpr Whole TARGET = 18;
+constexpr Whole TENSION = 19;
+constexpr Whole DELAY = 20;
+constexpr Whole DRIFT = 21;
+constexpr Whole SINGERS = 22;
+constexpr Whole SIZE = 23;
+constexpr Whole TAIL = 24;
+constexpr Whole MODE = 25;
+constexpr Whole GLIDE = 26;
+constexpr Whole PARAMETERS = 27;
 
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Gain", "", 0.5f, 0, 1, 0, nullptr},
@@ -61,7 +55,17 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Attack", "s", 0.3f, QUICKEST, SLOWEST, 0, nullptr},
   {"Decay", "s", 0.5f, QUICKEST, SLOWEST, 0, nullptr},
   {"Sustain", "", 0.9f, 0, 1, 0, nullptr},
-  {"Release", "s", 0.8f, QUICKEST, SLOWEST, 0, nullptr}};
+  {"Release", "s", 0.8f, QUICKEST, SLOWEST, 0, nullptr},
+  {"Voice", "", Float(MIXED), 0, Float(MIXED), MIXED, VOICES},
+  {"Target", "", 1, 0, LAST, STEPS, VOWELS},
+  {"Tension", "", 0.5f, 0, 1, 0, nullptr},
+  {"Delay", "s", 0.3f, 0, SLOWEST, 0, nullptr},
+  {"Drift", "ct", 4.0f, 0, WANDER, 0, nullptr},
+  {"Singers", "", Float(SEATS), Float(FEWEST), Float(SEATS), SECTIONS, nullptr},
+  {"Size", "", 0.8f, CORE::REVERB::SMALLEST, CORE::REVERB::LARGEST, 0, nullptr},
+  {"Tail", "s", 1.4f, BRIEFEST, LONGEST, 0, nullptr},
+  {"Mode", "", 0, 0, Float(VOICINGS), VOICINGS, MODES},
+  {"Glide", "s", 0.08f, 0, TRAVEL, 0, nullptr}};
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);

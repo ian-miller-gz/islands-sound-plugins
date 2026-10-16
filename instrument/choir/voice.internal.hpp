@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "choir.hpp"
+#include "voice.seats.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/line/line.hpp"
@@ -11,53 +12,9 @@
 namespace SOUND::PLUGINS::CHOIR {
 
 constexpr Whole NOTES = 6;
-constexpr Whole SINGERS = 8;
 constexpr Whole CONTROL = 64;
-constexpr Whole TAPS = 3;
-constexpr Whole SIDES = CORE::REVERB::SIDES;
 constexpr Float CENT = 100.0f;
 constexpr Float BLEND = 0.35355339f;
-
-using Stereo = CORE::REVERB::Stereo;
-
-struct Seat {
-  Float detune = 0;
-  Float shift = 0;
-  Float pan = 0;
-  Float pace = 0;
-};
-
-struct Singer {
-  CORE::GLOTTIS::Source source;
-  CORE::FILTER::Formant formant;
-  CORE::MODULATOR::Lfo vibrato;
-  CORE::ENVELOPE::Gate gate;
-  Seat seat;
-  Float shift = 1;
-  Stereo pan = {1, 1};
-  Whole wait = 0;
-  Flag pending = false;
-};
-
-struct Part {
-  Singer singers[SINGERS];
-};
-
-struct Side {
-  CORE::LINE::Line line;
-  CORE::LINE::Sweep sweeps[TAPS];
-};
-
-struct Ensemble {
-  Side sides[SIDES];
-  CORE::MODULATOR::Lfo lfos[TAPS];
-  Float mix = 0;
-};
-
-struct Room {
-  CORE::REVERB::Network network;
-  Float mix = 0;
-};
 
 struct Choir {
   Whole rate = 0;
