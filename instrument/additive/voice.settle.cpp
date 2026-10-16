@@ -1,8 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#include <algorithm>
+#include <cmath>
+
 #include "voice.internal.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
+
+constexpr Float DECIBELS = 6.02f;
+constexpr Whole PARITY = 2;
+constexpr Float FULL = 1;
 
 auto envelope(
   Float attack, Float decay, Float sustain, Float release, Whole curve,
@@ -19,10 +26,21 @@ auto series(const Float *rows, Whole at) -> Float {
   return rows[ADDITIVE::HARMONIC8] * Float(ADDITIVE::HARMONICS) / Float(at + 1);
 }
 
+auto balanced(Float balance, Whole order) -> Float {
+  if (order == 1) return FULL;
+  return order % PARITY == 0 ? FULL + std::min(balance, 0.0f)
+                             : FULL - std::max(balance, 0.0f);
+}
+
 void spread(ADDITIVE::Synth &synth) {
+  const Float *rows = synth.rows;
+  const Float tilt = rows[ADDITIVE::TILT] / DECIBELS;
+  const Float stretch = FULL + rows[ADDITIVE::STRETCH] / CORE::PHASE::CENTS;
   for (Whole at = 0; at < ADDITIVE::BANK; ++at) {
-    synth.weights[at] = ::series(synth.rows, at);
-    synth.ratios[at] = Float(at + 1);
+    const Float order = Float(at + 1);
+    synth.weights[at] = ::series(rows, at) * std::pow(order, tilt) *
+                        ::balanced(rows[ADDITIVE::BALANCE], at + 1);
+    synth.ratios[at] = std::pow(order, stretch);
   }
 }
 
