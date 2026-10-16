@@ -51,12 +51,24 @@ void visit(SAMPLER::Synth &synth, const CORE::VOICE::Note &note) {
   VISITS[note.change](synth, at);
 }
 
+void release(SAMPLER::Synth &synth) {
+  CORE::VOICE::Allocator &allocator = synth.allocator;
+  for (Whole &key : allocator.keys) key = 0;
+  for (Whole at = 0; at < SAMPLER::POLYPHONY; ++at) {
+    if (!allocator.notes[at].held) continue;
+    allocator.notes[at].held = false;
+    lifted(synth, at);
+  }
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::SAMPLER::land(Synth &synth, Whole row, Float value) {
   if (row >= PARAMETERS) return;
+  const Float before = synth.rows[row];
   synth.rows[row] = row == STOCK ? picked(synth, value)
                                  : CORE::TABLE::clamped(SHEET, row, value);
+  if (row == MODE && synth.rows[row] != before) ::release(synth);
   settle(synth);
   CORE::BLOCK::reset(synth.stride);
 }
