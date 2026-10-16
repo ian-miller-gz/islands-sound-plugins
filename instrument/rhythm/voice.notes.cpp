@@ -53,6 +53,7 @@ void run(RHYTHM::Box &box) {
   if (box.rows[RHYTHM::RUN] > 0) return CORE::CLOCK::run(box.clock);
   CORE::CLOCK::stop(box.clock);
   CORE::CLOCK::reset(box.clock);
+  RHYTHM::rewind(box);
 }
 
 }  // namespace

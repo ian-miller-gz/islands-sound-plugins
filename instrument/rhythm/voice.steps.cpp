@@ -43,7 +43,7 @@ void fill(RHYTHM::Box &box, Whole steps, Whole step, Float velocity) {
   const Whole left = steps - step;
   if (left > ::STROKED) return;
   const Stroke &stroke = ::STROKES[::STROKED - left];
-  RHYTHM::strike(box, stroke.voice, stroke.part, velocity * ::ROLL);
+  RHYTHM::queue(box, stroke.voice, stroke.part, velocity * ::ROLL);
 }
 
 void play(RHYTHM::Box &box, Whole edge) {
@@ -55,16 +55,17 @@ void play(RHYTHM::Box &box, Whole edge) {
   const Float velocity = ::weight(box, chosen, step);
   for (Whole voice = 0; voice < RHYTHM::VOICES; ++voice)
     if (RHYTHM::struck(chosen, voice, step))
-      RHYTHM::strike(box, voice, ::PARTS[voice], velocity);
+      RHYTHM::queue(box, voice, ::PARTS[voice], velocity);
   if (::filling(box, bar) && step + chosen.division >= steps)
     ::fill(box, steps, step, velocity);
   if (step == 0 && bar > 0 && ::filling(box, bar - ::ONE))
-    RHYTHM::strike(box, RHYTHM::CYMBAL, PLATE::CRASH, ::HIT);
+    RHYTHM::queue(box, RHYTHM::CYMBAL, PLATE::CRASH, ::HIT);
 }
 
 }  // namespace
 
 void SOUND::PLUGINS::RHYTHM::pulse(Box &box) {
+  drain(box);
   CORE::CLOCK::Edge edge;
   if (CORE::CLOCK::advance(box.clock, ::ONE, &edge, ::ONE) == ::ONE)
     ::play(box, edge.step);
