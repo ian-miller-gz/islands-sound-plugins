@@ -31,6 +31,8 @@ void SOUND::PLUGINS::WHISPER::settle(Mouth &mouth) {
   mouth.motion.hertz = rows[MOTION];
   CORE::MODULATOR::settle(mouth.motion, pace);
   place(mouth);
-  for (Hiss &hiss : mouth.hisses)
+  for (Hiss &hiss : mouth.hisses) {
     CORE::GLOTTIS::settle(hiss.source, TENSION, 0, mouth.rate);
+    hiss.pan = CORE::STEREO::pan(hiss.place * rows[WIDTH]);
+  }
 }

@@ -31,11 +31,13 @@ auto hissed(WHISPER::Mouth &mouth, CORE::VOICE::Note &note, WHISPER::Hiss &hiss)
 
 }  // namespace
 
-auto SOUND::PLUGINS::WHISPER::breathe(Mouth &mouth) -> Float {
-  Float sum = 0;
+auto SOUND::PLUGINS::WHISPER::breathe(Mouth &mouth) -> CORE::STEREO::Pair {
+  CORE::STEREO::Pair sum;
   for (Whole at = 0; at < HISSES; ++at) {
     CORE::VOICE::Note &note = mouth.allocator.notes[at];
-    if (note.sounding) sum += ::hissed(mouth, note, mouth.hisses[at]);
+    if (!note.sounding) continue;
+    Hiss &hiss = mouth.hisses[at];
+    CORE::STEREO::add(sum, ::hissed(mouth, note, hiss), hiss.pan);
   }
   return sum;
 }
