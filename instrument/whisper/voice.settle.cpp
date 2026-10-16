@@ -17,6 +17,7 @@ void SOUND::PLUGINS::WHISPER::settle(Mouth &mouth) {
     rows[ATTACK], rows[DECAY], rows[SUSTAIN], rows[RELEASE]);
   mouth.envelope.depth = CORE::ENVELOPE::FULL;
   CORE::ENVELOPE::shape(mouth.envelope, mouth.rate);
+  allocate(mouth);
   mouth.pole = CORE::MODULATOR::pole(GLIDING, pace);
   mouth.motion.hertz = rows[MOTION];
   CORE::MODULATOR::settle(mouth.motion, pace);

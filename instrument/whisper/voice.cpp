@@ -9,7 +9,6 @@ using Surface = CORE::TABLE::Surface<WHISPER::Mouth, WHISPER::SHEET>;
 auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *mouth = new WHISPER::Mouth{.rate = rate, .channels = channels};
-  mouth->allocator.count = WHISPER::HISSES;
   for (Whole at = 0; at < WHISPER::HISSES; ++at)
     WHISPER::seed(
       mouth->hisses[at],

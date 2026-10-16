@@ -46,6 +46,18 @@ auto hissed(WHISPER::Mouth &mouth, CORE::VOICE::Note &note, WHISPER::Hiss &hiss)
   return CORE::FILTER::tick(hiss.formant, noise) * level;
 }
 
+void release(WHISPER::Mouth &mouth) {
+  CORE::VOICE::Allocator &allocator = mouth.allocator;
+  for (Whole &key : allocator.keys) key = 0;
+  for (CORE::VOICE::Note &note : allocator.notes) {
+    if (!note.held) continue;
+    note.held = false;
+    note.change = CORE::VOICE::LIFTED;
+  }
+  CORE::VOICE::drain(
+    allocator, [&mouth](CORE::VOICE::Note &note) { ::voice(mouth, note); });
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::WHISPER::apply(
@@ -54,7 +66,9 @@ void SOUND::PLUGINS::WHISPER::apply(
     mouth.allocator, event,
     [&mouth](CORE::VOICE::Note &note) { ::voice(mouth, note); });
   if (row >= PARAMETERS) return;
+  const Float before = mouth.rows[row];
   mouth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
+  if (row == MODE && mouth.rows[row] != before) ::release(mouth);
   settle(mouth);
   CORE::BLOCK::reset(mouth.stride);
 }

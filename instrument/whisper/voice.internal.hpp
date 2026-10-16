@@ -46,6 +46,8 @@ struct Mouth {
 
 void seed(Hiss &hiss, CORE::NOISE::Register state);
 
+void allocate(Mouth &mouth);
+
 void place(Mouth &mouth);
 
 void shape(Mouth &mouth, Whole at, Flag leap);
