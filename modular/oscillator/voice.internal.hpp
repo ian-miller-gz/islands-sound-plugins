@@ -9,6 +9,7 @@ namespace SOUND::PLUGINS::OSCILLATOR {
 
 constexpr Float MIX = 0.5f;
 constexpr Whole LEAD = 0;
+constexpr Whole MIDDLE = 60;
 
 struct Ins {
   Float pitch = 0;
@@ -26,7 +27,7 @@ struct Module {
   Float pitch = 0;
   Float fm = 0;
   Flag stale = true;
-  Flag sounding = false;
+  Flag struck = false;
   CORE::BLOCK::Meter meter;
 };
 
@@ -38,6 +39,7 @@ auto read(Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame)
 auto pitched(Module &module, const Ins &ins) -> Float;
 auto modulated(const Module &module, Float pitch, Float fm) -> Float;
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
+auto playing(const Module &module) -> Flag;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,

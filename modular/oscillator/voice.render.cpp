@@ -32,7 +32,7 @@ using Shape = auto (*)(OSCILLATOR::Module &) -> Float;
 constexpr Shape SHAPES[OSCILLATOR::WAVES] = {saw, pulse, triangle, sine, super};
 
 auto sound(OSCILLATOR::Module &module, const OSCILLATOR::Ins &ins) -> Float {
-  if (!module.sounding) return 0;
+  if (!OSCILLATOR::playing(module)) return 0;
   const Float *rows = module.rows;
   const Float pitch = OSCILLATOR::pitched(module, ins);
   const Flag moved = pitch != module.pitch || ins.fm != module.fm;
