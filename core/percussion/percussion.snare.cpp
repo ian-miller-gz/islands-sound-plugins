@@ -55,6 +55,9 @@ void SOUND::PLUGINS::CORE::PERCUSSION::settle(
 
 void SOUND::PLUGINS::CORE::PERCUSSION::strike(Snare &snare, Float velocity) {
   snare.velocity = struck(velocity);
+  const SNARE::Setting &setting = snare.setting;
+  const Float tone = touched(setting.tone, snare.velocity, setting.touch);
+  FILTER::settle(snare.band, FILTER::BAND, tone, WIDTH, FLAT, snare.rate);
   strike(snare.low, snare.low.base, snare.velocity);
   strike(snare.high, snare.high.base, snare.velocity * UPPER);
   for (Whole at = 0; at < SNARE::MODES; ++at)

@@ -13,7 +13,8 @@ void SOUND::PLUGINS::SNARE::settle(Voice &voice) {
       .bend = rows[BEND],
       .drop = rows[DROP],
       .hold = rows[HOLD],
-      .body = rows[BODY]},
+      .body = rows[BODY],
+      .touch = rows[TOUCH]},
     voice.rate);
 }
 
@@ -26,6 +27,7 @@ void SOUND::PLUGINS::SNARE::apply(
     settle(voice);
     return;
   }
-  if (event.kind == AUDIO::PLUGIN::Event::NOTE_ON && event.value > 0)
-    CORE::PERCUSSION::strike(voice.snare, event.value);
+  if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
+  CORE::PERCUSSION::strike(
+    voice.snare, CORE::PERCUSSION::struck(event.value, voice.rows[CURVE]));
 }

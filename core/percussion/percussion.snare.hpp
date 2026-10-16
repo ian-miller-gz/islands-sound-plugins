@@ -20,6 +20,7 @@ struct Setting {
   Float drop = DROP;
   Float hold = 0;
   Float body = 0;
+  Float touch = 0;
 };
 
 }  // namespace SNARE
