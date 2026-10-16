@@ -22,6 +22,7 @@ struct Module {
 
 void seat(Module &module);
 void settle(Module &module);
+auto shaped(const Float *rows) -> CORE::ENVELOPE::Envelope;
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
 
 void render(

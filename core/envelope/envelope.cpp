@@ -7,8 +7,6 @@ namespace {
 using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float SINGLE = 1.0f;
-constexpr Float RISE = 0.3f;
-constexpr Float SETTLE = 0.001f;
 
 auto linear(Float frames, Float from, Float to, Float) -> ENVELOPE::Slope {
   const Float span = frames <= SINGLE ? SINGLE : frames;
@@ -51,12 +49,13 @@ void SOUND::PLUGINS::CORE::ENVELOPE::shape(Envelope &envelope, Whole rate) {
   const Builder build = ::built(envelope);
   const Float sustain = envelope.sustain;
   envelope.slopes[IDLE] = {0, 0};
-  envelope.slopes[RISING] = build(frames(envelope.attack, rate), 0, FULL, RISE);
+  envelope.slopes[RISING] =
+    build(frames(envelope.attack, rate), 0, FULL, envelope.rise);
   envelope.slopes[FALLING] =
-    build(frames(envelope.decay, rate), FULL, sustain, SETTLE);
+    build(frames(envelope.decay, rate), FULL, sustain, envelope.fall);
   envelope.slopes[HELD] = {0, sustain};
   envelope.slopes[LEAVING] =
-    build(frames(envelope.release, rate), FULL, 0, SETTLE);
+    build(frames(envelope.release, rate), FULL, 0, envelope.fall);
   const Float bounds[STAGES] = {0, FULL, sustain, sustain, 0};
   for (Whole stage = 0; stage < STAGES; ++stage)
     envelope.bounds[stage] = bounds[stage];
