@@ -16,6 +16,6 @@ void SOUND::PLUGINS::COWBELL::apply(
     settle(voice);
     return;
   }
-  if (event.kind == AUDIO::PLUGIN::Event::NOTE_ON && event.value > 0)
-    CORE::PERCUSSION::strike(voice.cowbell, event.value);
+  if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
+  strike(voice, event);
 }

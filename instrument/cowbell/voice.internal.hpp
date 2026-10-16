@@ -2,6 +2,7 @@
 #pragma once
 #include "cowbell.hpp"
 #include "../../core/block/block.hpp"
+#include "../../core/envelope/envelope.hpp"
 #include "../../core/percussion/percussion.hpp"
 
 namespace SOUND::PLUGINS::COWBELL {
@@ -15,6 +16,8 @@ struct Voice {
 };
 
 void settle(Voice &voice);
+
+void strike(Voice &voice, const AUDIO::PLUGIN::Event &event);
 
 void apply(Voice &voice, const AUDIO::PLUGIN::Event &event);
 
