@@ -10,6 +10,7 @@ constexpr Float SPAN = 400.0f;
 constexpr Float FAN = 200.0f;
 constexpr Float PACE = 0.2f;
 constexpr Float WIDTH = 0.8f;
+constexpr Float GLIDING = 0.02f;
 
 auto panned(Float pan) -> CHOIR::Stereo {
   return {pan > 0 ? FULL - pan : FULL, pan < 0 ? FULL + pan : FULL};
@@ -25,7 +26,6 @@ void seat(const CHOIR::Choir &choir, CHOIR::Singer &singer, Float sex) {
   singer.vibrato.hertz = rows[CHOIR::RATE] * pace;
   singer.vibrato.depth = rows[CHOIR::DEPTH];
   CORE::MODULATOR::settle(singer.vibrato, choir.rate / CHOIR::CONTROL);
-  CORE::FILTER::settle(singer.formant, choir.place, singer.shift, choir.rate);
 }
 
 void envelope(CHOIR::Choir &choir) {
@@ -45,6 +45,7 @@ void SOUND::PLUGINS::CHOIR::settle(Choir &choir) {
   choir.gain = rows[GAIN];
   choir.scatter = rows[SCATTER] * Float(choir.rate);
   place(choir);
+  choir.pole = CORE::MODULATOR::pole(::GLIDING, choir.rate / CONTROL);
   allocate(choir);
   choir.motion.hertz = rows[MOTION];
   CORE::MODULATOR::settle(choir.motion, choir.rate / CONTROL);

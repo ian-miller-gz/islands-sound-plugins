@@ -15,7 +15,7 @@ void struck(CHOIR::Choir &choir, CORE::VOICE::Note &note, CHOIR::Part &part) {
     singer.pending = true;
     CORE::MODULATOR::reset(singer.vibrato);
   }
-  CHOIR::tune(choir, note, part);
+  CHOIR::tune(choir, note, part, true);
 }
 
 void lifted(CHOIR::Choir &, CORE::VOICE::Note &, CHOIR::Part &part) {
