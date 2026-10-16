@@ -77,9 +77,13 @@ auto play(WAVETABLE::Synth &synth, Whole at, Float lfo) -> Float {
 
 }  // namespace
 
-auto SOUND::PLUGINS::WAVETABLE::sound(Synth &synth) -> Float {
+auto SOUND::PLUGINS::WAVETABLE::sound(Synth &synth) -> Sum {
   const Float lfo = CORE::MODULATOR::tick(synth.lfo);
-  Float sum = 0;
-  for (Whole at = 0; at < VOICES; ++at) sum += ::play(synth, at, lfo);
+  Sum sum;
+  for (Whole at = 0; at < VOICES; ++at) {
+    const Float out = synth.weight * ::play(synth, at, lfo);
+    CORE::STEREO::add(sum.sides, out, synth.voices[at].sides);
+    sum.whole += out;
+  }
   return sum;
 }

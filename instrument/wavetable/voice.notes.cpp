@@ -8,7 +8,9 @@ void kept(WAVETABLE::Synth &, Whole) {}
 
 void struck(WAVETABLE::Synth &synth, Whole at) {
   WAVETABLE::Voice &voice = synth.voices[at];
-  const Float velocity = synth.allocator.notes[at].velocity;
+  const CORE::VOICE::Note &note = synth.allocator.notes[at];
+  const Float velocity = note.velocity;
+  voice.sides = CORE::STEREO::pan(note.pan);
   CORE::ENVELOPE::strike(voice.contour, synth.contour, velocity);
   CORE::ENVELOPE::strike(voice.door, synth.door, velocity);
   CORE::BLOCK::reset(voice.stride);

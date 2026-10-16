@@ -6,11 +6,12 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/oscillator/oscillator.hpp"
+#include "../../core/stereo/stereo.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::WAVETABLE {
 
-constexpr Whole VOICES = 8;
+constexpr Whole VOICES = CORE::VOICE::VOICES;
 constexpr Whole SOURCES = 2;
 constexpr Whole STRIDE = 16;
 constexpr Whole PARTIALS = CORE::OSCILLATOR::TOP;
@@ -27,6 +28,12 @@ struct Voice {
   CORE::ENVELOPE::Gate contour;
   CORE::ENVELOPE::Gate door;
   CORE::BLOCK::Stride stride;
+  CORE::STEREO::Pair sides;
+};
+
+struct Sum {
+  CORE::STEREO::Pair sides;
+  Float whole = 0;
 };
 
 struct Synth {
@@ -41,6 +48,7 @@ struct Synth {
   CORE::ENVELOPE::Envelope door;
   CORE::MODULATOR::Lfo lfo;
   Float tune = 0;
+  Float weight = 1;
   CORE::BLOCK::Meter meter;
 };
 
@@ -57,7 +65,7 @@ void settle(
   Float contour);
 auto filter(const Synth &synth, Voice &voice, Float in) -> Float;
 
-auto sound(Synth &synth) -> Float;
+auto sound(Synth &synth) -> Sum;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
