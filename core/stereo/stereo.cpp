@@ -13,19 +13,15 @@ constexpr Float ROOT = std::numbers::sqrt2_v<Float>;
 constexpr Float QUARTER = std::numbers::pi_v<Float> * 0.25f;
 constexpr Whole SIDES = 2;
 
-auto held(Float value) -> Float {
-  return value > -FULL ? (value < FULL ? value : FULL) : -FULL;
-}
-
 }  // namespace
 
 auto SOUND::PLUGINS::CORE::STEREO::pan(Float place) -> Pair {
-  const Float angle = ::QUARTER * (::held(place) + ::FULL);
+  const Float angle = ::QUARTER * (BLOCK::clipped(place) + ::FULL);
   return {::ROOT * std::cos(angle), ::ROOT * std::sin(angle)};
 }
 
 auto SOUND::PLUGINS::CORE::STEREO::place(Float pitch, Float width) -> Float {
-  return ::held((pitch - CENTRE) / SPAN * width);
+  return BLOCK::clipped((pitch - CENTRE) / SPAN * width);
 }
 
 void SOUND::PLUGINS::CORE::STEREO::add(Pair &sum, Float in, Pair gains) {
