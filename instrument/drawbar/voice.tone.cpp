@@ -5,8 +5,6 @@ namespace {
 using namespace SOUND::PLUGINS;
 
 constexpr Float LEVEL = 0.08f;
-constexpr Float FULL = 1;
-constexpr Float DRIVING = 8;
 
 struct Tones {
   Float body = 0;
@@ -26,21 +24,17 @@ auto turn(DRAWBAR::Organ &organ) -> Tones {
   return tones;
 }
 
-auto drive(const Float *rows, Float in) -> Float {
-  const Float driven = rows[DRAWBAR::DRIVE];
-  if (driven <= 0) return in;
-  const Float gain = FULL + DRIVING * driven;
-  return CORE::SHAPER::soft(in * gain) / CORE::SHAPER::soft(gain);
-}
-
 }  // namespace
 
 auto SOUND::PLUGINS::DRAWBAR::sound(Organ &organ) -> Pair {
+  close(organ);
   const Tones tones = ::turn(organ);
   const Float decay = CORE::ENVELOPE::tick(organ.gate, organ.percussion);
   const Float percussion = tones.struck * decay * organ.accent;
-  Float mixed = LEVEL * (tones.body + percussion);
+  Float mixed = ::LEVEL * (tones.body + percussion);
   mixed += CORE::NOISE::tick(organ.click);
   mixed = tick(organ.scanner, mixed);
-  return tick(organ.rotary, organ, ::drive(organ.rows, mixed));
+  const Float driven = tick(organ.preamp, organ.rows, mixed);
+  return tick(
+    organ.room, organ.rows[REVERB], tick(organ.rotary, organ, driven));
 }

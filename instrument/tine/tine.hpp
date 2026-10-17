@@ -23,7 +23,14 @@ constexpr Whole STEREO = 12;
 constexpr Whole TUNE = 13;
 constexpr Whole BEND = 14;
 constexpr Whole VOLUME = 15;
-constexpr Whole PARAMETERS = 16;
+constexpr Whole TAPER = 16;
+constexpr Whole CURVE = 17;
+constexpr Whole TOUCH = 18;
+constexpr Whole HAMMER = 19;
+constexpr Whole DAMPER = 20;
+constexpr Whole HOLD = 21;
+constexpr Whole WIDTH = 22;
+constexpr Whole PARAMETERS = 23;
 
 constexpr Float INDEX = 4;
 constexpr Float CENTS = 100;
@@ -35,6 +42,7 @@ constexpr Float BRIEFEST = 0.5f;
 constexpr Float LONGEST = 20;
 constexpr Float SLOWEST = 0.1f;
 constexpr Float FASTEST = 12;
+constexpr Float OCTAVES = 6;
 
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Tone", "", 1.2f, 0, INDEX, 0, nullptr},
@@ -52,7 +60,14 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Stereo", "", 1, 0, 1, 0, nullptr},
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
   {"Bend", "st", 0, -SEMITONES, SEMITONES, 0, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Taper", "", 0.5f, 0, 1, 0, nullptr},
+  {"Curve", "", 0, -1, 1, 0, nullptr},
+  {"Touch", "oct", 3, 0, OCTAVES, 0, nullptr},
+  {"Hammer", "", 0.3f, 0, 1, 0, nullptr},
+  {"Damper", "", 0.3f, 0, 1, 0, nullptr},
+  {"Hold", "", 0, 0, 1, 1, nullptr},
+  {"Width", "", 0.5f, 0, 1, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

@@ -17,6 +17,10 @@ constexpr Float TEN = 10;
 constexpr Integer SECOND = 12;
 constexpr Integer THIRD = 19;
 constexpr Whole TOP = DRAWBAR::BARS - 1;
+constexpr Float UNIT = 1;
+constexpr Float CHORD = 10;
+constexpr Float DROP = 1.4125375f;
+constexpr Float LOAD = (DROP - UNIT) / (CHORD * Float(DRAWBAR::BARS));
 
 struct Gear {
   Float driving;
@@ -45,10 +49,22 @@ auto gain(Float degree) -> Float {
   return std::pow(TEN, -STEP * (DRAWBAR::PULLED - degree) / DECIBELS);
 }
 
-void sound(DRAWBAR::Organ &organ, Integer pitch, Integer harmonic) {
-  for (Whole bar = 0; bar < DRAWBAR::BARS; ++bar)
-    organ.targets[::fold(pitch + OFFSETS[bar])] += organ.gains[bar];
-  organ.strikes[::fold(pitch + harmonic)] += 1;
+auto sound(DRAWBAR::Organ &organ, Whole pitch, Integer harmonic) -> Float {
+  const Integer key = Integer(pitch);
+  Float drawn = 0;
+  for (Whole bar = 0; bar < DRAWBAR::BARS; ++bar) {
+    if (!DRAWBAR::closed(organ, pitch, bar)) continue;
+    organ.targets[::fold(key + OFFSETS[bar])] += organ.gains[bar];
+    drawn += organ.gains[bar];
+  }
+  organ.strikes[::fold(key + harmonic)] += UNIT;
+  return drawn;
+}
+
+void load(DRAWBAR::Organ &organ, Float drawn) {
+  const Float burden = organ.rows[DRAWBAR::LOADING] * drawn * LOAD;
+  const Float share = UNIT / (UNIT + burden);
+  for (Float &target : organ.targets) target *= share;
 }
 
 }  // namespace
@@ -71,6 +87,9 @@ void SOUND::PLUGINS::DRAWBAR::pull(Organ &organ) {
   std::fill(std::begin(organ.targets), std::end(organ.targets), 0.0f);
   std::fill(std::begin(organ.strikes), std::end(organ.strikes), 0.0f);
   const Integer harmonic = ::HARMONICS[organ.rows[HARMONIC] > 0 ? 1 : 0];
+  Float drawn = 0;
   for (Whole pitch = 0; pitch < CORE::PHASE::PITCHES; ++pitch)
-    if (organ.keys[pitch]) ::sound(organ, Integer(pitch), harmonic);
+    if (organ.keys[pitch]) drawn += ::sound(organ, pitch, harmonic);
+  leak(organ);
+  ::load(organ, drawn);
 }

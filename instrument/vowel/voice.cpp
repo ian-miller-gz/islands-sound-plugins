@@ -9,12 +9,10 @@ using Surface = CORE::TABLE::Surface<VOWEL::Singer, VOWEL::SHEET>;
 auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *singer = new VOWEL::Singer{.rate = rate, .channels = channels};
+  const Whole pace = rate / VOWEL::STRIDE;
+  singer->pace = pace == 0 ? 1 : pace;
   CORE::GLOTTIS::build(singer->table);
-  singer->allocator.count = VOWEL::VOICES;
-  for (Whole at = 0; at < VOWEL::VOICES; ++at)
-    CORE::GLOTTIS::seed(
-      singer->throats[at].source,
-      CORE::NOISE::SEED ^ (CORE::NOISE::Register(at + 1) * VOWEL::SCATTER));
+  for (Whole at = 0; at < VOWEL::THROATS; ++at) VOWEL::seat(*singer, at);
   CORE::TABLE::rest(VOWEL::SHEET, singer->rows);
   VOWEL::settle(*singer);
   return singer;

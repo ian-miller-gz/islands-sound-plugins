@@ -1,75 +1,100 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
-#include <threads.hpp>
-
 #include "sampler.hpp"
+#include "../../core/block/block.hpp"
+#include "../../core/envelope/envelope.hpp"
+#include "../../core/filter/filter.hpp"
+#include "../../core/modulator/modulator.hpp"
+#include "../../core/shaper/shaper.hpp"
+#include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::SAMPLER {
 
-struct Source {
+constexpr Whole STRIDE = 16;
+constexpr Whole ROOTS = 64;
+static_assert(POLYPHONY == CORE::VOICE::VOICES);
+
+struct Clip {
   String name;
   Vector<Vector<Float>> lanes;
+  Float ratio = 1;
+};
+
+struct Region {
+  Integer origin = 0;
+  Integer sign = 1;
+  Float length = 0;
+  Integer start = 0;
+  Integer end = 0;
+  Float fade = 0;
+  Whole walk = 0;
+  Flag wraps = false;
+};
+
+struct Blend {
+  Float near = 1;
+  Float far = 0;
 };
 
 struct Voice {
-  Whole source = 0;
-  Float place = 0;
-  Float base = 0;
+  Whole clip = 0;
+  Float along = 0;
+  Flag turned = false;
   Float step = 0;
-  Float from = 0;
   Float level = 0;
-  Float rise = 0;
-  Float fall = 0;
-  Float velocity = 0;
-  Whole pitch = 0;
-  Flag gated = false;
-  Flag live = false;
+  Flag held = false;
+  Whole reader = 0;
+  Region region;
+  CORE::ENVELOPE::Gate loudness;
+  CORE::ENVELOPE::Gate contour;
+  Vector<CORE::SHAPER::Oversampler> downs;
+  Vector<CORE::FILTER::Variable> filters;
 };
 
-struct Player {
+struct Synth {
   Whole rate = 0;
   Whole channels = 0;
-  Float ratio = 1;
-  Vector<Source> sources;
-  Vector<Float> steps;
-  Vector<Float> cents;
-  Float gain = 0;
-  Whole chosen = 0;
-  Float root = 0;
-  Float tune = 0;
-  Float tuning = 1;
-  Float lowest = 0;
-  Float start = 0;
-  Float loop = 0;
-  Float attack = 0;
-  Float release = 0;
-  Voice voices[VOICES];
-  Float level[2] = {0, 0};
-  THREADS::Shared<Whole> face{0};
+  Whole pace = 1;
+  Float rows[PARAMETERS] = {};
+  Vector<Clip> clips;
+  CORE::VOICE::Allocator allocator = {.steal = CORE::VOICE::QUIETEST};
+  Voice voices[POLYPHONY];
+  CORE::ENVELOPE::Envelope loudness;
+  CORE::ENVELOPE::Envelope contour;
+  CORE::MODULATOR::Lfo lfo;
+  Float swing = 0;
+  Float roots[ROOTS + 1] = {};
+  CORE::BLOCK::Stride stride;
+  CORE::BLOCK::Meter meter;
 };
 
-void stock(Player &player);
+using Surface = CORE::TABLE::Surface<Synth, SHEET>;
 
-auto frames(const Source &source) -> Whole;
+void take(Synth &synth);
+void tone(Synth &synth);
+auto frames(const Clip &clip) -> Whole;
 
-auto span(const Player &player) -> Float;
+auto picked(const Synth &synth, Float value) -> Float;
+auto reading(void *instance, Whole index) -> String;
+auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
 
-auto delta(Float seconds, Whole rate) -> Float;
+void settle(Synth &synth);
+void steer(Synth &synth, Whole at);
+auto base(const Synth &synth, const Voice &voice, Float key) -> Float;
+void land(Synth &synth, Whole row, Float value);
+void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
-void apply(Player &player, const AUDIO::PLUGIN::Event &event);
-
-void steer(Player &player, Whole id, Float value);
+auto region(const Synth &synth, const Clip &clip, Flag sustained) -> Region;
+auto walk(Voice &voice) -> Flag;
+void prepare(Synth &synth);
+auto blend(const Synth &synth, const Region &region, Float along) -> Blend;
+auto reader(const Synth &synth, Float step) -> Whole;
+auto read(const Synth &synth, Voice &voice, Whole lane) -> Float;
+void shade(Synth &synth, Whole at, Float key, Float contour);
+auto filtered(const Synth &synth, Voice &voice, Whole lane, Float in) -> Float;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
 }  // namespace SOUND::PLUGINS::SAMPLER
-
-namespace SOUND::PLUGINS::SAMPLER::SURFACE {
-auto parameters(void *instance) -> Whole;
-auto name(void *instance, Whole index) -> String;
-auto reading(void *instance, Whole index) -> String;
-auto held(void *instance, Whole index) -> Float;
-auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::PLUGINS::SAMPLER::SURFACE

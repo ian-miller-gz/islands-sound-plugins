@@ -15,17 +15,22 @@ void wake(TINE::Voice &voice) {
 
 void struck(TINE::Synth &synth, Whole at) {
   TINE::Voice &voice = synth.voices[at];
-  const Float velocity = synth.allocator.notes[at].velocity;
+  const Float velocity = TINE::curve(synth, synth.allocator.notes[at].velocity);
+  voice.velocity = velocity;
   ::wake(voice);
   TINE::shape(synth, at);
   TINE::tune(synth, at);
+  TINE::touch(synth, at);
   CORE::ENVELOPE::strike(voice.door, voice.loudness, velocity);
   CORE::ENVELOPE::strike(voice.strike, synth.strike, velocity);
   CORE::ENVELOPE::strike(voice.ring, synth.ring, velocity);
+  CORE::NOISE::strike(voice.hammer, synth.rows[TINE::HAMMER] * velocity);
 }
 
 void lifted(TINE::Synth &synth, Whole at) {
-  CORE::ENVELOPE::lift(synth.voices[at].door);
+  TINE::Voice &voice = synth.voices[at];
+  CORE::ENVELOPE::lift(voice.door);
+  CORE::NOISE::strike(voice.damper, synth.rows[TINE::DAMPER] * voice.velocity);
 }
 
 using Visit = void (*)(TINE::Synth &, Whole);
@@ -39,6 +44,12 @@ void visit(TINE::Synth &synth, const CORE::VOICE::Note &note) {
   VISITS[note.change](synth, at);
 }
 
+void sustain(TINE::Synth &synth) {
+  CORE::VOICE::hold(
+    synth.allocator, synth.rows[TINE::HOLD] > 0,
+    [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::TINE::apply(
@@ -49,4 +60,5 @@ void SOUND::PLUGINS::TINE::apply(
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);
+  if (row == HOLD) ::sustain(synth);
 }

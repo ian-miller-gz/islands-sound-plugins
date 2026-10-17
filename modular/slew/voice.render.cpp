@@ -1,6 +1,24 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
+namespace {
+using namespace SOUND::PLUGINS;
+
+void step(
+  SLEW::Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame) {
+  const Whole channels = module.channels;
+  for (Whole channel = 0; channel < channels; ++channel) {
+    const Float cv =
+      CORE::BLOCK::lane(lanes, SLEW::CV, channel, channels)[frame];
+    SLEW::tune(module, channel, cv);
+    Float &sample =
+      CORE::BLOCK::lane(lanes, SLEW::IN, channel, channels)[frame];
+    sample = CORE::MODULATOR::tick(module.slews[channel], sample);
+  }
+}
+
+}  // namespace
+
 void SOUND::PLUGINS::SLEW::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
@@ -13,10 +31,7 @@ void SOUND::PLUGINS::SLEW::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
-    for (Whole channel = 0; channel < module.channels; ++channel) {
-      Float &sample = lanes[channel][frame];
-      sample = CORE::MODULATOR::tick(module.slews[channel], sample);
-    }
+    ::step(module, lanes, frame);
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
   }

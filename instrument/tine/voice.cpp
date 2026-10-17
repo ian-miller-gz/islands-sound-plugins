@@ -11,6 +11,7 @@ auto create(Whole rate, Whole channels) -> void * {
   auto *synth = new TINE::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(TINE::SHEET, synth->rows);
   CORE::OSCILLATOR::build(synth->sine);
+  TINE::seed(*synth);
   TINE::settle(*synth);
   return synth;
 }

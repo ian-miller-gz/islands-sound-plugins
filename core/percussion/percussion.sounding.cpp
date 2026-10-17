@@ -23,7 +23,8 @@ auto SOUND::PLUGINS::CORE::PERCUSSION::sounding(const Snare &snare) -> Flag {
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::sounding(const Hat &hat) -> Flag {
-  return ENVELOPE::sounding(hat.gate);
+  return ENVELOPE::sounding(hat.shut.gate) ||
+         (ENVELOPE::sounding(hat.open.gate) && sounding(hat.choke));
 }
 
 auto SOUND::PLUGINS::CORE::PERCUSSION::sounding(const Clap &clap) -> Flag {

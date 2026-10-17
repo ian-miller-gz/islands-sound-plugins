@@ -4,6 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
+#include "../../core/line/line.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/voice/voice.hpp"
@@ -11,16 +12,17 @@
 namespace SOUND::PLUGINS::SUPERSAW {
 
 constexpr Whole VOICES = 8;
-constexpr Whole CONTROL = 16;
+constexpr Whole STRIDE = 16;
 constexpr Float REFERENCE = 60;
 
 struct Voice {
   CORE::OSCILLATOR::Super super;
   CORE::FILTER::Biquad highpass;
   CORE::FILTER::Ladder ladder;
+  CORE::FILTER::Variable variable;
   CORE::ENVELOPE::Gate contour;
   CORE::ENVELOPE::Gate door;
-  Flag stale = true;
+  CORE::BLOCK::Stride stride;
 };
 
 struct Pair {
@@ -38,15 +40,19 @@ struct Synth {
   Voice voices[VOICES];
   CORE::ENVELOPE::Envelope contour;
   CORE::ENVELOPE::Envelope door;
+  CORE::MODULATOR::Lfo lfo;
+  CORE::LINE::Chorus chorus;
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
   Float tune = 0;
-  Whole clock = 0;
   CORE::BLOCK::Meter meter;
 };
 
 void settle(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
+
+void settle(const Synth &synth, Voice &voice, Float cutoff);
+auto filter(const Synth &synth, Voice &voice, Float in) -> Float;
 
 auto sound(Synth &synth) -> Pair;
 

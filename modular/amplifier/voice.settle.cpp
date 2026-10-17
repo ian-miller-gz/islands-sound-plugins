@@ -7,4 +7,5 @@ void SOUND::PLUGINS::AMPLIFIER::apply(
   if (event.index >= PARAMETERS) return;
   module.rows[event.index] =
     CORE::TABLE::clamped(SHEET, event.index, event.value);
+  if (event.index == MODE) CORE::BLOCK::reset(module.stride);
 }

@@ -6,10 +6,15 @@ using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<MONO::Synth, MONO::SHEET>;
 
+constexpr CORE::MODULATOR::Seed WALK = 0x2545F491u;
+constexpr CORE::MODULATOR::Seed ROAM = 0x6C8E9CF5u;
+
 auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *synth = new MONO::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(MONO::SHEET, synth->rows);
+  CORE::MODULATOR::seed(synth->drift, WALK);
+  CORE::MODULATOR::seed(synth->wander, ROAM);
   MONO::settle(*synth);
   return synth;
 }

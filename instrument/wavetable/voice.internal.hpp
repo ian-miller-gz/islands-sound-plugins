@@ -6,14 +6,15 @@
 #include "../../core/filter/filter.hpp"
 #include "../../core/modulator/modulator.hpp"
 #include "../../core/oscillator/oscillator.hpp"
+#include "../../core/stereo/stereo.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::WAVETABLE {
 
-constexpr Whole VOICES = 8;
+constexpr Whole VOICES = CORE::VOICE::VOICES;
 constexpr Whole SOURCES = 2;
-constexpr Whole CONTROL = 16;
-constexpr Whole PARTIALS = 32;
+constexpr Whole STRIDE = 16;
+constexpr Whole PARTIALS = CORE::OSCILLATOR::TOP;
 constexpr Whole KEYS = 8;
 constexpr Whole SPAN = (FRAMES - 1) / (KEYS - 1);
 constexpr Float REFERENCE = 60;
@@ -21,10 +22,18 @@ static_assert(SPAN * (KEYS - 1) == FRAMES - 1);
 
 struct Voice {
   CORE::OSCILLATOR::Oscillator oscillators[SOURCES];
+  Whole levels[SOURCES] = {};
   CORE::FILTER::Ladder ladder;
+  CORE::FILTER::Variable variable;
   CORE::ENVELOPE::Gate contour;
   CORE::ENVELOPE::Gate door;
-  Flag stale = true;
+  CORE::BLOCK::Stride stride;
+  CORE::STEREO::Pair sides;
+};
+
+struct Sum {
+  CORE::STEREO::Pair sides;
+  Float whole = 0;
 };
 
 struct Synth {
@@ -39,7 +48,9 @@ struct Synth {
   CORE::ENVELOPE::Envelope door;
   CORE::MODULATOR::Lfo lfo;
   Float tune = 0;
-  Whole clock = 0;
+  Float weight = 1;
+  Whole warp = 0;
+  Float slope = 1;
   CORE::BLOCK::Meter meter;
 };
 
@@ -51,7 +62,15 @@ void settle(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
-auto sound(Synth &synth) -> Float;
+void settle(
+  const Synth &synth, Voice &voice, const CORE::VOICE::Note &note, Float key,
+  Float contour);
+auto filter(const Synth &synth, Voice &voice, Float in) -> Float;
+
+auto slope(Whole kind, Float amount) -> Float;
+auto warp(const Synth &synth, CORE::PHASE::Wheel phase) -> CORE::PHASE::Wheel;
+
+auto sound(Synth &synth) -> Sum;
 
 void render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,

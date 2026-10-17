@@ -6,11 +6,16 @@ using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<DCO::Synth, DCO::SHEET>;
 
+constexpr CORE::MODULATOR::Seed WALK = 0x2545F491u;
+
 auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *synth = new DCO::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(DCO::SHEET, synth->rows);
-  DCO::build(synth->chorus, rate);
+  CORE::LINE::build(synth->chorus, rate);
+  CORE::VOICE::draw(synth->trims, CORE::MODULATOR::SEED);
+  for (Whole at = 0; at < DCO::VOICES; ++at)
+    CORE::MODULATOR::seed(synth->voices[at].drift, WALK * (at + 1));
   DCO::settle(*synth);
   return synth;
 }

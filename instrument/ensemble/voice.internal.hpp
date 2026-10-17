@@ -3,21 +3,20 @@
 #include <cstdint>
 
 #include "ensemble.hpp"
+#include "voice.ensemble.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
-#include "../../core/line/line.hpp"
-#include "../../core/modulator/modulator.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 
 namespace SOUND::PLUGINS::ENSEMBLE {
 
 using Counter = std::uint64_t;
 
-constexpr Whole LINES = 3;
 constexpr Whole CLASSES = 12;
 constexpr Whole TOP = 120;
 constexpr Whole REGISTERS = 4;
+constexpr Whole BANDS = 3;
 constexpr Float BRIGHT = 7000;
 constexpr Float MELLOW = 2500;
 constexpr Float WARM = 1600;
@@ -38,28 +37,18 @@ struct Key {
   Flag held = false;
   Float target = 0;
   Float level = 0;
+  Float velocity = CORE::ENVELOPE::FULL;
+  CORE::ENVELOPE::Gate gate;
+};
+
+struct Resonator {
+  CORE::FILTER::Biquad bands[BANDS];
+  Float wet = 0;
 };
 
 struct Sums {
   Float eight = 0;
   Float sixteen = 0;
-};
-
-struct Pair {
-  Float left = 0;
-  Float right = 0;
-  Float whole = 0;
-};
-
-struct Ensemble {
-  CORE::FILTER::Pole bucket;
-  CORE::LINE::Line line;
-  CORE::LINE::Sweep sweeps[LINES];
-  CORE::MODULATOR::Lfo slow[LINES];
-  CORE::MODULATOR::Lfo fast[LINES];
-  Float wet = 0;
-  Float chorus = 0;
-  Float vibrato = 0;
 };
 
 struct Synth {
@@ -74,6 +63,7 @@ struct Synth {
   CORE::ENVELOPE::Envelope envelope;
   CORE::ENVELOPE::Gate gate;
   CORE::FILTER::Biquad tones[REGISTERS];
+  Resonator resonator;
   Ensemble ensemble;
   CORE::BLOCK::Meter meter;
 };
@@ -81,11 +71,10 @@ struct Synth {
 void settle(Synth &synth);
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
-auto divide(Synth &synth) -> Sums;
+auto divide(Synth &synth, Float swell) -> Sums;
 
-void build(Ensemble &ensemble, Whole rate);
-void settle(Ensemble &ensemble, const Float *rows, Whole rate);
-auto tick(Ensemble &ensemble, Float in) -> Pair;
+void settle(Resonator &resonator, Float formant, Whole rate);
+auto tick(Resonator &resonator, Float in) -> Float;
 
 auto sound(Synth &synth) -> Pair;
 

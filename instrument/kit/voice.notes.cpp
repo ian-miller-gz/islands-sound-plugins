@@ -4,37 +4,10 @@
 namespace {
 using namespace SOUND::PLUGINS;
 using CORE::PERCUSSION::strike;
-using CORE::PERCUSSION::CLICK::CLAVE;
-using CORE::PERCUSSION::CLICK::RIM;
-using CORE::PERCUSSION::HEIGHT::HIGH;
-using CORE::PERCUSSION::HEIGHT::LOW;
-using CORE::PERCUSSION::HEIGHT::MID;
-using CORE::PERCUSSION::OPENING::CLOSED;
-using CORE::PERCUSSION::OPENING::OPEN;
-using CORE::PERCUSSION::PLATE::CRASH;
-using CORE::PERCUSSION::PLATE::RIDE;
 
-constexpr Whole WHOLE = 0;
-constexpr Float FULL = 1.0f;
 constexpr Float ACCENTED = 0.75f;
 constexpr Float SOFTEN = 0.6f;
-
-struct Pad {
-  Whole pitch;
-  Whole drum;
-  Whole part;
-};
-
-constexpr Pad PADS[] = {
-  {35, KIT::KICK, WHOLE},  {36, KIT::KICK, WHOLE},   {37, KIT::CLAVE, RIM},
-  {38, KIT::SNARE, WHOLE}, {39, KIT::CLAP, WHOLE},   {40, KIT::SNARE, WHOLE},
-  {41, KIT::TOM, LOW},     {42, KIT::HAT, CLOSED},   {43, KIT::TOM, LOW},
-  {44, KIT::HAT, CLOSED},  {45, KIT::TOM, MID},      {46, KIT::HAT, OPEN},
-  {47, KIT::TOM, MID},     {48, KIT::TOM, HIGH},     {49, KIT::CYMBAL, CRASH},
-  {50, KIT::TOM, HIGH},    {51, KIT::CYMBAL, RIDE},  {52, KIT::CYMBAL, CRASH},
-  {53, KIT::CYMBAL, RIDE}, {55, KIT::CYMBAL, CRASH}, {56, KIT::COWBELL, WHOLE},
-  {62, KIT::CONGA, HIGH},  {63, KIT::CONGA, MID},    {64, KIT::CONGA, LOW},
-  {75, KIT::CLAVE, CLAVE}};
+constexpr Float FULL = 1.0f;
 
 using Strike = void (*)(KIT::Kit &kit, Whole part, Float velocity);
 
@@ -59,14 +32,10 @@ constexpr Strike STRIKES[KIT::DRUMS] = {
     strike(kit.conga, part, velocity);
   }};
 
-auto found(Whole pitch) -> const Pad * {
-  for (const Pad &pad : PADS)
-    if (pad.pitch == pitch) return &pad;
-  return nullptr;
-}
-
 auto accented(const KIT::Kit &kit, Float velocity) -> Float {
-  return velocity >= ACCENTED ? FULL : FULL - kit.rows[KIT::ACCENT] * SOFTEN;
+  const Float hit = CORE::PERCUSSION::struck(velocity, kit.rows[KIT::CURVE]);
+  if (hit >= ACCENTED) return hit;
+  return hit * (FULL - kit.rows[KIT::ACCENT] * SOFTEN);
 }
 
 }  // namespace
@@ -76,12 +45,12 @@ void SOUND::PLUGINS::KIT::apply(Kit &kit, const AUDIO::PLUGIN::Event &event) {
     if (event.index >= PARAMETERS) return;
     kit.rows[event.index] =
       CORE::TABLE::clamped(SHEET, event.index, event.value);
-    if (event.index < ACCENT && event.index % KNOBS == TUNE)
-      settle(kit, event.index / KNOBS);
+    settle(kit, drummed(event.index));
+    pan(kit, panned(event.index));
     return;
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
-  const Pad *pad = ::found(event.index);
+  const Pad *pad = found(event.index);
   if (pad == nullptr) return;
   ::STRIKES[pad->drum](kit, pad->part, ::accented(kit, event.value));
 }

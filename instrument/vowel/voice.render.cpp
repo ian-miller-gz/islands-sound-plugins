@@ -13,10 +13,11 @@ void SOUND::PLUGINS::VOWEL::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, take);
-    const Float sample = sing(singer) * singer.gain;
-    for (Whole channel = 0; channel < singer.channels; ++channel)
-      lanes[channel][frame] = sample;
-    const Float size = CORE::BLOCK::magnitude(sample);
+    const CORE::STEREO::Pair sung = sing(singer);
+    const CORE::STEREO::Pair pair = {
+      sung.left * singer.gain, sung.right * singer.gain};
+    CORE::STEREO::pour(lanes, singer.channels, frame, pair);
+    const Float size = CORE::BLOCK::loudest(lanes, singer.channels, frame);
     if (size > peak) peak = size;
   }
   CORE::BLOCK::rest(cursor, events, count, take);

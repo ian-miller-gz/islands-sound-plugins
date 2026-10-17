@@ -5,6 +5,7 @@
 
 namespace SOUND::PLUGINS::HARNESS::OSCILLATOR {
 void synced();
+void levelled();
 }  // namespace SOUND::PLUGINS::HARNESS::OSCILLATOR
 
 namespace {
@@ -49,6 +50,7 @@ void run() {
   for (const Float fraction : ::FRACTIONS) ::step(fraction);
   ::blip();
   synced();
+  levelled();
 }
 
 }  // namespace SOUND::PLUGINS::HARNESS::OSCILLATOR

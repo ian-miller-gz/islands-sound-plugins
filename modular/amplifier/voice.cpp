@@ -10,6 +10,7 @@ auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *module = new AMPLIFIER::Module{.rate = rate, .channels = channels};
   CORE::TABLE::rest(AMPLIFIER::SHEET, module->rows);
+  module->filters.resize(channels);
   return module;
 }
 

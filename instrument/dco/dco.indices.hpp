@@ -30,6 +30,12 @@ constexpr Whole RATE = 22;
 constexpr Whole DELAY = 23;
 constexpr Whole CHORUS = 24;
 constexpr Whole VOLUME = 25;
-constexpr Whole PARAMETERS = 26;
+constexpr Whole ASSIGN = 26;
+constexpr Whole GLIDE = 27;
+constexpr Whole VELOCITY = 28;
+constexpr Whole TOUCH = 29;
+constexpr Whole DRIFT = 30;
+constexpr Whole TRIM = 31;
+constexpr Whole PARAMETERS = 32;
 
 }  // namespace SOUND::PLUGINS::DCO

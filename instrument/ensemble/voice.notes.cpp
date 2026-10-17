@@ -20,6 +20,7 @@ void release(ENSEMBLE::Synth &synth, const AUDIO::PLUGIN::Event &event) {
   ENSEMBLE::Key &key = synth.keys[event.index];
   if (!key.held) return;
   key.held = false;
+  CORE::ENVELOPE::lift(key.gate);
   if (--synth.held > 0)
     key.target = 0;
   else
@@ -34,6 +35,8 @@ void press(ENSEMBLE::Synth &synth, const AUDIO::PLUGIN::Event &event) {
   if (synth.held == 0) ::wake(synth);
   key.held = true;
   key.target = 1;
+  key.velocity = event.value;
+  CORE::ENVELOPE::strike(key.gate, synth.envelope, CORE::ENVELOPE::FULL);
   ++synth.held;
 }
 

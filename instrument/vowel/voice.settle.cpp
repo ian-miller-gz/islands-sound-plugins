@@ -4,22 +4,31 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-struct Shape {
-  Float place;
-  Float shift;
-};
-
-void voice(const VOWEL::Singer &singer, VOWEL::Throat &throat, Shape shape) {
+void voice(const VOWEL::Singer &singer, VOWEL::Throat &throat) {
   const Float *rows = singer.rows;
-  CORE::FILTER::settle(throat.formant, shape.place, shape.shift, singer.rate);
-  CORE::GLOTTIS::settle(throat.source, rows[VOWEL::OPEN], rows[VOWEL::BREATH]);
+  CORE::GLOTTIS::settle(
+    throat.source, rows[VOWEL::TENSION], rows[VOWEL::BREATH], singer.rate);
   throat.vibrato.hertz = rows[VOWEL::RATE];
   throat.vibrato.depth = rows[VOWEL::DEPTH];
   throat.vibrato.fade = rows[VOWEL::DELAY];
-  CORE::MODULATOR::settle(throat.vibrato, singer.rate);
+  CORE::MODULATOR::settle(throat.vibrato, singer.pace);
+  throat.pan = CORE::STEREO::pan(throat.place * rows[VOWEL::WIDTH]);
+  CORE::MODULATOR::settle(throat.wobble, VOWEL::WOBBLE::TIME, singer.pace);
+  CORE::MODULATOR::settle(throat.jitter, VOWEL::JITTER::TIME, singer.pace);
 }
 
 }  // namespace
+
+void SOUND::PLUGINS::VOWEL::seat(Singer &singer, Whole at) {
+  Throat &throat = singer.throats[at];
+  const CORE::NOISE::Register state =
+    CORE::NOISE::SEED ^ (CORE::NOISE::Register(at + 1) * SCATTER);
+  CORE::GLOTTIS::seed(throat.source, state);
+  CORE::MODULATOR::Seed seed = state * SCATTER;
+  throat.place = CORE::MODULATOR::draw(seed);
+  CORE::MODULATOR::seed(throat.wobble, seed);
+  CORE::MODULATOR::seed(throat.jitter, seed * SCATTER);
+}
 
 void SOUND::PLUGINS::VOWEL::settle(Singer &singer) {
   const Float *rows = singer.rows;
@@ -28,7 +37,11 @@ void SOUND::PLUGINS::VOWEL::settle(Singer &singer) {
     rows[ATTACK], rows[DECAY], rows[SUSTAIN], rows[RELEASE]);
   singer.envelope.depth = CORE::ENVELOPE::FULL;
   CORE::ENVELOPE::shape(singer.envelope, singer.rate);
-  const Shape shape = {
-    rows[VOWEL] + rows[MORPH], CORE::PHASE::ratio(rows[SEX] * SPAN)};
-  for (Throat &throat : singer.throats) ::voice(singer, throat, shape);
+  singer.shift = CORE::PHASE::ratio(rows[SEX] * SPAN);
+  singer.pole = CORE::MODULATOR::pole(TRACT::TIME, singer.pace);
+  singer.motion.hertz = rows[MOTION];
+  CORE::MODULATOR::settle(singer.motion, singer.pace);
+  allot(singer);
+  aim(singer);
+  for (Throat &throat : singer.throats) ::voice(singer, throat);
 }

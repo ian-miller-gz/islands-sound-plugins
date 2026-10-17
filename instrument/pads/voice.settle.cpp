@@ -27,8 +27,16 @@ void SOUND::PLUGINS::PADS::settle(Kit &kit, Whole pad) {
   CORE::PERCUSSION::settle(kit.pads[pad], voicing, kit.rate);
 }
 
+void SOUND::PLUGINS::PADS::pan(Kit &kit, Whole pad) {
+  if (pad >= PADS) return;
+  kit.sides[pad] = CORE::STEREO::pan(kit.rows[PAN + pad]);
+}
+
 void SOUND::PLUGINS::PADS::settle(Kit &kit) {
-  for (Whole pad = 0; pad < PADS; ++pad) settle(kit, pad);
+  for (Whole pad = 0; pad < PADS; ++pad) {
+    settle(kit, pad);
+    pan(kit, pad);
+  }
 }
 
 void SOUND::PLUGINS::PADS::apply(Kit &kit, const AUDIO::PLUGIN::Event &event) {
@@ -36,7 +44,10 @@ void SOUND::PLUGINS::PADS::apply(Kit &kit, const AUDIO::PLUGIN::Event &event) {
     if (event.index >= PARAMETERS) return;
     kit.rows[event.index] =
       CORE::TABLE::clamped(SHEET, event.index, event.value);
-    if (event.index % KNOBS != LEVEL) settle(kit, event.index / KNOBS);
+    if (event.index >= PAN)
+      pan(kit, event.index - PAN);
+    else if (event.index % KNOBS != LEVEL)
+      settle(kit, event.index / KNOBS);
     return;
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;

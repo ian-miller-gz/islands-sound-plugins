@@ -9,15 +9,21 @@ void step(
   const Float *rows = module.rows;
   const Float swing =
     CORE::MODULATOR::tick(module.lfo) * rows[RESONATOR::SWEEP];
-  if (module.countdown == 0) {
-    const Whole channels = module.channels;
-    for (Whole channel = 0; channel < channels; ++channel) {
-      const Float cv = lanes[RESONATOR::CV * channels + channel][frame];
-      RESONATOR::sweep(module, channel, swing + cv * rows[RESONATOR::DEPTH]);
-    }
-    module.countdown = RESONATOR::STRIDE;
+  if (!CORE::BLOCK::due(module.stride, RESONATOR::STRIDE)) return;
+  const Whole channels = module.channels;
+  for (Whole channel = 0; channel < channels; ++channel) {
+    const Float cv =
+      CORE::BLOCK::lane(lanes, RESONATOR::CV, channel, channels)[frame];
+    RESONATOR::sweep(module, channel, swing, cv);
   }
-  --module.countdown;
+}
+
+auto filtered(const RESONATOR::Model &model, RESONATOR::Stage &stage, Float in)
+  -> Float {
+  const CORE::SHAPER::Pair pair = CORE::SHAPER::up(stage.oversampler, in);
+  const CORE::SHAPER::Pair out = {
+    model.tick(stage, pair.early), model.tick(stage, pair.late)};
+  return CORE::SHAPER::down(stage.oversampler, out);
 }
 
 }  // namespace
@@ -35,9 +41,11 @@ void SOUND::PLUGINS::RESONATOR::render(
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
     ::step(module, lanes, frame);
+    const RESONATOR::Model &model = RESONATOR::model(module);
     for (Whole channel = 0; channel < module.channels; ++channel) {
-      Float &sample = lanes[channel][frame];
-      sample = CORE::FILTER::tick(module.filters[channel], sample);
+      Float &sample = CORE::BLOCK::lane(
+        lanes, RESONATOR::IN, channel, module.channels)[frame];
+      sample = ::filtered(model, module.stages[channel], sample);
     }
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;

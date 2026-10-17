@@ -1,100 +1,84 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#include <iterator>
+
 #include "voice.internal.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float SECOND = 1000.0f;
+void kept(SAMPLER::Synth &, Whole) {}
 
-auto tuned(const SAMPLER::Player &player) -> Float {
-  if (player.cents.empty()) return 1;
-  const Float place = player.tune - player.lowest;
-  const Whole at = Whole(place < 0 ? 0 : place);
-  if (at + 1 >= player.cents.size()) return player.cents.back();
-  return player.cents[at] +
-         (player.cents[at + 1] - player.cents[at]) * (place - Float(at));
+void struck(SAMPLER::Synth &synth, Whole at) {
+  SAMPLER::Voice &voice = synth.voices[at];
+  CORE::VOICE::Note &note = synth.allocator.notes[at];
+  voice.clip = Whole(synth.rows[SAMPLER::STOCK]);
+  voice.along = 0;
+  voice.turned = false;
+  voice.held = true;
+  voice.reader =
+    SAMPLER::reader(synth, SAMPLER::base(synth, voice, Float(note.pitch)));
+  for (CORE::SHAPER::Oversampler &down : voice.downs) down = {};
+  for (CORE::FILTER::Variable &filter : voice.filters) filter = {};
+  CORE::ENVELOPE::strike(voice.loudness, synth.loudness, note.velocity);
+  CORE::ENVELOPE::strike(voice.contour, synth.contour, note.velocity);
+  SAMPLER::steer(synth, at);
 }
 
-auto seat(SAMPLER::Player &player) -> SAMPLER::Voice & {
-  Whole chosen = 0;
-  for (Whole index = 0; index < SAMPLER::VOICES; ++index) {
-    if (!player.voices[index].live) return player.voices[index];
-    if (player.voices[index].level < player.voices[chosen].level)
-      chosen = index;
+void tied(SAMPLER::Synth &synth, Whole at) {
+  SAMPLER::Voice &voice = synth.voices[at];
+  const Float velocity = synth.allocator.notes[at].velocity;
+  voice.held = true;
+  CORE::ENVELOPE::tie(voice.loudness, synth.loudness, velocity);
+  CORE::ENVELOPE::tie(voice.contour, synth.contour, velocity);
+}
+
+void lifted(SAMPLER::Synth &synth, Whole at) {
+  SAMPLER::Voice &voice = synth.voices[at];
+  voice.held = false;
+  voice.region = SAMPLER::region(synth, synth.clips[voice.clip], false);
+  CORE::ENVELOPE::lift(voice.loudness);
+  CORE::ENVELOPE::lift(voice.contour);
+}
+
+using Visit = void (*)(SAMPLER::Synth &, Whole);
+
+constexpr Visit VISITS[] = {kept, struck, tied, lifted};
+static_assert(std::size(VISITS) == CORE::VOICE::LIFTED + 1);
+
+void visit(SAMPLER::Synth &synth, const CORE::VOICE::Note &note) {
+  const Whole at = Whole(&note - synth.allocator.notes);
+  if (at >= SAMPLER::POLYPHONY || note.change >= std::size(VISITS)) return;
+  VISITS[note.change](synth, at);
+}
+
+void release(SAMPLER::Synth &synth) {
+  CORE::VOICE::Allocator &allocator = synth.allocator;
+  for (Whole &key : allocator.keys) key = 0;
+  for (Whole at = 0; at < SAMPLER::POLYPHONY; ++at) {
+    if (!allocator.notes[at].held) continue;
+    allocator.notes[at].held = false;
+    lifted(synth, at);
   }
-  return player.voices[chosen];
-}
-
-void strike(SAMPLER::Player &player, Whole pitch, Float velocity) {
-  const Whole root = Whole(player.root);
-  if (player.chosen >= player.sources.size()) return;
-  if (pitch >= player.steps.size() || root >= player.steps.size()) return;
-  const SAMPLER::Source &source = player.sources[player.chosen];
-  const Float total = Float(SAMPLER::frames(source));
-  const Float from = player.start * player.ratio * Float(player.rate) / SECOND;
-  if (total == 0 || from >= total) return;
-  SAMPLER::Voice &voice = ::seat(player);
-  voice.source = player.chosen;
-  voice.base = player.ratio * player.steps[pitch] / player.steps[root];
-  voice.step = voice.base * player.tuning;
-  voice.place = from;
-  voice.from = from;
-  voice.level = 0;
-  voice.rise = SAMPLER::delta(player.attack, player.rate);
-  voice.fall = SAMPLER::delta(player.release, player.rate);
-  voice.velocity = velocity > 1 ? 1 : velocity;
-  voice.pitch = pitch;
-  voice.gated = true;
-  voice.live = true;
-}
-
-void lift(SAMPLER::Player &player, Whole pitch) {
-  for (SAMPLER::Voice &voice : player.voices) {
-    if (!voice.live || !voice.gated || voice.pitch != pitch) continue;
-    voice.gated = false;
-    voice.fall = SAMPLER::delta(player.release, player.rate);
-  }
-}
-
-auto picked(const SAMPLER::Player &player, Float value) -> Whole {
-  if (player.sources.empty()) return 0;
-  const Float most = Float(player.sources.size() - 1);
-  return Whole(value < 0 ? 0 : value > most ? most : value);
 }
 
 }  // namespace
 
-void SOUND::PLUGINS::SAMPLER::steer(Player &player, Whole id, Float value) {
-  if (id == STOCK) {
-    player.chosen = ::picked(player, value);
-    return steer(player, START, player.start);
-  }
-  if (id == START) {
-    const Float most = span(player);
-    player.start = value < 0 ? 0 : value > most ? most : value;
-    return;
-  }
-  const Float held = clamped(id, value);
-  if (id == GAIN) player.gain = held;
-  if (id == ROOT) player.root = held;
-  if (id == LOOP) player.loop = held;
-  if (id == ATTACK) player.attack = held;
-  if (id == RELEASE) player.release = held;
-  if (id == TUNE) {
-    player.tune = held;
-    player.tuning = ::tuned(player);
-    for (Voice &voice : player.voices) voice.step = voice.base * player.tuning;
-  }
+void SOUND::PLUGINS::SAMPLER::land(Synth &synth, Whole row, Float value) {
+  if (row >= PARAMETERS) return;
+  const Float before = synth.rows[row];
+  synth.rows[row] = row == STOCK ? picked(synth, value)
+                                 : CORE::TABLE::clamped(SHEET, row, value);
+  if (row == MODE && synth.rows[row] != before) ::release(synth);
+  settle(synth);
+  CORE::BLOCK::reset(synth.stride);
 }
 
 void SOUND::PLUGINS::SAMPLER::apply(
-  Player &player, const AUDIO::PLUGIN::Event &event) {
-  if (event.kind == AUDIO::PLUGIN::Event::CONTROLLER)
-    return steer(player, event.index, event.value);
+  Synth &synth, const AUDIO::PLUGIN::Event &event) {
   if (event.kind == AUDIO::PLUGIN::Event::PROGRAM)
-    return steer(player, STOCK, Float(event.index));
-  if (event.kind == AUDIO::PLUGIN::Event::NOTE_OFF)
-    return ::lift(player, event.index);
-  if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
-  ::strike(player, event.index, event.value);
+    return land(synth, STOCK, Float(event.index));
+  const Whole row = CORE::VOICE::apply(
+    synth.allocator, event,
+    [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
+  land(synth, row, event.value);
 }

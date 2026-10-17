@@ -49,6 +49,11 @@ constexpr Whole DETUNE = 41;
 constexpr Whole RELEASE = 42;
 constexpr Whole HOLD = 43;
 constexpr Whole VOLUME = 44;
-constexpr Whole PARAMETERS = 45;
+constexpr Whole VELOCITY = 45;
+constexpr Whole TOUCH = 46;
+constexpr Whole DRIFT = 47;
+constexpr Whole TRIM = 48;
+constexpr Whole CHORUS = 49;
+constexpr Whole PARAMETERS = 50;
 
 }  // namespace SOUND::PLUGINS::POLYMOD
