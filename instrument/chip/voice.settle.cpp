@@ -8,7 +8,6 @@ using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 constexpr Float HALF = 0.5f;
-constexpr Float QUARTER = 240;
 constexpr Whole LONG = 1;
 constexpr Whole SHORT = 6;
 
@@ -42,7 +41,19 @@ void hiss(CHIP::Synth &synth) {
   const Whole period = Whole(synth.rows[CHIP::PERIOD]);
   const Float cycles = PERIODS[period < std::size(PERIODS) ? period : 0];
   synth.noise.tap = synth.rows[CHIP::MODE] > HALF ? SHORT : LONG;
-  synth.noise.clocks = CHIP::CPU / cycles / Float(synth.rate);
+  synth.timers[CHIP::CHANNEL::HISS].clocks =
+    CHIP::CPU / cycles / Float(synth.rate);
+}
+
+void sway(CHIP::Synth &synth) {
+  CORE::MODULATOR::Lfo &vibrato = synth.vibrato;
+  vibrato.wave = CORE::MODULATOR::SINE;
+  vibrato.hertz = synth.rows[CHIP::RATE];
+  vibrato.fade = synth.rows[CHIP::DELAY];
+  vibrato.depth = synth.rows[CHIP::VIBRATO];
+  CORE::MODULATOR::settle(vibrato, CHIP::QUARTER);
+  synth.allocator.glide.time = synth.rows[CHIP::GLIDE];
+  CORE::VOICE::settle(synth.allocator, CHIP::QUARTER);
 }
 
 }  // namespace
@@ -56,7 +67,8 @@ void SOUND::PLUGINS::CHIP::settle(Synth &synth) {
   for (Whole at = 0; at < PULSES; ++at)
     synth.pulses[at].duty = Whole(rows[::DUTIES[at]]);
   ::hiss(synth);
-  synth.frame.step = CORE::PHASE::step(::QUARTER, synth.rate);
+  ::sway(synth);
+  synth.frame.step = CORE::PHASE::step(Float(QUARTER), synth.rate);
   synth.arpeggio.step = CORE::PHASE::step(rows[SPEED], synth.rate);
   for (Whole at = 0; at < FILTERS; ++at)
     CORE::FILTER::settle(

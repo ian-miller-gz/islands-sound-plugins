@@ -16,6 +16,12 @@ constexpr Whole SPEEDS = 2;
 constexpr Float THIRD = 1;
 constexpr Float CHORUS = 6;
 constexpr Float SLOW = 1;
+constexpr Float SPREAD = 8;
+constexpr Float CLOSING = 3;
+constexpr Float BLEED = 0.3f;
+constexpr Float BURDEN = 0.5f;
+constexpr Float SAGGING = 0.4f;
+constexpr Float WET = 0.15f;
 
 inline constexpr STRING::Hot DEGREES[] = {"0", "1", "2", "3", "4",
                                           "5", "6", "7", "8"};
@@ -49,7 +55,12 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Drive", "", 0, 0, 1, 0, nullptr},
   {"Balance", "", 0.5f, 0, 1, 0, nullptr},
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Contact", "ms", CLOSING, 0, SPREAD, 0, nullptr},
+  {"Leakage", "", BLEED, 0, 1, 0, nullptr},
+  {"Loading", "", BURDEN, 0, 1, 0, nullptr},
+  {"Sag", "", SAGGING, 0, 1, 0, nullptr},
+  {"Reverb", "", WET, 0, 1, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

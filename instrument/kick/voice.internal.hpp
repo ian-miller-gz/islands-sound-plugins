@@ -3,6 +3,7 @@
 #include "kick.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/percussion/percussion.hpp"
+#include "../../core/phase/phase.hpp"
 
 namespace SOUND::PLUGINS::KICK {
 

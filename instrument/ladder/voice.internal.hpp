@@ -4,6 +4,7 @@
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
+#include "../../core/modulator/modulator.hpp"
 #include "../../core/noise/noise.hpp"
 #include "../../core/oscillator/oscillator.hpp"
 #include "../../core/shaper/shaper.hpp"
@@ -26,6 +27,8 @@ constexpr Whole FIRST = 0;
 constexpr Whole SECOND = 1;
 constexpr Whole THIRD = 2;
 constexpr Float REFERENCE = 60;
+constexpr Whole OVERSAMPLING = 2;
+constexpr Whole STRIDE = 16;
 
 struct Source {
   CORE::OSCILLATOR::Oscillator oscillator;
@@ -50,12 +53,17 @@ struct Synth {
     .legato = true};
   Source sources[OSCILLATORS];
   CORE::NOISE::Pink noise;
-  CORE::FILTER::Ladder ladder;
+  CORE::FILTER::Transistor transistor;
+  CORE::SHAPER::Oversampler oversampler;
+  CORE::BLOCK::Stride stride;
+  CORE::MODULATOR::Drift drift;
+  Float stray = 0;
   Contour loudness;
   Contour filter;
   CORE::SHAPER::Blocker blocker;
   Float tune = 0;
   Float tracking = 0;
+  Float velocity = 0;
   CORE::BLOCK::Meter meter;
 };
 
@@ -65,6 +73,8 @@ void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 auto sing(Source &source, Float pitch, Whole rate) -> Float;
 
+void steer(Synth &synth, Float key, Float wheel, Float contour);
+auto filter(Synth &synth, Float in) -> Float;
 auto sound(Synth &synth) -> Float;
 
 void render(

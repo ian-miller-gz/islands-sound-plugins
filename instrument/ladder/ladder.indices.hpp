@@ -38,6 +38,10 @@ constexpr Whole DECAY = 30;
 constexpr Whole SUSTAIN = 31;
 constexpr Whole RELEASE = 32;
 constexpr Whole VOLUME = 33;
-constexpr Whole PARAMETERS = 34;
+constexpr Whole BASS = 34;
+constexpr Whole VELOCITY = 35;
+constexpr Whole TOUCH = 36;
+constexpr Whole DRIFT = 37;
+constexpr Whole PARAMETERS = 38;
 
 }  // namespace SOUND::PLUGINS::LADDER

@@ -16,6 +16,7 @@ constexpr Float INTERVAL = 24;
 constexpr Whole STEPS = 48;
 constexpr Float OCTAVES = 5;
 constexpr Float DEPTH = 3;
+constexpr Float WANDER = 20;
 constexpr Float SLOWEST = 0.05f;
 constexpr Float FASTEST = 20;
 constexpr Float NARROW = 0.05f;
@@ -75,7 +76,12 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Detune", "ct", 10, 0, DETUNING, 0, nullptr},
   {"Release", "", 1, 0, 1, 1, nullptr},
   {"Hold", "", 0, 0, 1, 1, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
+  {"Touch", "oct", 1, 0, DEPTH, 0, nullptr},
+  {"Drift", "ct", 3, 0, WANDER, 0, nullptr},
+  {"Trim", "", 0.3f, 0, 1, 0, nullptr},
+  {"Chorus", "", 0.3f, 0, 1, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

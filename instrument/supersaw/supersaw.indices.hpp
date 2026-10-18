@@ -25,6 +25,14 @@ constexpr Whole SPREAD = 17;
 constexpr Whole WIDTH = 18;
 constexpr Whole GLIDE = 19;
 constexpr Whole VOLUME = 20;
-constexpr Whole PARAMETERS = 21;
+constexpr Whole RATE = 21;
+constexpr Whole WAVE = 22;
+constexpr Whole VIBRATO = 23;
+constexpr Whole WOBBLE = 24;
+constexpr Whole MODE = 25;
+constexpr Whole VELOCITY = 26;
+constexpr Whole TOUCH = 27;
+constexpr Whole CHORUS = 28;
+constexpr Whole PARAMETERS = 29;
 
 }  // namespace SOUND::PLUGINS::SUPERSAW

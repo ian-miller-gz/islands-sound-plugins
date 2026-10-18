@@ -20,8 +20,16 @@ constexpr Float HIGHEST = 20000;
 constexpr Float SINGLE = 1;
 constexpr Float STACK = 4;
 constexpr Whole STACKS = 3;
+constexpr Float SLOW = 0.05f;
+constexpr Float FAST = 20;
+constexpr Float PACE = 5;
+constexpr Float CHOICE = 3;
+constexpr Whole CHOICES = 3;
+constexpr Float SWEEP = 3;
 
 inline constexpr STRING::Hot UNISONS[] = {"1", "2", "3", "4"};
+inline constexpr STRING::Hot WAVES[] = {"Sine", "Triangle", "Saw", "Square"};
+inline constexpr STRING::Hot MODES[] = {"24dB", "12dB", "Band", "High"};
 
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
@@ -44,7 +52,15 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Spread", "ct", 10, 0, BEATING, 0, nullptr},
   {"Width", "", 0.5f, 0, 1, 0, nullptr},
   {"Glide", "s", 0, 0, LONGEST, 0, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Rate", "Hz", PACE, SLOW, FAST, 0, nullptr},
+  {"Wave", "", 0, 0, CHOICE, CHOICES, WAVES},
+  {"Vibrato", "st", 0, 0, SEMITONES, 0, nullptr},
+  {"Wobble", "oct", 0, 0, SWEEP, 0, nullptr},
+  {"Mode", "", 0, 0, CHOICE, CHOICES, MODES},
+  {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
+  {"Touch", "oct", 1, 0, SWEEP, 0, nullptr},
+  {"Chorus", "", 0.3f, 0, 1, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

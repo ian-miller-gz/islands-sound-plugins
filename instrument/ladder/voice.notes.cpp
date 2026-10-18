@@ -7,6 +7,8 @@ using namespace SOUND::PLUGINS;
 void kept(LADDER::Synth &, const CORE::VOICE::Note &) {}
 
 void struck(LADDER::Synth &synth, const CORE::VOICE::Note &note) {
+  synth.velocity = note.velocity;
+  CORE::BLOCK::reset(synth.stride);
   for (LADDER::Contour *contour : {&synth.loudness, &synth.filter})
     CORE::ENVELOPE::strike(contour->gate, contour->envelope, note.velocity);
 }
@@ -35,4 +37,5 @@ void SOUND::PLUGINS::LADDER::apply(
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);
+  CORE::BLOCK::reset(synth.stride);
 }

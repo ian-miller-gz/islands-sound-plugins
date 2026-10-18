@@ -11,6 +11,7 @@ void release(DRAWBAR::Organ &organ, const AUDIO::PLUGIN::Event &event) {
   if (event.index >= CORE::PHASE::PITCHES || !organ.keys[event.index]) return;
   organ.keys[event.index] = false;
   --organ.held;
+  DRAWBAR::lift(organ, event.index);
   CORE::NOISE::strike(organ.click, organ.rows[DRAWBAR::CLICK] * LETTING);
   DRAWBAR::pull(organ);
 }
@@ -22,7 +23,7 @@ void press(DRAWBAR::Organ &organ, const AUDIO::PLUGIN::Event &event) {
     CORE::ENVELOPE::strike(organ.gate, organ.percussion, CORE::ENVELOPE::FULL);
   organ.keys[event.index] = true;
   ++organ.held;
-  CORE::NOISE::strike(organ.click, organ.rows[DRAWBAR::CLICK]);
+  DRAWBAR::arm(organ, event.index);
   DRAWBAR::pull(organ);
 }
 

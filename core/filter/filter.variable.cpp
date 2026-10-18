@@ -20,10 +20,21 @@ constexpr Mix MIXES[] = {
   {0, 0, 0, 1}, {1, -1, 0, -1}, {0, 0, 1, 0}, {1, -1, 0, 0}};
 constexpr Whole MODES = sizeof(MIXES) / sizeof(MIXES[0]);
 
+auto bent(Float band, Float saturation) -> Float {
+  if (saturation <= 0) return band;
+  return band + (SHAPER::soft(band) - band) * saturation;
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::CORE::FILTER::settle(
   Variable &variable, Whole kind, Float cutoff, Float emphasis, Whole rate) {
+  settle(variable, kind, cutoff, emphasis, 0, rate);
+}
+
+void SOUND::PLUGINS::CORE::FILTER::settle(
+  Variable &variable, Whole kind, Float cutoff, Float emphasis,
+  Float saturation, Whole rate) {
   const Float g = warped(cutoff, rate);
   const Float k = SMOOTH - bounded(emphasis) * (SMOOTH - RINGING);
   const Mix &mix = MIXES[kind < MODES ? kind : LOW];
@@ -34,14 +45,16 @@ void SOUND::PLUGINS::CORE::FILTER::settle(
   variable.mix[0] = mix.direct;
   variable.mix[1] = mix.damped * k + mix.band;
   variable.mix[2] = mix.low;
+  variable.saturation = bounded(saturation);
 }
 
 auto SOUND::PLUGINS::CORE::FILTER::split(Variable &variable, Float in) -> Taps {
   const Float *weights = variable.weights;
   Float *states = variable.states;
   const Float lead = in - states[1];
-  const Float band = weights[0] * states[0] + weights[1] * lead;
   const Float low = states[1] + weights[1] * states[0] + weights[2] * lead;
+  const Float band =
+    ::bent(weights[0] * states[0] + weights[1] * lead, variable.saturation);
   states[0] = TWO * band - states[0];
   states[1] = TWO * low - states[1];
   const Float high = in - variable.damping * band - low;

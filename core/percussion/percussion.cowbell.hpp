@@ -12,10 +12,17 @@ struct Cowbell {
   ENVELOPE::Gate hit;
   ENVELOPE::Gate ring;
   Float velocity = 0;
+  Float bite = 0;
+  Float body = 0;
 };
 
 void settle(Cowbell &cowbell, Float tune, Float decay, Whole rate);
+void settle(
+  Cowbell &cowbell, Float tune, Float decay, Float interval, Float tone,
+  Whole rate);
 void strike(Cowbell &cowbell, Float velocity);
+void strike(Cowbell &cowbell, Float level, Float clank, Float ring);
 auto tick(Cowbell &cowbell) -> Float;
+auto sounding(const Cowbell &cowbell) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

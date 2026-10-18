@@ -29,6 +29,15 @@ struct Chebyshev {
 void settle(Chebyshev &chebyshev, Float even, Float odd);
 auto tick(const Chebyshev &chebyshev, Float in) -> Float;
 
+constexpr Float NEAR = 0.001f;
+
+struct Integral {
+  Float last = 0;
+  Float area = 0;
+};
+
+auto tick(Integral &integral, Float in, Curve curve, Curve area) -> Float;
+
 struct Blocker {
   Float pole = 0;
   Float in = 0;
@@ -63,3 +72,8 @@ auto tick(Oversampler &oversampler, Float in, Shape &&shape) -> Float {
 }
 
 }  // namespace SOUND::PLUGINS::CORE::SHAPER
+
+namespace SOUND::PLUGINS::CORE::SHAPER::AREA {
+auto hard(Float in) -> Float;
+auto fold(Float in) -> Float;
+}  // namespace SOUND::PLUGINS::CORE::SHAPER::AREA

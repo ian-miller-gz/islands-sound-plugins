@@ -1,65 +1,63 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
-#include <cstdint>
-
-#include <threads.hpp>
-
 #include "additive.hpp"
+#include "../../core/block/block.hpp"
+#include "../../core/envelope/envelope.hpp"
+#include "../../core/modulator/modulator.hpp"
+#include "../../core/oscillator/oscillator.hpp"
+#include "../../core/phase/phase.hpp"
+#include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::ADDITIVE {
 
-constexpr Whole TABLE = 4096;
-constexpr Whole TURN = 20;
+constexpr Whole VOICES = 8;
+constexpr Whole STRIDE = 16;
+constexpr Float REFERENCE = 60;
 
-enum Stage : Whole { IDLE, RISING, FALLING, HELD, LEAVING };
+struct Bank {
+  CORE::PHASE::Wheel phases[BANK] = {};
+  CORE::PHASE::Wheel steps[BANK] = {};
+  Float gains[BANK] = {};
+  Float slopes[BANK] = {};
+};
 
-struct Note {
-  uint32_t phase = 0;
-  uint32_t step = 0;
-  Whole pitch = 0;
-  Float velocity = 0;
-  Float level = 0;
-  Whole stage = IDLE;
-  Whole struck = 0;
+struct Voice {
+  Bank bank;
+  CORE::ENVELOPE::Gate contour;
+  CORE::ENVELOPE::Gate door;
+  CORE::BLOCK::Stride stride;
+  Float key = 0;
+  Float sweep = 0;
 };
 
 struct Synth {
   Whole rate = 0;
   Whole channels = 0;
-  Vector<Float> table;
-  Vector<uint32_t> steps;
-  Float amplitudes[PARTIALS] = {};
-  Float span = 1;
-  Float gain = 0;
-  Float attack = 0;
-  Float decay = 0;
-  Float release = 0;
-  Float sustain = 0;
-  Float rise = 0;
-  Float fall = 0;
-  Float drop = 0;
-  Note notes[VOICES];
-  Whole clock = 0;
-  Float level[2] = {0, 0};
-  THREADS::Shared<Whole> face{0};
+  Float rows[PARAMETERS] = {};
+  CORE::OSCILLATOR::Table table;
+  CORE::VOICE::Allocator allocator = {
+    .count = VOICES, .mode = CORE::VOICE::POLY, .steal = CORE::VOICE::OLDEST};
+  Voice voices[VOICES];
+  CORE::ENVELOPE::Envelope contour;
+  CORE::ENVELOPE::Envelope door;
+  CORE::MODULATOR::Lfo lfo;
+  Float weights[BANK] = {};
+  Float ratios[BANK] = {};
+  Float tune = 0;
+  Float swing = 0;
+  CORE::BLOCK::Meter meter;
 };
 
-auto delta(Float seconds, Whole rate) -> Float;
-
-void shape(Synth &synth);
+void settle(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
+void shape(Synth &synth, Voice &voice, const CORE::VOICE::Note &note);
+
+auto sound(Synth &synth) -> Float;
+
 void render(
-  void *instance, AUDIO::PLUGIN::Sample *const *outputs, Whole frames,
+  void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count);
 
 }  // namespace SOUND::PLUGINS::ADDITIVE
-
-namespace SOUND::PLUGINS::ADDITIVE::SURFACE {
-auto parameters(void *instance) -> Whole;
-auto name(void *instance, Whole index) -> String;
-auto reading(void *instance, Whole index) -> String;
-auto held(void *instance, Whole index) -> Float;
-auto control(void *instance, Whole index, AUDIO::PLUGIN::Control &out) -> Flag;
-}  // namespace SOUND::PLUGINS::ADDITIVE::SURFACE

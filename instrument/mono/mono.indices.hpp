@@ -31,6 +31,9 @@ constexpr Whole RELEASE = 23;
 constexpr Whole TRIGGER = 24;
 constexpr Whole AMPLIFIER = 25;
 constexpr Whole VOLUME = 26;
-constexpr Whole PARAMETERS = 27;
+constexpr Whole VELOCITY = 27;
+constexpr Whole TOUCH = 28;
+constexpr Whole DRIFT = 29;
+constexpr Whole PARAMETERS = 30;
 
 }  // namespace SOUND::PLUGINS::MONO

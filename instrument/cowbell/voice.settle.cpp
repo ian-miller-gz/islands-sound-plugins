@@ -1,9 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
+auto SOUND::PLUGINS::COWBELL::keyed(const Voice &voice) -> Flag {
+  return voice.rows[KEY] > 0;
+}
+
 void SOUND::PLUGINS::COWBELL::settle(Voice &voice) {
+  const Float tune =
+    keyed(voice) ? voice.rows[TUNE] + voice.shift : voice.rows[TUNE];
   CORE::PERCUSSION::settle(
-    voice.cowbell, voice.rows[TUNE], voice.rows[DECAY], voice.rate);
+    voice.cowbell, tune, voice.rows[DECAY], voice.rows[INTERVAL],
+    voice.rows[TONE], voice.rate);
 }
 
 void SOUND::PLUGINS::COWBELL::apply(
@@ -15,6 +22,6 @@ void SOUND::PLUGINS::COWBELL::apply(
     settle(voice);
     return;
   }
-  if (event.kind == AUDIO::PLUGIN::Event::NOTE_ON && event.value > 0)
-    CORE::PERCUSSION::strike(voice.cowbell, event.value);
+  if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
+  strike(voice, event);
 }

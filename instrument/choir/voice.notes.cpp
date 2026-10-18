@@ -9,13 +9,15 @@ using Change = void (*)(CHOIR::Choir &, CORE::VOICE::Note &, CHOIR::Part &);
 void kept(CHOIR::Choir &, CORE::VOICE::Note &, CHOIR::Part &) {}
 
 void struck(CHOIR::Choir &choir, CORE::VOICE::Note &note, CHOIR::Part &part) {
-  for (CHOIR::Singer &singer : part.singers) {
+  for (Whole at = 0; at < CHOIR::SEATS; ++at) {
+    CHOIR::Singer &singer = part.singers[at];
     const Float onset = CORE::MODULATOR::draw(choir.seed);
     singer.wait = Whole(CORE::BLOCK::magnitude(onset) * choir.scatter);
-    singer.pending = true;
+    singer.pending = at < choir.singers;
     CORE::MODULATOR::reset(singer.vibrato);
+    if (!singer.pending) CORE::ENVELOPE::choke(singer.gate);
   }
-  CHOIR::tune(choir, note, part);
+  CHOIR::tune(choir, note, part, true);
 }
 
 void lifted(CHOIR::Choir &, CORE::VOICE::Note &, CHOIR::Part &part) {
@@ -34,6 +36,18 @@ void voice(CHOIR::Choir &choir, CORE::VOICE::Note &note) {
   CHANGES[note.change](choir, note, choir.parts[at]);
 }
 
+void release(CHOIR::Choir &choir) {
+  CORE::VOICE::Allocator &allocator = choir.allocator;
+  for (Whole &key : allocator.keys) key = 0;
+  for (CORE::VOICE::Note &note : allocator.notes) {
+    if (!note.held) continue;
+    note.held = false;
+    note.change = CORE::VOICE::LIFTED;
+  }
+  CORE::VOICE::drain(
+    allocator, [&choir](CORE::VOICE::Note &note) { ::voice(choir, note); });
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::CHOIR::apply(
@@ -42,6 +56,9 @@ void SOUND::PLUGINS::CHOIR::apply(
     choir.allocator, event,
     [&choir](CORE::VOICE::Note &note) { ::voice(choir, note); });
   if (row >= PARAMETERS) return;
+  const Float before = choir.rows[row];
   choir.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
+  if (row == MODE && choir.rows[row] != before) ::release(choir);
   settle(choir);
+  CORE::BLOCK::reset(choir.stride);
 }

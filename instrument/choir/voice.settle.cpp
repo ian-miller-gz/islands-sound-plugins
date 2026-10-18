@@ -1,31 +1,35 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#include <cmath>
+
 #include "voice.internal.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
 constexpr Float FULL = 1.0f;
-constexpr Float OPEN = 0.6f;
 constexpr Float SPAN = 400.0f;
 constexpr Float FAN = 200.0f;
 constexpr Float PACE = 0.2f;
 constexpr Float WIDTH = 0.8f;
-
-auto panned(Float pan) -> CHOIR::Stereo {
-  return {pan > 0 ? FULL - pan : FULL, pan < 0 ? FULL + pan : FULL};
-}
+constexpr Float GLIDING = 0.02f;
+constexpr Float WOBBLE = 0.4f;
+constexpr Float JITTER = 0.01f;
 
 void seat(const CHOIR::Choir &choir, CHOIR::Singer &singer, Float sex) {
   const Float *rows = choir.rows;
   const Float fan = singer.seat.shift * rows[CHOIR::SPREAD] * ::FAN;
   singer.shift = sex * CORE::PHASE::ratio(fan);
-  singer.pan = ::panned(singer.seat.pan * ::WIDTH);
-  CORE::GLOTTIS::settle(singer.source, ::OPEN, rows[CHOIR::BREATH]);
+  singer.pan = CORE::STEREO::pan(singer.seat.pan * ::WIDTH);
+  CORE::GLOTTIS::settle(
+    singer.source, rows[CHOIR::TENSION], rows[CHOIR::BREATH], choir.rate);
   const Float pace = FULL + singer.seat.pace * ::PACE;
   singer.vibrato.hertz = rows[CHOIR::RATE] * pace;
   singer.vibrato.depth = rows[CHOIR::DEPTH];
-  CORE::MODULATOR::settle(singer.vibrato, choir.rate / CHOIR::CONTROL);
-  CORE::FILTER::settle(singer.formant, choir.place, singer.shift, choir.rate);
+  singer.vibrato.fade = rows[CHOIR::DELAY];
+  const Whole stride = choir.rate / CHOIR::CONTROL;
+  CORE::MODULATOR::settle(singer.vibrato, stride);
+  CORE::MODULATOR::settle(singer.wobble, ::WOBBLE, stride);
+  CORE::MODULATOR::settle(singer.jitter, ::JITTER, stride);
 }
 
 void envelope(CHOIR::Choir &choir) {
@@ -44,7 +48,11 @@ void SOUND::PLUGINS::CHOIR::settle(Choir &choir) {
   const Float *rows = choir.rows;
   choir.gain = rows[GAIN];
   choir.scatter = rows[SCATTER] * Float(choir.rate);
+  choir.singers = Whole(rows[SINGERS]);
+  choir.blend = ::FULL / std::sqrt(Float(choir.singers));
   place(choir);
+  choir.pole = CORE::MODULATOR::pole(::GLIDING, choir.rate / CONTROL);
+  allocate(choir);
   choir.motion.hertz = rows[MOTION];
   CORE::MODULATOR::settle(choir.motion, choir.rate / CONTROL);
   ::envelope(choir);

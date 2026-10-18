@@ -2,9 +2,19 @@
 #include "voice.internal.hpp"
 
 void SOUND::PLUGINS::CLAP::settle(Voice &voice) {
-  CORE::PERCUSSION::settle(
-    voice.clap, voice.rows[SPREAD], voice.rows[DECAY], voice.rows[TONE],
-    voice.rate);
+  const Float *rows = voice.rows;
+  const CORE::PERCUSSION::Hand hand = {
+    .spread = rows[SPREAD],
+    .decay = rows[DECAY],
+    .tone = rows[TONE],
+    .tail = rows[TAIL],
+    .cutoff = rows[CUTOFF],
+    .emphasis = rows[EMPHASIS],
+    .bursts = Whole(rows[BURSTS]),
+    .scatter = rows[SCATTER],
+    .curve = rows[CURVE],
+    .touch = rows[TOUCH]};
+  CORE::PERCUSSION::settle(voice.clap, hand, voice.rate);
 }
 
 void SOUND::PLUGINS::CLAP::apply(

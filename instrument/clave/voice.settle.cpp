@@ -1,16 +1,21 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
-namespace {
-using namespace SOUND::PLUGINS;
+auto SOUND::PLUGINS::CLAVE::shifted(Float semitones) -> Float {
+  return CORE::PHASE::ratio(
+    semitones * CORE::PHASE::CENTS / CORE::PHASE::OCTAVE);
+}
 
-constexpr CORE::PERCUSSION::Key KEYS[] = {{37, CORE::PERCUSSION::CLICK::RIM}};
-
-}  // namespace
+auto SOUND::PLUGINS::CLAVE::keyed(const Voice &voice) -> Flag {
+  return voice.rows[KEY] > 0;
+}
 
 void SOUND::PLUGINS::CLAVE::settle(Voice &voice) {
+  const Float tune =
+    keyed(voice) ? voice.rows[TUNE] * voice.ratio : voice.rows[TUNE];
   CORE::PERCUSSION::settle(
-    voice.clave, voice.rows[TUNE], voice.rows[DECAY], voice.rate);
+    voice.clave, tune, voice.rows[DECAY], shifted(voice.rows[RIM]),
+    voice.rows[TONE], voice.rate);
 }
 
 void SOUND::PLUGINS::CLAVE::apply(
@@ -23,7 +28,5 @@ void SOUND::PLUGINS::CLAVE::apply(
     return;
   }
   if (event.kind != AUDIO::PLUGIN::Event::NOTE_ON || event.value <= 0) return;
-  const Whole click =
-    CORE::PERCUSSION::keyed(KEYS, event.index, CORE::PERCUSSION::CLICK::CLAVE);
-  CORE::PERCUSSION::strike(voice.clave, click, event.value);
+  strike(voice, event);
 }

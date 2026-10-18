@@ -8,6 +8,7 @@ namespace SOUND::PLUGINS::CORE::FILTER {
 constexpr Whole POLES = 4;
 constexpr Whole STAGES = 4;
 constexpr Whole LOOPS = 3;
+constexpr Float RING = 4.0f;
 
 struct Ladder {
   Pole poles[POLES];
@@ -20,6 +21,20 @@ struct Ladder {
 void settle(
   Ladder &ladder, Float cutoff, Float emphasis, Float drive, Whole rate);
 auto tick(Ladder &ladder, Float in) -> Float;
+
+struct Transistor {
+  Float states[POLES] = {0, 0, 0, 0};
+  Float gain = 0;
+  Float feedback = 0;
+  Float drive = 1;
+  Float lift = 1;
+  Float last = 0;
+};
+
+void settle(
+  Transistor &transistor, Float cutoff, Float emphasis, Float drive, Float bass,
+  Whole rate);
+auto tick(Transistor &transistor, Float in) -> Float;
 
 struct Diode {
   Float betas[STAGES] = {};

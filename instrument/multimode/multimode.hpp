@@ -8,6 +8,7 @@
 
 namespace SOUND::PLUGINS::MULTIMODE {
 
+constexpr Whole VOICES = 8;
 constexpr Float CENTS = 200;
 constexpr Float DETUNING = 50;
 constexpr Float SEMITONES = 12;
@@ -23,6 +24,7 @@ constexpr Float LONGEST = 10;
 constexpr Float GLIDING = 3;
 constexpr Float LOWEST = 20;
 constexpr Float HIGHEST = 20000;
+constexpr Float WANDER = 20;
 
 inline constexpr STRING::Hot SOURCES[] = {"LFO", "Envelope"};
 
@@ -59,7 +61,13 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Unison", "", 0, 0, 1, 1, nullptr},
   {"Detune", "ct", 10, 0, DETUNING, 0, nullptr},
   {"Spread", "", 0.5f, 0, 1, 0, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Voices", "", VOICES, 1, VOICES, VOICES - 1, nullptr},
+  {"Saturation", "", 0.25f, 0, 1, 0, nullptr},
+  {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
+  {"Touch", "oct", 1, 0, DEPTH, 0, nullptr},
+  {"Drift", "ct", 3, 0, WANDER, 0, nullptr},
+  {"Trim", "", 0.3f, 0, 1, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

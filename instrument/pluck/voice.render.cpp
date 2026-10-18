@@ -13,10 +13,11 @@ void SOUND::PLUGINS::PLUCK::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, land);
-    const Float sample = sound(synth) * synth.rows[VOLUME];
-    for (Whole channel = 0; channel < synth.channels; ++channel)
-      lanes[channel][frame] = sample;
-    const Float size = CORE::BLOCK::magnitude(sample);
+    const CORE::STEREO::Pair pair = sound(synth);
+    const Float volume = synth.rows[VOLUME];
+    CORE::STEREO::pour(
+      lanes, synth.channels, frame, {pair.left * volume, pair.right * volume});
+    const Float size = CORE::BLOCK::loudest(lanes, synth.channels, frame);
     if (size > peak) peak = size;
   }
   CORE::BLOCK::rest(cursor, events, count, land);

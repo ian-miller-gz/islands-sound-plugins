@@ -6,55 +6,76 @@
 namespace {
 using namespace SOUND::PLUGINS::CORE;
 
+constexpr Float ONE = 1.0f;
 constexpr Float TEN = 10.0f;
 constexpr Float DECIBELS = 20.0f;
+constexpr Float PI = 3.14159265f;
+constexpr Float MOVED = 0.001f;
 
-struct Shape {
-  Float centres[FILTER::FORMANTS];
-  Float levels[FILTER::FORMANTS];
-  Float widths[FILTER::FORMANTS];
-};
+auto moved(const FILTER::Formant &formant, Float shift) -> Flag {
+  if (formant.breadth != formant.applied) return true;
+  for (Whole band = 0; band < FILTER::FORMANTS; ++band) {
+    const Float settled = formant.settled[band];
+    const Float centre = formant.tract.centres[band] * shift;
+    if (std::fabs(centre - settled) > MOVED * settled) return true;
+  }
+  return false;
+}
 
-constexpr Shape SHAPES[] = {
-  {{650, 1080, 2650, 2900, 3250},
-   {0, -6, -7, -8, -22},
-   {80, 90, 120, 130, 140}},
-  {{400, 1700, 2600, 3200, 3580},
-   {0, -14, -12, -14, -20},
-   {70, 80, 100, 120, 120}},
-  {{290, 1870, 2800, 3250, 3540},
-   {0, -15, -18, -20, -30},
-   {40, 90, 100, 120, 120}},
-  {{400, 800, 2600, 2800, 3000},
-   {0, -10, -12, -12, -26},
-   {40, 80, 100, 120, 120}},
-  {{350, 600, 2700, 2900, 3300},
-   {0, -20, -17, -14, -26},
-   {40, 60, 100, 120, 120}}};
-static_assert(sizeof(SHAPES) / sizeof(SHAPES[0]) == FILTER::VOWELS);
+void apply(FILTER::Formant &formant, Float shift, Whole rate) {
+  const FILTER::Tract &tract = formant.tract;
+  for (Whole band = 0; band < FILTER::FORMANTS; ++band) {
+    const Float centre = tract.centres[band];
+    const Float q = centre / (tract.widths[band] * formant.breadth);
+    formant.settled[band] = centre * shift;
+    FILTER::settle(
+      formant.bands[band], FILTER::BAND, formant.settled[band], q, 0, rate);
+    formant.gains[band] = std::pow(TEN, tract.levels[band] / DECIBELS);
+  }
+  formant.applied = formant.breadth;
+}
 
-auto blend(Float from, Float to, Float part) -> Float {
-  return from + (to - from) * part;
+void follow(Float *values, const Float *targets, Float pole) {
+  for (Whole band = 0; band < FILTER::FORMANTS; ++band)
+    values[band] += pole * (targets[band] - values[band]);
 }
 
 }  // namespace
 
+auto SOUND::PLUGINS::CORE::FILTER::glide(
+  Formant &formant, const Tract &tract, Float pole, Float shift,
+  Whole rate) -> Flag {
+  const Float share = bounded(pole);
+  ::follow(formant.tract.centres, tract.centres, share);
+  ::follow(formant.tract.widths, tract.widths, share);
+  ::follow(formant.tract.levels, tract.levels, share);
+  if (!::moved(formant, shift)) return false;
+  ::apply(formant, shift, rate);
+  return true;
+}
+
+void SOUND::PLUGINS::CORE::FILTER::jump(
+  Formant &formant, const Tract &tract, Float shift, Whole rate) {
+  formant.tract = tract;
+  ::apply(formant, shift, rate);
+}
+
+auto SOUND::PLUGINS::CORE::FILTER::makeup(const Formant &formant, Whole rate)
+  -> Float {
+  const Float scale = PI * formant.breadth / Float(rate);
+  Float sum = 0;
+  for (Whole band = 0; band < FORMANTS; ++band) {
+    const Float gain = formant.gains[band];
+    sum += gain * gain * formant.tract.widths[band] * scale;
+  }
+  return sum > 0 ? ONE / std::sqrt(sum) : ONE;
+}
+
 void SOUND::PLUGINS::CORE::FILTER::settle(
   Formant &formant, Float vowel, Float shift, Whole rate) {
-  const Float last = Float(U);
-  const Float place = vowel < 0 ? 0 : vowel > last ? last : vowel;
-  const Whole from = Whole(place);
-  const Whole to = from < U ? from + 1 : U;
-  const Float part = place - Float(from);
-  const Shape &first = SHAPES[from], &second = SHAPES[to];
-  for (Whole band = 0; band < FORMANTS; ++band) {
-    const Float centre =
-      ::blend(first.centres[band], second.centres[band], part);
-    const Float width = ::blend(first.widths[band], second.widths[band], part);
-    const Float level = ::blend(first.levels[band], second.levels[band], part);
-    settle(formant.bands[band], BAND, centre * shift, centre / width, 0, rate);
-    formant.gains[band] = std::pow(TEN, level / DECIBELS);
-  }
+  Tract tract;
+  aim(tract, Float(TENOR), vowel, vowel, 0);
+  jump(formant, tract, shift, rate);
 }
 
 auto SOUND::PLUGINS::CORE::FILTER::tick(Formant &formant, Float in) -> Float {

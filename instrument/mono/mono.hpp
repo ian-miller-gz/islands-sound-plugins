@@ -22,6 +22,8 @@ constexpr Float LOWEST = 20;
 constexpr Float HIGHEST = 20000;
 constexpr Float SLOW = 0.1f;
 constexpr Float FAST = 30;
+constexpr Float DEPTH = 3;
+constexpr Float WANDER = 20;
 
 inline constexpr STRING::Hot SLIDES[] = {"Off", "Auto", "On"};
 inline constexpr STRING::Hot WAVES[] = {
@@ -59,7 +61,10 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Release", "s", 0.2f, QUICKEST, SLOWEST, 0, nullptr},
   {"Trigger", "", 2, 0, THREEWAY, THREEWAY, TRIGGERS},
   {"Amplifier", "", 0, 0, 1, 1, AMPLIFIERS},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
+  {"Touch", "oct", 1, 0, DEPTH, 0, nullptr},
+  {"Drift", "ct", 3, 0, WANDER, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

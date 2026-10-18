@@ -1,73 +1,28 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "choir.hpp"
+#include "voice.seats.hpp"
 #include "../../core/block/block.hpp"
-#include "../../core/envelope/envelope.hpp"
-#include "../../core/line/line.hpp"
-#include "../../core/modulator/modulator.hpp"
-#include "../../core/reverb/reverb.hpp"
 #include "../../core/voice/voice.hpp"
 
 namespace SOUND::PLUGINS::CHOIR {
 
 constexpr Whole NOTES = 6;
-constexpr Whole SINGERS = 8;
 constexpr Whole CONTROL = 64;
-constexpr Whole TAPS = 3;
-constexpr Whole SIDES = CORE::REVERB::SIDES;
 constexpr Float CENT = 100.0f;
-constexpr Float BLEND = 0.35355339f;
-
-using Stereo = CORE::REVERB::Stereo;
-
-struct Seat {
-  Float detune = 0;
-  Float shift = 0;
-  Float pan = 0;
-  Float pace = 0;
-};
-
-struct Singer {
-  CORE::GLOTTIS::Source source;
-  CORE::FILTER::Formant formant;
-  CORE::MODULATOR::Lfo vibrato;
-  CORE::ENVELOPE::Gate gate;
-  Seat seat;
-  Float shift = 1;
-  Stereo pan = {1, 1};
-  Whole wait = 0;
-  Flag pending = false;
-};
-
-struct Part {
-  Singer singers[SINGERS];
-};
-
-struct Side {
-  CORE::LINE::Line line;
-  CORE::LINE::Sweep sweeps[TAPS];
-};
-
-struct Ensemble {
-  Side sides[SIDES];
-  CORE::MODULATOR::Lfo lfos[TAPS];
-  Float mix = 0;
-};
-
-struct Room {
-  CORE::REVERB::Network network;
-  Float mix = 0;
-};
 
 struct Choir {
   Whole rate = 0;
   Whole channels = 0;
   Float rows[PARAMETERS] = {};
   Float gain = 0;
-  Float place = 0;
+  Float part = 0;
+  Float pole = 0;
   Float sway = 0;
   Float scatter = 0;
-  Whole clock = 0;
+  Whole singers = SEATS;
+  Float blend = 0;
+  CORE::BLOCK::Stride stride;
   CORE::MODULATOR::Seed seed = CORE::MODULATOR::SEED;
   CORE::OSCILLATOR::Table table;
   CORE::ENVELOPE::Envelope envelope;
@@ -80,11 +35,13 @@ struct Choir {
 };
 
 void build(Choir &choir);
+void allocate(Choir &choir);
 void settle(Choir &choir);
 void settle(Ensemble &ensemble, Room &room, const Float *rows, Whole rate);
 void apply(Choir &choir, const AUDIO::PLUGIN::Event &event);
 void place(Choir &choir);
-void tune(const Choir &choir, const CORE::VOICE::Note &note, Part &part);
+void tune(Choir &choir, CORE::VOICE::Note &note, Part &part, Flag leap);
+auto cast(const Choir &choir, const CORE::VOICE::Note &note) -> Float;
 void steer(Choir &choir);
 auto sing(Choir &choir) -> Stereo;
 auto spread(Choir &choir, Stereo dry) -> Stereo;

@@ -38,7 +38,11 @@ struct Synth {
   CORE::OSCILLATOR::Oscillator sub;
   CORE::NOISE::White noise;
   CORE::MODULATOR::Lfo lfo;
-  CORE::FILTER::Ladder ladder;
+  CORE::MODULATOR::Drift drift;
+  CORE::MODULATOR::Drift wander;
+  CORE::FILTER::Transistor transistor;
+  CORE::SHAPER::Oversampler oversampler;
+  CORE::BLOCK::Stride stride;
   Contour envelope;
   Contour gate;
   CORE::SHAPER::Blocker blocker;
@@ -54,6 +58,8 @@ void strike(Contour &contour, Float velocity);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
+auto filter(Synth &synth, Float in, Float key, Float lfo, Float contour)
+  -> Float;
 auto sound(Synth &synth) -> Float;
 
 void render(

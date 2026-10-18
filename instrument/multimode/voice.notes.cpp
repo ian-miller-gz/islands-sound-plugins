@@ -9,13 +9,14 @@ void kept(MULTIMODE::Synth &, Whole) {}
 void struck(MULTIMODE::Synth &synth, Whole at) {
   MULTIMODE::Voice &voice = synth.voices[at];
   const Float velocity = synth.allocator.notes[at].velocity;
-  CORE::ENVELOPE::strike(voice.contour, synth.contour, velocity);
-  CORE::ENVELOPE::strike(voice.loudness, synth.loudness, velocity);
+  for (MULTIMODE::Contour *contour : {&voice.contour, &voice.loudness})
+    CORE::ENVELOPE::strike(contour->gate, contour->envelope, velocity);
+  CORE::BLOCK::reset(voice.stride);
 }
 
 void lifted(MULTIMODE::Synth &synth, Whole at) {
-  CORE::ENVELOPE::lift(synth.voices[at].contour);
-  CORE::ENVELOPE::lift(synth.voices[at].loudness);
+  CORE::ENVELOPE::lift(synth.voices[at].contour.gate);
+  CORE::ENVELOPE::lift(synth.voices[at].loudness.gate);
 }
 
 using Visit = void (*)(MULTIMODE::Synth &, Whole);
@@ -39,4 +40,5 @@ void SOUND::PLUGINS::MULTIMODE::apply(
   if (row >= PARAMETERS) return;
   synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
   settle(synth);
+  for (Voice &voice : synth.voices) CORE::BLOCK::reset(voice.stride);
 }

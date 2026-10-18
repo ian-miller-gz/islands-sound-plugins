@@ -5,21 +5,29 @@ namespace {
 using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float SEMITONE = 100.0f;
-constexpr Float CENTRES[PERCUSSION::TAIL::TAILS] = {3440.0f, 7100.0f};
+constexpr Float PING = 3440.0f;
+constexpr Float WASH = 7100.0f;
+constexpr Float SIZZLE = 10500.0f;
+constexpr Float CENTRES[PERCUSSION::TAIL::TAILS] = {PING, WASH, SIZZLE};
+constexpr Float AIRS[PERCUSSION::TAIL::TAILS] = {0, 1.0f, 1.0f};
 constexpr Float WIDTH = 1.0f;
-constexpr Float FLAT = 0;
+constexpr Float LEVEL = 0;
 constexpr Float LENGTHS[PERCUSSION::PLATE::PLATES][PERCUSSION::TAIL::TAILS] = {
-  {1.0f, 0.4f}, {0.7f, 1.0f}};
-constexpr Float SPLASHES[PERCUSSION::PLATE::PLATES] = {0.3f, 1.0f};
+  {1.0f, 0.4f, 0.6f}, {0.7f, 1.0f, 0.8f}, {1.4f, 0.15f, 0.1f}};
 constexpr Float FLASH = 0.04f;
 constexpr Float BALANCE = 2.0f;
 constexpr Float ONE = 1.0f;
-constexpr Float GAIN = 4.0f;
+constexpr Float EDGE = 2000.0f;
+constexpr Float HISS = 0.15f;
+constexpr Float CURVE = 0;
+constexpr Float TOUCH = 0.5f;
+constexpr Float FADE = 0.005f;
 
-auto sounding(const PERCUSSION::Cymbal &cymbal) -> Flag {
-  for (const ENVELOPE::Gate &gate : cymbal.gates)
-    if (ENVELOPE::sounding(gate)) return true;
-  return false;
+void balance(PERCUSSION::Cymbal &cymbal, Float tone) {
+  namespace TAIL = PERCUSSION::TAIL;
+  cymbal.weights[TAIL::PING] = (ONE - tone) * BALANCE;
+  cymbal.weights[TAIL::WASH] = ONE;
+  cymbal.weights[TAIL::SIZZLE] = tone * BALANCE;
 }
 
 }  // namespace
@@ -27,42 +35,37 @@ auto sounding(const PERCUSSION::Cymbal &cymbal) -> Flag {
 void SOUND::PLUGINS::CORE::PERCUSSION::settle(
   Cymbal &cymbal, Float tune, Float decay, Float tone, Float splash,
   Whole rate) {
-  settle(cymbal.metal, METALLIC, BANK, PHASE::ratio(tune * SEMITONE), rate);
-  for (Whole tail = 0; tail < TAIL::TAILS; ++tail)
+  const Bronze bronze = {
+    .tune = tune,
+    .decay = decay,
+    .tone = tone,
+    .splash = splash,
+    .edge = ::EDGE,
+    .noise = ::HISS,
+    .curve = ::CURVE,
+    .touch = ::TOUCH};
+  settle(cymbal, bronze, rate);
+}
+
+void SOUND::PLUGINS::CORE::PERCUSSION::settle(
+  Cymbal &cymbal, const Bronze &bronze, Whole rate) {
+  const Float ratio = PHASE::ratio(bronze.tune * SEMITONE);
+  settle(cymbal.metal, METALLIC, BANK, ratio, rate);
+  for (Whole tail = 0; tail < TAIL::TAILS; ++tail) {
     FILTER::settle(
-      cymbal.bands[tail], FILTER::BAND, CENTRES[tail], WIDTH, FLAT, rate);
+      cymbal.bands[tail], FILTER::BAND, CENTRES[tail], WIDTH, LEVEL, rate);
+    cymbal.airs[tail] = bronze.noise * AIRS[tail];
+  }
   for (Whole plate = 0; plate < PLATE::PLATES; ++plate)
     for (Whole tail = 0; tail < TAIL::TAILS; ++tail)
-      shape(cymbal.tails[plate][tail], decay * LENGTHS[plate][tail], rate);
+      shape(
+        cymbal.tails[plate][tail], bronze.decay * LENGTHS[plate][tail], rate);
   shape(cymbal.flash, FLASH, rate);
-  cymbal.weights[TAIL::PING] = (ONE - tone) * BALANCE;
-  cymbal.weights[TAIL::WASH] = tone * BALANCE;
-  cymbal.splash = splash;
-}
-
-void SOUND::PLUGINS::CORE::PERCUSSION::strike(
-  Cymbal &cymbal, Whole plate, Float velocity) {
-  cymbal.plate = plate < PLATE::PLATES ? plate : PLATE::CRASH;
-  cymbal.velocity = struck(velocity);
-  for (Whole tail = 0; tail < TAIL::TAILS; ++tail)
-    ENVELOPE::strike(
-      cymbal.gates[tail], cymbal.tails[cymbal.plate][tail], cymbal.velocity);
-  ENVELOPE::strike(cymbal.burst, cymbal.flash, cymbal.velocity);
-}
-
-auto SOUND::PLUGINS::CORE::PERCUSSION::tick(Cymbal &cymbal) -> Float {
-  if (!::sounding(cymbal)) return 0;
-  const Float ring = tick(cymbal.metal);
-  Float bands[TAIL::TAILS] = {};
-  Float sum = 0;
-  for (Whole tail = 0; tail < TAIL::TAILS; ++tail) {
-    const ENVELOPE::Envelope &envelope = cymbal.tails[cymbal.plate][tail];
-    const Float level = ENVELOPE::tick(cymbal.gates[tail], envelope);
-    bands[tail] = FILTER::tick(cymbal.bands[tail], ring);
-    sum += bands[tail] * level * cymbal.weights[tail];
-  }
-  const Float flash = ENVELOPE::tick(cymbal.burst, cymbal.flash);
-  const Float splash = flash * cymbal.splash * SPLASHES[cymbal.plate];
-  return SHAPER::soft(
-    (sum + bands[TAIL::WASH] * splash) * cymbal.velocity * GAIN);
+  FILTER::settle(
+    cymbal.edge, FILTER::HIGH, bronze.edge, FILTER::FLAT, LEVEL, rate);
+  settle(cymbal.choke, ::FADE, rate);
+  ::balance(cymbal, bronze.tone);
+  cymbal.splash = bronze.splash;
+  cymbal.curve = bronze.curve;
+  cymbal.touch = bronze.touch;
 }

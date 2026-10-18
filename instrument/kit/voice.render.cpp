@@ -17,13 +17,29 @@ constexpr Tick TICKS[KIT::DRUMS] = {
   [](KIT::Kit &kit) -> Float { return CORE::PERCUSSION::tick(kit.clave); },
   [](KIT::Kit &kit) -> Float { return CORE::PERCUSSION::tick(kit.conga); }};
 
+using Sounding = auto (*)(const KIT::Kit &kit) -> Flag;
+
+constexpr Sounding SOUNDINGS[KIT::DRUMS] = {
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.kick); },
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.snare); },
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.hat); },
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.clap); },
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.tom); },
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.cymbal); },
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.cowbell); },
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.clave); },
+  [](const KIT::Kit &kit) { return CORE::PERCUSSION::sounding(kit.conga); }};
+
 }  // namespace
 
-auto SOUND::PLUGINS::KIT::mix(Kit &kit) -> Float {
-  Float sum = 0;
+auto SOUND::PLUGINS::KIT::mix(Kit &kit) -> CORE::STEREO::Pair {
+  CORE::STEREO::Pair sum;
   for (Whole drum = 0; drum < DRUMS; ++drum)
-    sum += ::TICKS[drum](kit) * kit.rows[place(drum, LEVEL)];
-  return CORE::SHAPER::soft(sum);
+    if (::SOUNDINGS[drum](kit)) {
+      const Float hit = ::TICKS[drum](kit) * kit.rows[place(drum, LEVEL)];
+      CORE::STEREO::add(sum, hit, kit.sides[drum]);
+    }
+  return {CORE::SHAPER::soft(sum.left), CORE::SHAPER::soft(sum.right)};
 }
 
 void SOUND::PLUGINS::KIT::render(

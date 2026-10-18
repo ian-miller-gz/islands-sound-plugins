@@ -10,6 +10,7 @@ constexpr Float CENT = 100;
 constexpr Float SNAP = 0.005f;
 constexpr Float BLOCKED = 10;
 constexpr Float PORTION = 1.0f / 3.0f;
+constexpr Float WANDERING = 2;
 
 constexpr Float OFFSETS[] = {LO, -2 * OCTAVE, -OCTAVE, 0, OCTAVE, 2 * OCTAVE};
 static_assert(std::size(OFFSETS) == LADDER::FEET + 1);
@@ -76,8 +77,10 @@ void SOUND::PLUGINS::LADDER::settle(Synth &synth) {
     CORE::ENVELOPE::ADSR::create(
       rows[ATTACK], rows[DECAY], rows[SUSTAIN], fade),
     synth.rate);
+  synth.loudness.envelope.depth = rows[VELOCITY];
   synth.allocator.glide.time = rows[GLIDE];
   CORE::VOICE::settle(synth.allocator, synth.rate);
+  CORE::MODULATOR::settle(synth.drift, WANDERING, synth.rate / STRIDE);
   synth.tune = rows[TUNE] / CENT;
   synth.tracking = ::TRACKS[Whole(rows[TRACKING])];
   CORE::SHAPER::settle(synth.blocker, BLOCKED, synth.rate);

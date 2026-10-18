@@ -1,6 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
+namespace {
+using namespace SOUND::PLUGINS;
+
+constexpr Whole MONO = 1;
+constexpr Whole SIDES = 2;
+
+auto side(const WAVETABLE::Sum &sum, Whole channels, Whole channel) -> Float {
+  if (channels == MONO) return sum.whole;
+  return channel % SIDES == 0 ? sum.sides.left : sum.sides.right;
+}
+
+}  // namespace
+
 void SOUND::PLUGINS::WAVETABLE::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
@@ -13,10 +26,11 @@ void SOUND::PLUGINS::WAVETABLE::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, land);
-    const Float sample = sound(synth) * synth.rows[VOLUME];
+    const Sum sum = sound(synth);
+    const Float volume = synth.rows[VOLUME];
     for (Whole channel = 0; channel < synth.channels; ++channel)
-      lanes[channel][frame] = sample;
-    const Float size = CORE::BLOCK::magnitude(sample);
+      lanes[channel][frame] = volume * ::side(sum, synth.channels, channel);
+    const Float size = CORE::BLOCK::loudest(lanes, synth.channels, frame);
     if (size > peak) peak = size;
   }
   CORE::BLOCK::rest(cursor, events, count, land);

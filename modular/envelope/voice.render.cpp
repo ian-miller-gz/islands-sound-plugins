@@ -13,14 +13,16 @@ void SOUND::PLUGINS::ENVELOPE::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
-    const Float level =
-      CORE::ENVELOPE::tick(module.gate, module.envelope) * module.rows[DEPTH];
+    follow(module, lanes, frame);
+    const Float level = step(module) * module.rows[DEPTH];
+    loop(module);
     for (Whole channel = 0; channel < module.channels; ++channel)
-      lanes[channel][frame] = level;
+      CORE::BLOCK::lane(lanes, IN::GATE, channel, module.channels)[frame] =
+        level;
     const Float size = CORE::BLOCK::magnitude(level);
     if (size > peak) peak = size;
   }
   CORE::BLOCK::rest(cursor, events, count, applied);
-  module.allocator.notes[0].sounding = CORE::ENVELOPE::sounding(module.gate);
+  module.allocator.notes[LEAD].sounding = CORE::ENVELOPE::sounding(module.gate);
   CORE::BLOCK::publish(module.meter, peak);
 }

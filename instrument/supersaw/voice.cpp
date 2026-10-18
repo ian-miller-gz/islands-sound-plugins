@@ -10,6 +10,7 @@ auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *synth = new SUPERSAW::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(SUPERSAW::SHEET, synth->rows);
+  CORE::LINE::build(synth->chorus, rate);
   SUPERSAW::settle(*synth);
   return synth;
 }

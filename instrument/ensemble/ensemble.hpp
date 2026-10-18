@@ -20,7 +20,10 @@ constexpr Whole VIBRATO = 9;
 constexpr Whole TUNE = 10;
 constexpr Whole BEND = 11;
 constexpr Whole VOLUME = 12;
-constexpr Whole PARAMETERS = 13;
+constexpr Whole ENVELOPE = 13;
+constexpr Whole VELOCITY = 14;
+constexpr Whole FORMANT = 15;
+constexpr Whole PARAMETERS = 16;
 
 constexpr Float CENTS = 100;
 constexpr Float SEMITONES = 12;
@@ -31,6 +34,10 @@ constexpr Float LEAST = 0.05f;
 constexpr Float SLOW = 2;
 constexpr Float FAST = 3;
 constexpr Float FASTEST = 10;
+constexpr Whole MODES = 1;
+
+inline constexpr STRING::Hot ENVELOPES[] = {"Paraphonic", "Polyphonic"};
+static_assert(std::size(ENVELOPES) == MODES + 1);
 
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Violin", "", 0.8f, 0, 1, 0, nullptr},
@@ -45,7 +52,10 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Vibrato", "Hz", 6, FAST, FASTEST, 0, nullptr},
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
   {"Bend", "st", 0, -SEMITONES, SEMITONES, 0, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Envelope", "", 0, 0, 1, MODES, ENVELOPES},
+  {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
+  {"Formant", "", 0.3f, 0, 1, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

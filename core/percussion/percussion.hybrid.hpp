@@ -47,6 +47,7 @@ struct Kick {
 void settle(Kick &kick, Float tune, Float decay, Float attack, Whole rate);
 void strike(Kick &kick, Float velocity);
 auto tick(Kick &kick) -> Float;
+auto sounding(const Kick &kick) -> Flag;
 
 struct Snare {
   Swept low;
@@ -68,6 +69,7 @@ void settle(
   Snare &snare, Float tune, Float decay, Float snappy, Float tone, Whole rate);
 void strike(Snare &snare, Float velocity);
 auto tick(Snare &snare) -> Float;
+auto sounding(const Snare &snare) -> Flag;
 
 struct Tom {
   Swept body;
@@ -82,9 +84,12 @@ struct Tom {
 };
 
 void settle(Tom &tom, Float tune, Float decay, Whole rate);
+void settle(Tom &tom, Float tune, Float decay, Float tone, Whole rate);
 void strike(Tom &tom, Whole height, Float velocity);
 auto tick(Tom &tom) -> Float;
+auto sounding(const Tom &tom) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION::HYBRID
 
 #include "percussion.hybrid.hat.hpp"
+#include "percussion.hybrid.cymbal.hpp"

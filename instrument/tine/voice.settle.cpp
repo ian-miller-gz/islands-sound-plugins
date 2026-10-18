@@ -52,6 +52,7 @@ void SOUND::PLUGINS::TINE::tune(Synth &synth, Whole at) {
   const Float hertz = CORE::PHASE::hertz(key + rows[TUNE] / CENT + rows[BEND]);
   const Float bell = hertz * OVERTONE;
   Voice &voice = synth.voices[at];
+  voice.hertz = hertz;
   CORE::OSCILLATOR::settle(voice.tine, hertz, 0, synth.rate);
   CORE::OSCILLATOR::settle(voice.bar, hertz * BAR, 0, synth.rate);
   CORE::OSCILLATOR::settle(voice.bell, bell, 0, synth.rate);
@@ -70,5 +71,6 @@ void SOUND::PLUGINS::TINE::settle(Synth &synth) {
     if (!synth.allocator.notes[at].sounding) continue;
     shape(synth, at);
     tune(synth, at);
+    touch(synth, at);
   }
 }

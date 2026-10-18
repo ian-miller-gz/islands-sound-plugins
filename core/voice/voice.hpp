@@ -92,3 +92,4 @@ void hold(Allocator &allocator, Flag held, Visit &&visit) {
 }  // namespace SOUND::PLUGINS::CORE::VOICE
 
 #include "voice.modes.hpp"
+#include "voice.trim.hpp"

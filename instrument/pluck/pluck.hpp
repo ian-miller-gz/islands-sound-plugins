@@ -16,7 +16,11 @@ constexpr Whole RELEASE = 5;
 constexpr Whole BODY = 6;
 constexpr Whole SIZE = 7;
 constexpr Whole VOLUME = 8;
-constexpr Whole PARAMETERS = 9;
+constexpr Whole STIFFNESS = 9;
+constexpr Whole EXCITER = 10;
+constexpr Whole WIDTH = 11;
+constexpr Whole BEND = 12;
+constexpr Whole PARAMETERS = 13;
 
 constexpr Float CENTS = 200;
 constexpr Float DULLEST = 200;
@@ -27,6 +31,11 @@ constexpr Float SHORTEST = 0.01f;
 constexpr Float LONGEST = 20;
 constexpr Float SMALLEST = 0.5f;
 constexpr Float LARGEST = 2;
+constexpr Float SEMITONES = 12;
+constexpr Whole KINDS = 2;
+
+inline constexpr STRING::Hot EXCITERS[] = {"Noise", "Pick", "Mallet"};
+static_assert(std::size(EXCITERS) == KINDS + 1);
 
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
@@ -37,7 +46,11 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Release", "s", 0.3f, SHORTEST, LONGEST, 0, nullptr},
   {"Body", "", 0.5f, 0, 1, 0, nullptr},
   {"Size", "", 1, SMALLEST, LARGEST, 0, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Stiffness", "", 0.2f, 0, 1, 0, nullptr},
+  {"Exciter", "", 0, 0, KINDS, KINDS, EXCITERS},
+  {"Width", "", 0.5f, 0, 1, 0, nullptr},
+  {"Bend", "st", 0, -SEMITONES, SEMITONES, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

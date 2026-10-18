@@ -3,3 +3,4 @@
 #include "oscillator.wave.hpp"
 #include "oscillator.table.hpp"
 #include "oscillator.super.hpp"
+#include "oscillator.edges.hpp"

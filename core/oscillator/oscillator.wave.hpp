@@ -26,6 +26,8 @@ void settle(Oscillator &oscillator, Float hertz, Float width, Whole rate);
 void reset(Oscillator &oscillator, Wheel phase);
 auto tick(Oscillator &oscillator, Whole wave) -> Float;
 
+auto cubic(const Float *points, Float fraction) -> Float;
+
 auto blep(Wheel phase, Wheel step) -> Float;
 auto blamp(Wheel phase, Wheel step) -> Float;
 
@@ -42,11 +44,14 @@ auto shaped(Wheel phase, Wheel edge, Whole wave) -> Float;
 auto tick(Oscillator &oscillator, Whole wave) -> Float;
 }  // namespace NAIVE
 
+constexpr Float NONE = -1.0f;
+
 struct Sync {
   Oscillator slave;
   Float pending = 0;
 };
 
+auto tick(Sync &sync, Float since, Whole wave) -> Float;
 auto tick(Sync &sync, const Oscillator &master, Whole wave) -> Float;
 
 }  // namespace SOUND::PLUGINS::CORE::OSCILLATOR

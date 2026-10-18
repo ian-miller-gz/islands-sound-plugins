@@ -10,6 +10,7 @@ auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *synth = new DUO::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(DUO::SHEET, synth->rows);
+  DUO::seed(*synth);
   DUO::settle(*synth);
   return synth;
 }

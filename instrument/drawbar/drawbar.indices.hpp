@@ -16,6 +16,11 @@ constexpr Whole DRIVE = 16;
 constexpr Whole BALANCE = 17;
 constexpr Whole TUNE = 18;
 constexpr Whole VOLUME = 19;
-constexpr Whole PARAMETERS = 20;
+constexpr Whole CONTACT = 20;
+constexpr Whole LEAKAGE = 21;
+constexpr Whole LOADING = 22;
+constexpr Whole SAG = 23;
+constexpr Whole REVERB = 24;
+constexpr Whole PARAMETERS = 25;
 
 }  // namespace SOUND::PLUGINS::DRAWBAR

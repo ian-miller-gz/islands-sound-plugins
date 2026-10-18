@@ -10,13 +10,13 @@ void kept(POLYMOD::Synth &, Whole) {}
 void struck(POLYMOD::Synth &synth, Whole at) {
   POLYMOD::Voice &voice = synth.voices[at];
   const Float velocity = synth.allocator.notes[at].velocity;
-  CORE::ENVELOPE::strike(voice.contour, synth.contour, velocity);
-  CORE::ENVELOPE::strike(voice.loudness, synth.loudness, velocity);
+  CORE::ENVELOPE::strike(voice.contour.gate, voice.contour.shape, velocity);
+  CORE::ENVELOPE::strike(voice.loudness.gate, voice.loudness.shape, velocity);
 }
 
 void lifted(POLYMOD::Synth &synth, Whole at) {
-  CORE::ENVELOPE::lift(synth.voices[at].contour);
-  CORE::ENVELOPE::lift(synth.voices[at].loudness);
+  CORE::ENVELOPE::lift(synth.voices[at].contour.gate);
+  CORE::ENVELOPE::lift(synth.voices[at].loudness.gate);
 }
 
 using Visit = void (*)(POLYMOD::Synth &, Whole);

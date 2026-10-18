@@ -20,13 +20,20 @@ auto blue(NOISE::Source &source) -> Float {
   return CORE::NOISE::tick(source.blue);
 }
 
-using Colour = auto (*)(NOISE::Source &) -> Float;
+auto violet(NOISE::Source &source) -> Float {
+  return CORE::NOISE::tick(source.violet);
+}
 
-constexpr Colour COLOURS[NOISE::COLOURS] = {white, pink, brown, blue};
+auto velvet(NOISE::Source &source) -> Float {
+  return CORE::NOISE::tick(source.velvet);
+}
 
-auto colour(const NOISE::Module &module) -> Colour {
+constexpr NOISE::Colour COLOURS[] = {white, pink, brown, blue, violet, velvet};
+static_assert(std::size(COLOURS) == NOISE::COLOURS);
+
+auto colour(const NOISE::Module &module) -> NOISE::Colour {
   const Whole chosen = Whole(module.rows[NOISE::COLOUR]);
-  return COLOURS[chosen < NOISE::COLOURS ? chosen : NOISE::WHITE];
+  return COLOURS[chosen < std::size(COLOURS) ? chosen : NOISE::WHITE];
 }
 
 }  // namespace
@@ -43,10 +50,13 @@ void SOUND::PLUGINS::NOISE::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
-    const Colour tick = ::colour(module);
+    follow(module, lanes, frame);
+    const Colour colour = ::colour(module);
+    const Mode mode = NOISE::mode(module);
     const Float level = CORE::MODULATOR::tick(module.level, module.target);
     for (Whole channel = 0; channel < module.channels; ++channel)
-      lanes[channel][frame] = tick(module.sources[channel]) * level;
+      CORE::BLOCK::lane(lanes, CV, channel, module.channels)[frame] =
+        mode(module.sources[channel], colour) * level;
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
   }

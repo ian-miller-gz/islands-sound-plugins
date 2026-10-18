@@ -16,6 +16,8 @@ struct Voice {
 
 void settle(Voice &voice);
 
+void strike(Voice &voice, const AUDIO::PLUGIN::Event &event);
+
 void apply(Voice &voice, const AUDIO::PLUGIN::Event &event);
 
 void render(

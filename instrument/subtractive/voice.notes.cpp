@@ -4,54 +4,59 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-auto claim(SUBTRACTIVE::Synth &synth) -> SUBTRACTIVE::Note & {
-  SUBTRACTIVE::Note *oldest = &synth.notes[0];
-  for (SUBTRACTIVE::Note &note : synth.notes) {
-    if (note.gates[SUBTRACTIVE::LOUDNESS].stage == SUBTRACTIVE::IDLE)
-      return note;
-    if (note.struck < oldest->struck) oldest = &note;
-  }
-  return *oldest;
+void kept(SUBTRACTIVE::Synth &, Whole) {}
+
+void struck(SUBTRACTIVE::Synth &synth, Whole at) {
+  SUBTRACTIVE::Voice &voice = synth.voices[at];
+  for (CORE::OSCILLATOR::Oscillator &oscillator : voice.oscillators)
+    CORE::OSCILLATOR::reset(oscillator, 0);
+  voice.variable = {};
+  const Float velocity = synth.allocator.notes[at].velocity;
+  for (Whole curve = 0; curve < SUBTRACTIVE::CURVES; ++curve)
+    CORE::ENVELOPE::strike(
+      voice.gates[curve], synth.envelopes[curve], velocity);
 }
 
-void strike(SUBTRACTIVE::Synth &synth, const AUDIO::PLUGIN::Event &event) {
-  SUBTRACTIVE::Note &note = claim(synth);
-  note.pitch = event.index < synth.steps.size() ? event.index : 0;
-  note.steps[0] = synth.steps[note.pitch];
-  note.steps[1] = uint32_t(Float(note.steps[0]) * synth.detune);
-  note.velocity = event.value < 0 ? 0 : event.value > 1 ? 1 : event.value;
-  for (uint32_t &phase : note.phases) phase = 0;
-  note.low = 0;
-  note.band = 0;
-  for (SUBTRACTIVE::Gate &gate : note.gates) gate = {0, SUBTRACTIVE::RISING};
-  note.struck = ++synth.clock;
+void tied(SUBTRACTIVE::Synth &synth, Whole at) {
+  SUBTRACTIVE::Voice &voice = synth.voices[at];
+  const Float velocity = synth.allocator.notes[at].velocity;
+  for (Whole curve = 0; curve < SUBTRACTIVE::CURVES; ++curve)
+    CORE::ENVELOPE::tie(voice.gates[curve], synth.envelopes[curve], velocity);
 }
 
-void lift(SUBTRACTIVE::Synth &synth, Whole pitch) {
-  for (SUBTRACTIVE::Note &note : synth.notes)
-    if (note.pitch == pitch)
-      for (SUBTRACTIVE::Gate &gate : note.gates)
-        if (gate.stage != SUBTRACTIVE::IDLE) gate.stage = SUBTRACTIVE::LEAVING;
+void lifted(SUBTRACTIVE::Synth &synth, Whole at) {
+  for (CORE::ENVELOPE::Gate &gate : synth.voices[at].gates)
+    CORE::ENVELOPE::lift(gate);
+}
+
+using Visit = void (*)(SUBTRACTIVE::Synth &, Whole);
+
+constexpr Visit VISITS[] = {kept, struck, tied, lifted};
+static_assert(std::size(VISITS) == CORE::VOICE::LIFTED + 1);
+
+void visit(SUBTRACTIVE::Synth &synth, const CORE::VOICE::Note &note) {
+  const Whole at = Whole(&note - synth.allocator.notes);
+  if (at >= SUBTRACTIVE::VOICES || note.change >= std::size(VISITS)) return;
+  VISITS[note.change](synth, at);
+}
+
+void release(SUBTRACTIVE::Synth &synth) {
+  for (Whole pitch = 0; pitch < CORE::PHASE::PITCHES; ++pitch)
+    CORE::VOICE::lift(synth.allocator, pitch);
+  CORE::VOICE::drain(synth.allocator, [&synth](const CORE::VOICE::Note &note) {
+    ::visit(synth, note);
+  });
 }
 
 }  // namespace
 
 void SOUND::PLUGINS::SUBTRACTIVE::apply(
   Synth &synth, const AUDIO::PLUGIN::Event &event) {
-  switch (event.kind) {
-    case AUDIO::PLUGIN::Event::NOTE_ON:
-      if (event.value > 0)
-        ::strike(synth, event);
-      else
-        ::lift(synth, event.index);
-      break;
-    case AUDIO::PLUGIN::Event::NOTE_OFF:
-      ::lift(synth, event.index);
-      break;
-    case AUDIO::PLUGIN::Event::CONTROLLER:
-      steer(synth, event.index, event.value);
-      break;
-    default:
-      break;
-  }
+  const Whole row = CORE::VOICE::apply(
+    synth.allocator, event,
+    [&synth](const CORE::VOICE::Note &note) { ::visit(synth, note); });
+  if (row >= PARAMETERS) return;
+  synth.rows[row] = CORE::TABLE::clamped(SHEET, row, event.value);
+  if (mode(synth) != synth.allocator.mode) ::release(synth);
+  settle(synth);
 }

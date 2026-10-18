@@ -13,7 +13,7 @@ void struck(SUPERSAW::Synth &synth, Whole at) {
   CORE::ENVELOPE::strike(voice.door, synth.door, velocity);
   CORE::MODULATOR::draw(synth.seed);
   CORE::OSCILLATOR::scatter(voice.super, synth.seed);
-  voice.stale = true;
+  CORE::BLOCK::reset(voice.stride);
 }
 
 void lifted(SUPERSAW::Synth &synth, Whole at) {

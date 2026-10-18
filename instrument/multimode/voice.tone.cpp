@@ -10,26 +10,39 @@ constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
 constexpr Float HALF = 0.5f;
 constexpr Float FULL = 1;
-constexpr Float PEAK = 0.9f;
 constexpr Float SPAN = MULTIMODE::SQUARE - MULTIMODE::NARROW;
-constexpr Float PANS[MULTIMODE::VOICES] = {-FULL, FULL};
+constexpr Float WIDE = 0.75f;
+constexpr Float SLIGHT = 0.25f;
+constexpr Float PANS[MULTIMODE::VOICES] = {-FULL, FULL, -WIDE,   WIDE,
+                                           -HALF, HALF, -SLIGHT, SLIGHT};
 
-auto pitch(
-  const MULTIMODE::Synth &synth, const CORE::VOICE::Note &note, Float key,
-  Float source) -> Float {
+auto pitch(const MULTIMODE::Synth &synth, Whole at, Float key, Float source)
+  -> Float {
   const Float *rows = synth.rows;
-  return key + note.cents / CENT + synth.tune + rows[MULTIMODE::BEND] +
-         rows[MULTIMODE::MODULATION] * source;
+  const Float cents = synth.allocator.notes[at].cents / CENT;
+  return key + cents + MULTIMODE::stray(synth, at) + synth.tune +
+         rows[MULTIMODE::BEND] + rows[MULTIMODE::MODULATION] * source;
 }
 
-auto swept(const MULTIMODE::Synth &synth, Float key, Float contour, Float lfo)
-  -> Float {
+auto swept(
+  const MULTIMODE::Synth &synth, Whole at, Float key, Float contour,
+  Float lfo) -> Float {
   const Float *rows = synth.rows;
   Float octaves =
     rows[MULTIMODE::TRACKING] * (key - MULTIMODE::REFERENCE) / OCTAVE;
   octaves +=
     rows[MULTIMODE::ENVELOPE] * contour + rows[MULTIMODE::WOBBLE] * lfo;
+  octaves += rows[MULTIMODE::TOUCH] * synth.allocator.notes[at].velocity;
+  octaves += MULTIMODE::open(synth, at);
   return rows[MULTIMODE::CUTOFF] * std::exp2(octaves);
+}
+
+void control(
+  MULTIMODE::Synth &synth, Whole at, Float key, Float contour, Float lfo) {
+  MULTIMODE::Voice &voice = synth.voices[at];
+  if (!CORE::BLOCK::due(voice.stride, MULTIMODE::STRIDE)) return;
+  MULTIMODE::drift(synth, voice);
+  MULTIMODE::steer(synth, voice, ::swept(synth, at, key, contour, lfo));
 }
 
 auto play(MULTIMODE::Synth &synth, Whole at, Float lfo) -> Float {
@@ -37,35 +50,26 @@ auto play(MULTIMODE::Synth &synth, Whole at, Float lfo) -> Float {
   CORE::VOICE::Note &note = synth.allocator.notes[at];
   if (!note.sounding) return 0;
   const Float *rows = synth.rows;
-  const Float contour = CORE::ENVELOPE::tick(voice.contour, synth.contour);
-  const Float loud = CORE::ENVELOPE::tick(voice.loudness, synth.loudness);
+  const Float contour =
+    CORE::ENVELOPE::tick(voice.contour.gate, voice.contour.envelope);
+  const Float loud =
+    CORE::ENVELOPE::tick(voice.loudness.gate, voice.loudness.envelope);
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
   const Float source = rows[MULTIMODE::MODULATOR] > 0 ? contour : lfo;
   const Float pwm = rows[MULTIMODE::SOURCE] > 0 ? contour : (lfo + FULL) * HALF;
   const Float width =
     rows[MULTIMODE::WIDTH] - SPAN * rows[MULTIMODE::SWEEP] * pwm;
+  ::control(synth, at, key, contour, lfo);
   const Float mixed =
-    MULTIMODE::sing(synth, voice, ::pitch(synth, note, key, source), width);
-  const Float cutoff = ::swept(synth, key, contour, lfo);
-  const Float out = MULTIMODE::sweep(synth, voice, mixed, cutoff) * loud;
-  if (!CORE::ENVELOPE::sounding(voice.loudness)) note.sounding = false;
+    MULTIMODE::sing(synth, voice, ::pitch(synth, at, key, source), width);
+  const Float out = MULTIMODE::filter(synth, voice, mixed) * loud;
+  if (!CORE::ENVELOPE::sounding(voice.loudness.gate)) note.sounding = false;
   return CORE::SHAPER::tick(voice.blocker, out);
 }
 
 auto gain(Float pan) -> Float { return pan > 0 ? FULL - pan : FULL; }
 
 }  // namespace
-
-auto SOUND::PLUGINS::MULTIMODE::sweep(
-  Synth &synth, Voice &voice, Float in, Float cutoff) -> Float {
-  const Float *rows = synth.rows;
-  CORE::FILTER::settle(
-    voice.variable, CORE::FILTER::LOW, cutoff, rows[RESONANCE] * PEAK,
-    synth.rate);
-  const CORE::FILTER::Taps taps = CORE::FILTER::split(voice.variable, in);
-  if (rows[BAND] > 0) return taps.band;
-  return taps.low + (taps.high - taps.low) * rows[MODE];
-}
 
 auto SOUND::PLUGINS::MULTIMODE::sound(Synth &synth) -> Pair {
   const Float lfo = CORE::MODULATOR::tick(synth.lfo);

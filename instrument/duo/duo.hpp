@@ -26,6 +26,7 @@ constexpr Float LOWEST = 20;
 constexpr Float HIGHEST = 20000;
 constexpr Float BOTTOM = 10;
 constexpr Float TOP = 10000;
+constexpr Float WANDER = 20;
 
 inline constexpr STRING::Hot WAVES[] = {"Saw", "Square"};
 inline constexpr STRING::Hot PULSES[] = {"Saw", "Pulse"};
@@ -77,7 +78,12 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Release2", "s", 0.5f, QUICKEST, LONGEST, 0, nullptr},
   {"Amplifier", "", 0, 0, 1, 1, CONTOURS},
   {"Repeat", "", 0, 0, 1, 1, nullptr},
-  {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
+  {"Volume", "", 0.5f, 0, 1, 0, nullptr},
+  {"Drive", "", 0, 0, 1, 1, nullptr},
+  {"Velocity", "", 0.5f, 0, 1, 0, nullptr},
+  {"Touch", "oct", 1, 0, DEPTH, 0, nullptr},
+  {"Drift", "ct", 3, 0, WANDER, 0, nullptr},
+  {"Trim", "", 0.3f, 0, 1, 0, nullptr}};
 static_assert(std::size(ROWS) == PARAMETERS);
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);

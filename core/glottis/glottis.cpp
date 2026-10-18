@@ -8,7 +8,6 @@ using namespace SOUND::PLUGINS::CORE;
 
 constexpr Float PI = 3.14159265f;
 constexpr Float HALF = 0.5f;
-constexpr Float CLOSED = 0.25f;
 
 auto bounded(Float value, Float least, Float most) -> Float {
   return value < least ? least : value > most ? most : value;
@@ -62,6 +61,8 @@ void SOUND::PLUGINS::CORE::GLOTTIS::settle(
   source.place = place(held);
   source.edge = PHASE::Wheel(held * PHASE::TURN);
   source.breath = ::bounded(breath, 0, FULL);
+  source.closed = CLOSED;
+  source.tilted = false;
 }
 
 void SOUND::PLUGINS::CORE::GLOTTIS::tune(
@@ -73,8 +74,9 @@ void SOUND::PLUGINS::CORE::GLOTTIS::reset(Source &source) { source.phase = 0; }
 
 auto SOUND::PLUGINS::CORE::GLOTTIS::tick(
   Source &source, const OSCILLATOR::Table &table) -> Float {
-  const Float pulse = OSCILLATOR::morph(table, source.place, source.phase);
-  const Float gate = source.phase < source.edge ? FULL : ::CLOSED;
+  const Float shape = OSCILLATOR::morph(table, source.place, source.phase);
+  const Float pulse = source.tilted ? FILTER::tick(source.tilt, shape) : shape;
+  const Float gate = source.phase < source.edge ? FULL : source.closed;
   const Float noise = NOISE::tick(source.white) * gate;
   source.phase += source.step;
   return pulse + (noise - pulse) * source.breath;

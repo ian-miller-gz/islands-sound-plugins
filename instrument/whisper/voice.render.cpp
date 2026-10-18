@@ -1,6 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "voice.internal.hpp"
 
+namespace {
+using namespace SOUND::PLUGINS;
+
+auto voiced(WHISPER::Mouth &mouth) -> CORE::STEREO::Pair {
+  if (CORE::BLOCK::due(mouth.stride, WHISPER::STRIDE)) WHISPER::steer(mouth);
+  const CORE::STEREO::Pair out = WHISPER::breathe(mouth);
+  return {out.left * mouth.gain, out.right * mouth.gain};
+}
+
+}  // namespace
+
 void SOUND::PLUGINS::WHISPER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
@@ -13,10 +24,8 @@ void SOUND::PLUGINS::WHISPER::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, take);
-    const Float sample = breathe(mouth) * mouth.gain;
-    for (Whole channel = 0; channel < mouth.channels; ++channel)
-      lanes[channel][frame] = sample;
-    const Float size = CORE::BLOCK::magnitude(sample);
+    CORE::STEREO::pour(lanes, mouth.channels, frame, ::voiced(mouth));
+    const Float size = CORE::BLOCK::loudest(lanes, mouth.channels, frame);
     if (size > peak) peak = size;
   }
   CORE::BLOCK::rest(cursor, events, count, take);

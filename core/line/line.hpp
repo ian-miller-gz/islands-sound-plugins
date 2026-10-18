@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "../../../plugin.hpp"
+#include "../modulator/modulator.hpp"
+#include "../stereo/stereo.hpp"
 
 namespace SOUND::PLUGINS::CORE::LINE {
 
@@ -8,6 +10,11 @@ constexpr Whole GUARD = 4;
 constexpr Float NEAREST = 1.0f;
 constexpr Float UNITY = 1.0f;
 constexpr Float THIN = 0.1f;
+
+constexpr Whole READS = 3;
+constexpr Float CENTRE = 0.0035f;
+constexpr Float DEEPEST = 0.003f;
+constexpr Float LENGTH = 0.012f;
 
 struct Line {
   Vector<Float> ring;
@@ -37,6 +44,14 @@ struct Loop {
   Float held = 0;
 };
 
+struct Chorus {
+  Line line;
+  Sweep sweeps[READS];
+  MODULATOR::Lfo lfos[READS];
+  Float wet = 0;
+  Float whole = 0;
+};
+
 void build(Line &line, Whole frames);
 void clear(Line &line);
 auto reach(const Line &line) -> Float;
@@ -56,5 +71,9 @@ auto tick(Line &line, Float in, Float delay) -> Float;
 auto tick(Line &line, Loop &loop, Float in, Float delay) -> Float;
 auto tick(Line &line, Loop &loop, Float in, Sweep &sweep, Float modulation)
   -> Float;
+
+void build(Chorus &chorus, Whole rate);
+void settle(Chorus &chorus, Float hertz, Float depth, Float wet, Whole rate);
+auto tick(Chorus &chorus, Float in) -> STEREO::Pair;
 
 }  // namespace SOUND::PLUGINS::CORE::LINE

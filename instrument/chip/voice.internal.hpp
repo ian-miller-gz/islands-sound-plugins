@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "chip.hpp"
+#include "voice.channels.hpp"
 #include "../../core/block/block.hpp"
+#include "../../core/envelope/envelope.hpp"
 #include "../../core/filter/filter.hpp"
+#include "../../core/modulator/modulator.hpp"
+#include "../../core/oscillator/oscillator.hpp"
 #include "../../core/phase/phase.hpp"
 #include "../../core/voice/voice.hpp"
 
@@ -15,41 +19,11 @@ constexpr Whole ENVELOPES = 3;
 constexpr Whole NOISE = 2;
 constexpr Whole FILTERS = 3;
 constexpr Whole POSITIONS = 3;
-
-struct Clock {
-  CORE::PHASE::Wheel phase = 0;
-  CORE::PHASE::Wheel step = 0;
-};
-
-struct Shape {
-  Whole level = 0;
-  Whole decay = 0;
-  Whole sustain = 0;
-};
-
-struct Steps {
-  Whole level = 0;
-  Whole count = 0;
-  Flag held = false;
-};
-
-struct Pulse {
-  Clock clock;
-  Whole duty = 0;
-  Flag muted = true;
-};
-
-struct Wave {
-  Clock clock;
-  Flag muted = true;
-};
-
-struct Lfsr {
-  Whole bits = 1;
-  Whole tap = 1;
-  Float clocks = 0;
-  Float debt = 0;
-};
+constexpr Whole QUARTER = 240;
+constexpr Whole SWEEPING = 120;
+constexpr Whole FLOOR = 8;
+constexpr Whole CEILING = 2047;
+static_assert(CHANNEL::WAVE == PULSES);
 
 struct Synth {
   Whole rate = 0;
@@ -63,14 +37,20 @@ struct Synth {
   Pulse pulses[PULSES];
   Wave triangle;
   Lfsr noise;
+  Timer timers[CHANNEL::COUNT];
+  CORE::OSCILLATOR::Edges edges;
   Shape shapes[ENVELOPES];
   Steps steps[ENVELOPES];
+  Float weight = 1;
   Clock frame;
+  Whole quarters = 0;
   Clock arpeggio;
   Whole position = 0;
   Flag gated = false;
   Flag stale = true;
   Float tune = 0;
+  CORE::MODULATOR::Lfo vibrato;
+  Float wobble = 0;
   CORE::FILTER::Pole filters[FILTERS];
   CORE::BLOCK::Meter meter;
 };
@@ -81,6 +61,15 @@ void lift(Synth &synth);
 void clock(Synth &synth);
 auto shift(Lfsr &noise) -> Whole;
 auto mixed(Whole pulses, Whole triangle, Whole noise) -> Float;
+void advance(Pulse &pulse);
+void advance(Wave &triangle);
+auto level(const Synth &synth) -> Float;
+auto run(Synth &synth, Float before) -> Float;
+
+auto target(const Synth &synth, Whole at) -> Whole;
+auto silenced(const Synth &synth, Whole at) -> Flag;
+void arm(Synth &synth);
+void sweep(Synth &synth);
 
 void settle(Synth &synth);
 void retune(Synth &synth);

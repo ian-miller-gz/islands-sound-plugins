@@ -23,6 +23,9 @@ void seat(CHOIR::Choir &choir, CHOIR::Singer &singer, Whole at) {
   singer.seat.pan = CORE::MODULATOR::draw(seed);
   singer.seat.pace = CORE::MODULATOR::draw(seed);
   singer.vibrato.start = ::fraction(seed);
+  CORE::MODULATOR::seed(singer.wobble, seed);
+  CORE::MODULATOR::draw(seed);
+  CORE::MODULATOR::seed(singer.jitter, seed);
 }
 
 void space(CHOIR::Choir &choir) {
@@ -41,7 +44,6 @@ void space(CHOIR::Choir &choir) {
 
 void SOUND::PLUGINS::CHOIR::build(Choir &choir) {
   CORE::GLOTTIS::build(choir.table);
-  choir.allocator.count = NOTES;
   Whole at = 0;
   for (Part &part : choir.parts)
     for (Singer &singer : part.singers) ::seat(choir, singer, at++);

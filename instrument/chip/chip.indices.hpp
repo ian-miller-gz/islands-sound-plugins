@@ -26,6 +26,13 @@ constexpr Whole SPEED = 18;
 constexpr Whole TUNE = 19;
 constexpr Whole BEND = 20;
 constexpr Whole VOLUME = 21;
-constexpr Whole PARAMETERS = 22;
+constexpr Whole VELOCITY = 22;
+constexpr Whole VIBRATO = 23;
+constexpr Whole RATE = 24;
+constexpr Whole DELAY = 25;
+constexpr Whole GLIDE = 26;
+constexpr Whole SWEEP = 27;
+constexpr Whole PACE = 28;
+constexpr Whole PARAMETERS = 29;
 
 }  // namespace SOUND::PLUGINS::CHIP

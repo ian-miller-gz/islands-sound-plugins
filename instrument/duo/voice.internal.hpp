@@ -13,6 +13,8 @@
 namespace SOUND::PLUGINS::DUO {
 
 constexpr Float REFERENCE = 60;
+constexpr Whole OVERSAMPLING = 2;
+constexpr Float GAIN = 3;
 
 struct Contour {
   CORE::ENVELOPE::Envelope envelope;
@@ -22,6 +24,13 @@ struct Contour {
 struct Tones {
   Float mixed = 0;
   Float saw = 0;
+};
+
+struct Modulation {
+  Float key = 0;
+  Float lfo = 0;
+  Float random = 0;
+  Float contour = 0;
 };
 
 struct Synth {
@@ -35,11 +44,19 @@ struct Synth {
   CORE::NOISE::Pink noise;
   CORE::MODULATOR::Lfo lfo;
   CORE::MODULATOR::Smoother lag;
+  CORE::VOICE::Trim trims[CORE::VOICE::PARTS];
+  CORE::MODULATOR::Drift drifts[CORE::VOICE::PARTS];
   Float input = 0;
   Float held = 0;
+  Float velocity = 0;
   CORE::FILTER::Pole highpass;
   CORE::FILTER::Variable variable;
-  CORE::FILTER::Ladder ladder;
+  CORE::FILTER::Transistor transistor;
+  CORE::SHAPER::Oversampler oversampler;
+  CORE::BLOCK::Stride stride;
+  Whole slope = 0;
+  Float gain = 1;
+  Float saturation = 0;
   Contour adsr;
   Contour ar;
   CORE::SHAPER::Blocker blocker;
@@ -49,15 +66,17 @@ struct Synth {
 };
 
 void settle(Synth &synth);
+void seed(Synth &synth);
+void wander(Synth &synth);
+auto stray(Synth &synth, Whole part) -> Float;
 
 void strike(Synth &synth, Float velocity);
 void sample(Synth &synth);
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);
 
 auto sing(Synth &synth, Float first, Float second, Float width) -> Tones;
-auto filter(
-  Synth &synth, Float in, Float key, Float lfo, Float random,
-  Float contour) -> Float;
+void steer(Synth &synth, const Modulation &modulation);
+auto filter(Synth &synth, Float in) -> Float;
 auto sound(Synth &synth) -> Float;
 
 void render(

@@ -13,6 +13,17 @@ namespace SOUND::PLUGINS::ACID {
 
 enum Accent : Whole { PLAIN, STRONG, ACCENTS };
 
+constexpr Whole OVERSAMPLING = 2;
+
+struct Bassline {
+  CORE::FILTER::Pole poles[CORE::FILTER::POLES];
+  CORE::FILTER::Pole leak;
+  Float feedback = 0;
+};
+
+void settle(Bassline &bassline, Float cutoff, Float resonance, Whole rate);
+auto tick(Bassline &bassline, Float in) -> Float;
+
 struct Synth {
   Whole rate = 0;
   Whole channels = 0;
@@ -25,6 +36,9 @@ struct Synth {
   CORE::OSCILLATOR::Oscillator oscillator;
   CORE::FILTER::Pole coupling;
   CORE::FILTER::Diode diode;
+  Bassline bassline;
+  CORE::SHAPER::Oversampler oversampler;
+  CORE::BLOCK::Stride stride;
   CORE::ENVELOPE::Envelope contours[ACCENTS];
   CORE::ENVELOPE::Envelope amplifier;
   CORE::ENVELOPE::Gate contour;
@@ -33,6 +47,9 @@ struct Synth {
   CORE::SHAPER::Blocker blocker;
   Whole wave = CORE::OSCILLATOR::SAW;
   Whole accent = PLAIN;
+  Whole filter = 0;
+  Float drive = 1;
+  Float level = 1;
   CORE::BLOCK::Meter meter;
 };
 

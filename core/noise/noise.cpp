@@ -23,6 +23,7 @@ constexpr Float LEAK = 1.02f;
 constexpr Float BROWN = 3.5f;
 
 constexpr Float BLUE = 1.7f;
+constexpr Float VIOLET = 0.5f;
 
 }  // namespace
 
@@ -40,6 +41,10 @@ void SOUND::PLUGINS::CORE::NOISE::seed(Brown &brown, Register state) {
 
 void SOUND::PLUGINS::CORE::NOISE::seed(Blue &blue, Register state) {
   seed(blue.pink, state);
+}
+
+void SOUND::PLUGINS::CORE::NOISE::seed(Violet &violet, Register state) {
+  seed(violet.white, state);
 }
 
 void SOUND::PLUGINS::CORE::NOISE::seed(Burst &burst, Register state) {
@@ -75,5 +80,12 @@ auto SOUND::PLUGINS::CORE::NOISE::tick(Blue &blue) -> Float {
   const Float pink = tick(blue.pink);
   const Float value = (pink - blue.last) * ::BLUE;
   blue.last = pink;
+  return value;
+}
+
+auto SOUND::PLUGINS::CORE::NOISE::tick(Violet &violet) -> Float {
+  const Float white = tick(violet.white);
+  const Float value = (white - violet.last) * ::VIOLET;
+  violet.last = white;
   return value;
 }

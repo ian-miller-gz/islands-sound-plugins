@@ -21,15 +21,24 @@ constexpr Tick TICKS[MACHINE::DRUMS] = {
   },
   [](MACHINE::Machine &machine) -> Float {
     return CORE::PERCUSSION::HYBRID::tick(machine.tom);
+  },
+  [](MACHINE::Machine &machine) -> Float {
+    return CORE::PERCUSSION::HYBRID::tick(machine.cymbal);
+  },
+  [](MACHINE::Machine &machine) -> Float {
+    return CORE::PERCUSSION::tick(machine.rim);
   }};
 
 }  // namespace
 
-auto SOUND::PLUGINS::MACHINE::mix(Machine &machine) -> Float {
-  Float sum = 0;
-  for (Whole drum = 0; drum < DRUMS; ++drum)
-    sum += ::TICKS[drum](machine) * machine.rows[place(drum, LEVEL)];
-  return CORE::SHAPER::soft(sum);
+auto SOUND::PLUGINS::MACHINE::mix(Machine &machine) -> CORE::STEREO::Pair {
+  CORE::STEREO::Pair sum;
+  for (Whole drum = 0; drum < DRUMS; ++drum) {
+    const Float sample =
+      ::TICKS[drum](machine) * machine.rows[SEATS[drum].level];
+    CORE::STEREO::add(sum, sample, machine.gains[drum]);
+  }
+  return {CORE::SHAPER::soft(sum.left), CORE::SHAPER::soft(sum.right)};
 }
 
 void SOUND::PLUGINS::MACHINE::render(

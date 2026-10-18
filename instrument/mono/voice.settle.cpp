@@ -7,6 +7,7 @@ using namespace SOUND::PLUGINS;
 constexpr Float OCTAVE = 12;
 constexpr Float CENT = 100;
 constexpr Float BLOCKED = 10;
+constexpr Float WANDERING = 1;
 constexpr Float HALVED = 2;
 constexpr Float QUARTERED = 4;
 constexpr Float QUARTER = 0.25f;
@@ -41,9 +42,10 @@ constexpr Whole LFOS[] = {
 static_assert(std::size(LFOS) == std::size(MONO::WAVES));
 
 void contour(
-  MONO::Contour &contour, const CORE::ENVELOPE::Envelope &envelope,
+  MONO::Contour &contour, const CORE::ENVELOPE::Envelope &envelope, Float depth,
   Whole rate) {
   contour.envelope = envelope;
+  contour.envelope.depth = depth;
   contour.envelope.curve = CORE::ENVELOPE::EXPONENTIAL;
   contour.envelope.trigger = CORE::ENVELOPE::RESUME;
   CORE::ENVELOPE::shape(contour.envelope, rate);
@@ -61,6 +63,8 @@ void swing(MONO::Synth &synth) {
   synth.lfo.wave = LFOS[Whole(synth.rows[MONO::WAVE])];
   synth.lfo.hertz = synth.rows[MONO::RATE];
   CORE::MODULATOR::settle(synth.lfo, synth.rate);
+  CORE::MODULATOR::settle(synth.drift, WANDERING, synth.rate);
+  CORE::MODULATOR::settle(synth.wander, WANDERING, synth.rate);
 }
 
 }  // namespace
@@ -75,8 +79,10 @@ void SOUND::PLUGINS::MONO::settle(Synth &synth) {
     synth.envelope,
     CORE::ENVELOPE::ADSR::create(
       rows[ATTACK], rows[DECAY], rows[SUSTAIN], rows[RELEASE]),
+    rows[VELOCITY], synth.rate);
+  ::contour(
+    synth.gate, CORE::ENVELOPE::GATE::create(rows[VELOCITY]), rows[VELOCITY],
     synth.rate);
-  ::contour(synth.gate, CORE::ENVELOPE::GATE::create(0), synth.rate);
   synth.allocator.legato = Whole(rows[TRIGGER]) != TRIGGERED;
   ::glide(synth);
   ::swing(synth);

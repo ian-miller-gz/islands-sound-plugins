@@ -22,6 +22,9 @@ struct Routing {
 struct Voice {
   CORE::OSCILLATOR::Operator units[OPERATORS];
   CORE::ENVELOPE::Walk walks[OPERATORS];
+  CORE::ENVELOPE::Segments segments[OPERATORS];
+  Float gains[OPERATORS] = {};
+  CORE::ENVELOPE::Walk contour;
   Float outs[OPERATORS] = {};
   Flag stale = true;
 };
@@ -34,11 +37,11 @@ struct Synth {
     .count = VOICES, .mode = CORE::VOICE::POLY, .steal = CORE::VOICE::OLDEST};
   Voice voices[VOICES];
   CORE::OSCILLATOR::Table table;
-  CORE::ENVELOPE::Segments segments[OPERATORS];
+  CORE::ENVELOPE::Segments contour;
   CORE::MODULATOR::Lfo lfo;
   const Routing *routing = nullptr;
   Float factors[OPERATORS] = {};
-  Float levels[OPERATORS] = {};
+  Float fixed[OPERATORS] = {};
   Float feedback = 0;
   Float sign = 1;
   Float tune = 0;
@@ -50,6 +53,11 @@ struct Synth {
 auto bit(Whole unit) -> Whole;
 auto routed(Float algorithm) -> const Routing &;
 
+auto mode(const Synth &synth) -> Whole;
+void allocate(Synth &synth);
+void fit(Synth &synth, Whole at);
+void trace(Synth &synth);
+auto sweep(const Synth &synth, Voice &voice) -> Float;
 void settle(Synth &synth);
 
 void apply(Synth &synth, const AUDIO::PLUGIN::Event &event);

@@ -11,6 +11,7 @@ auto create(Whole rate, Whole channels) -> void * {
   auto *module = new MIXER::Module{.rate = rate, .channels = channels};
   CORE::TABLE::rest(MIXER::SHEET, module->rows);
   MIXER::settle(*module);
+  MIXER::prime(*module);
   return module;
 }
 
@@ -35,6 +36,7 @@ const AUDIO::PLUGIN::Plug surface = {
      {AUDIO::PLUGIN::Port::AUDIO, "2"},
      {AUDIO::PLUGIN::Port::AUDIO, "3"},
      {AUDIO::PLUGIN::Port::AUDIO, "4"},
+     {AUDIO::PLUGIN::Port::AUDIO, "cv"},
      {AUDIO::PLUGIN::Port::CONTROL}},
   .outs = {{AUDIO::PLUGIN::Port::AUDIO}}};
 

@@ -1,47 +1,33 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-#include <cmath>
-
 #include "voice.internal.hpp"
+#include "../../core/dynamics/dynamics.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Float TEN = 10.0f;
-constexpr Float DECIBELS = 20.0f;
 constexpr Float FLOOR = 10.0f;
 
-auto soft(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::tick(stage.oversampler, in, CORE::SHAPER::soft);
+auto gain(const SHAPER::Module &module, SHAPER::Stage &stage, Float cv)
+  -> Float {
+  const Float *rows = module.rows;
+  const Float wanted = rows[SHAPER::DRIVE] + rows[SHAPER::AMOUNT] * cv;
+  const Float decibels = wanted < 0                 ? 0
+                         : wanted > SHAPER::LOUDEST ? SHAPER::LOUDEST
+                                                    : wanted;
+  if (decibels == stage.decibels) return stage.gain;
+  stage.decibels = decibels;
+  stage.gain = CORE::DYNAMICS::gain(decibels);
+  return stage.gain;
 }
-
-auto hard(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::tick(stage.oversampler, in, CORE::SHAPER::hard);
-}
-
-auto tube(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::tick(stage.oversampler, in, CORE::SHAPER::tube);
-}
-
-auto fold(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::tick(stage.oversampler, in, CORE::SHAPER::fold);
-}
-
-auto crush(SHAPER::Stage &stage, Float in) -> Float {
-  return CORE::SHAPER::hard(CORE::SHAPER::tick(stage.crusher, in));
-}
-
-using Path = auto (*)(SHAPER::Stage &, Float) -> Float;
-
-constexpr Path PATHS[SHAPER::CURVES] = {soft, hard, tube, fold, crush};
 
 }  // namespace
 
 void SOUND::PLUGINS::SHAPER::settle(Module &module) {
-  module.gain = std::pow(::TEN, module.rows[DRIVE] / ::DECIBELS);
   for (Stage &stage : module.stages) {
     CORE::SHAPER::settle(
       stage.crusher, module.rows[BITS], module.rows[RATE], module.rate);
     CORE::SHAPER::settle(stage.blocker, ::FLOOR, module.rate);
+    CORE::SHAPER::settle(stage.chebyshev, module.rows[EVEN], module.rows[ODD]);
   }
 }
 
@@ -55,10 +41,9 @@ void SOUND::PLUGINS::SHAPER::apply(
 }
 
 auto SOUND::PLUGINS::SHAPER::shaped(
-  const Module &module, Stage &stage, Float in) -> Float {
-  const Whole curve = Whole(module.rows[CURVE]);
-  const Path path = PATHS[curve < CURVES ? curve : SOFT];
+  const Module &module, Stage &stage, Float in, Float cv) -> Float {
+  const Float driven = in * ::gain(module, stage, cv) + module.rows[BIAS];
   const Float wet =
-    CORE::SHAPER::tick(stage.blocker, path(stage, in * module.gain));
+    CORE::SHAPER::tick(stage.blocker, curved(module, stage, driven));
   return in + (wet - in) * module.rows[MIX];
 }

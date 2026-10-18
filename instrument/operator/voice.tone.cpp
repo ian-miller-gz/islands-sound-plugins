@@ -23,8 +23,8 @@ void tune(OPERATOR::Synth &synth, OPERATOR::Voice &voice, Float key) {
   const Float hertz = CORE::PHASE::hertz(pitch);
   for (Whole unit = 0; unit < OPERATOR::OPERATORS; ++unit) {
     const Float loop = ::own(*synth.routing, unit) ? synth.feedback : 0;
-    CORE::OSCILLATOR::settle(
-      voice.units[unit], hertz * synth.factors[unit], loop, synth.rate);
+    const Float frequency = hertz * synth.factors[unit] + synth.fixed[unit];
+    CORE::OSCILLATOR::settle(voice.units[unit], frequency, loop, synth.rate);
   }
   voice.stale = false;
 }
@@ -47,15 +47,16 @@ auto play(OPERATOR::Synth &synth, Whole at) -> Float {
   OPERATOR::Voice &voice = synth.voices[at];
   CORE::VOICE::Note &note = synth.allocator.notes[at];
   if (!note.sounding) return 0;
-  const Float key = CORE::VOICE::tick(note, synth.allocator.glide);
+  const Float key = CORE::VOICE::tick(note, synth.allocator.glide) +
+                    OPERATOR::sweep(synth, voice);
   if (voice.stale || synth.clock == 0) ::tune(synth, voice, key);
   const Whole carriers = synth.routing->carriers;
   Float out = 0;
   Flag alive = false;
   for (Whole unit = OPERATOR::OPERATORS; unit-- > 0;) {
     const Float level =
-      synth.levels[unit] *
-      CORE::ENVELOPE::tick(voice.walks[unit], synth.segments[unit]);
+      voice.gains[unit] *
+      CORE::ENVELOPE::tick(voice.walks[unit], voice.segments[unit]);
     const Float phase = ::modulated(synth, voice, unit);
     voice.outs[unit] =
       CORE::OSCILLATOR::tick(voice.units[unit], synth.table, phase, level);

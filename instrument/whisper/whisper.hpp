@@ -2,7 +2,9 @@
 #pragma once
 #include "../../../plugin.hpp"
 #include "../../core/filter/filter.hpp"
+#include "../../core/glottis/glottis.hpp"
 #include "../../core/table/table.hpp"
+#include "whisper.words.hpp"
 
 namespace SOUND::PLUGINS::WHISPER {
 
@@ -15,24 +17,16 @@ constexpr Whole ATTACK = 5;
 constexpr Whole DECAY = 6;
 constexpr Whole SUSTAIN = 7;
 constexpr Whole RELEASE = 8;
-constexpr Whole PARAMETERS = 9;
-
-constexpr Whole WHITE = 0;
-constexpr Whole PINK = 1;
-constexpr Whole BROWN = 2;
-constexpr Whole BLUE = 3;
-constexpr Whole COLOURS = 4;
-
-constexpr Whole STEPS = CORE::FILTER::VOWELS - 1;
-constexpr Float LAST = Float(STEPS);
-constexpr Float QUICKEST = 0.001f;
-constexpr Float SLOWEST = 4.0f;
-
-inline constexpr STRING::Hot NOISES[] = {"White", "Pink", "Brown", "Blue"};
-static_assert(sizeof(NOISES) / sizeof(NOISES[0]) == COLOURS);
-
-inline constexpr STRING::Hot VOWELS[] = {"A", "E", "I", "O", "U"};
-static_assert(sizeof(VOWELS) / sizeof(VOWELS[0]) == CORE::FILTER::VOWELS);
+constexpr Whole VOICE = 9;
+constexpr Whole SEX = 10;
+constexpr Whole TARGET = 11;
+constexpr Whole MOTION = 12;
+constexpr Whole BREADTH = 13;
+constexpr Whole VOICING = 14;
+constexpr Whole MODE = 15;
+constexpr Whole GLIDE = 16;
+constexpr Whole WIDTH = 17;
+constexpr Whole PARAMETERS = 18;
 
 inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Gain", "", 0.5f, 0, 1, 0, nullptr},
@@ -43,7 +37,17 @@ inline constexpr CORE::TABLE::Row ROWS[] = {
   {"Attack", "s", 0.02f, QUICKEST, SLOWEST, 0, nullptr},
   {"Decay", "s", 0.2f, QUICKEST, SLOWEST, 0, nullptr},
   {"Sustain", "", 0.8f, 0, 1, 0, nullptr},
-  {"Release", "s", 0.3f, QUICKEST, SLOWEST, 0, nullptr}};
+  {"Release", "s", 0.3f, QUICKEST, SLOWEST, 0, nullptr},
+  {"Voice", "", Float(CORE::FILTER::TENOR), 0, Float(CORE::FILTER::SOPRANO),
+   CORE::FILTER::SOPRANO, VOICES},
+  {"Sex", "", 0, -1, 1, 0, nullptr},
+  {"Target", "", 1, 0, LAST, STEPS, VOWELS},
+  {"Motion", "Hz", 0.1f, STILLEST, RESTLESS, 0, nullptr},
+  {"Breadth", "", 2, NARROWEST, WIDEST, 0, nullptr},
+  {"Voicing", "", 0.1f, 0, 1, 0, nullptr},
+  {"Mode", "", 0, 0, Float(VOICINGS), VOICINGS, MODES},
+  {"Glide", "s", 0.08f, 0, TRAVEL, 0, nullptr},
+  {"Width", "", 0.5f, 0, 1, 0, nullptr}};
 
 inline constexpr CORE::TABLE::Sheet SHEET = CORE::TABLE::sheet(ROWS);
 static_assert(SHEET.count == PARAMETERS);

@@ -6,6 +6,7 @@ using namespace SOUND::PLUGINS;
 
 constexpr Float CENT = 100;
 constexpr Float BLOCKED = 10;
+constexpr Float UNITY = 1;
 
 void contour(
   DUO::Contour &contour, const CORE::ENVELOPE::Envelope &envelope, Whole rate) {
@@ -28,6 +29,13 @@ void swing(DUO::Synth &synth) {
   CORE::MODULATOR::settle(synth.lag, synth.rate);
 }
 
+void drive(DUO::Synth &synth) {
+  const Flag driven = synth.rows[DUO::DRIVE] > 0;
+  synth.slope = Whole(synth.rows[DUO::SLOPE]);
+  synth.gain = driven ? DUO::GAIN : UNITY;
+  synth.saturation = driven ? UNITY : 0;
+}
+
 }  // namespace
 
 void SOUND::PLUGINS::DUO::settle(Synth &synth) {
@@ -42,6 +50,8 @@ void SOUND::PLUGINS::DUO::settle(Synth &synth) {
     synth.rate);
   ::glide(synth);
   ::swing(synth);
+  DUO::wander(synth);
+  ::drive(synth);
   CORE::FILTER::settle(
     synth.highpass, CORE::FILTER::HIGH, rows[HIGHPASS], synth.rate);
   synth.tune = rows[TUNE] / CENT;

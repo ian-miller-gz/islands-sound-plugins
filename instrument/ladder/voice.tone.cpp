@@ -1,26 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-#include <cmath>
-
 #include "voice.internal.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
 constexpr Float VIBRATO = 2;
-constexpr Float WOBBLE = 2;
-constexpr Float OCTAVE = 12;
 
 auto noise(LADDER::Synth &synth) -> Float {
   if (synth.rows[LADDER::COLOUR] > 0) return CORE::NOISE::tick(synth.noise);
   return CORE::NOISE::tick(synth.noise.white);
-}
-
-auto swept(const LADDER::Synth &synth, Float key, Float wheel, Float contour)
-  -> Float {
-  Float octaves = synth.tracking * (key - LADDER::REFERENCE) / OCTAVE;
-  octaves += synth.rows[LADDER::AMOUNT] * contour;
-  if (synth.rows[LADDER::FILTER] > 0) octaves += wheel * WOBBLE;
-  return synth.rows[LADDER::CUTOFF] * std::exp2(octaves);
 }
 
 auto mixed(LADDER::Synth &synth, Float bent, Float wheel, Float noise)
@@ -39,7 +27,7 @@ auto mixed(LADDER::Synth &synth, Float bent, Float wheel, Float noise)
 auto SOUND::PLUGINS::LADDER::sound(Synth &synth) -> Float {
   CORE::VOICE::Note &note = synth.allocator.notes[0];
   const Float key = CORE::VOICE::tick(note, synth.allocator.glide) + synth.tune;
-  const Float bent = key + synth.rows[BEND];
+  const Float bent = key + synth.rows[BEND] + synth.stray;
   const Float noise = ::noise(synth);
   const Flag keyed = synth.rows[KEYBOARD] > 0;
   Source &control = synth.sources[THIRD];
@@ -52,10 +40,8 @@ auto SOUND::PLUGINS::LADDER::sound(Synth &synth) -> Float {
     CORE::ENVELOPE::tick(synth.filter.gate, synth.filter.envelope);
   const Float loud =
     CORE::ENVELOPE::tick(synth.loudness.gate, synth.loudness.envelope);
-  const Float cutoff = ::swept(synth, key, wheel, contour);
-  CORE::FILTER::settle(
-    synth.ladder, cutoff, synth.rows[EMPHASIS], synth.rows[DRIVE], synth.rate);
-  const Float out = CORE::FILTER::tick(synth.ladder, sum) * loud;
+  steer(synth, key, wheel, contour);
+  const Float out = filter(synth, sum) * loud;
   if (!CORE::ENVELOPE::sounding(synth.loudness.gate)) note.sounding = false;
   return CORE::SHAPER::tick(synth.blocker, out);
 }

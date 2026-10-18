@@ -1,49 +1,38 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-#include <xmmintrin.h>
-
 #include "voice.internal.hpp"
 
 namespace {
 using namespace SOUND::PLUGINS;
 
-void denormals() { _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON); }
+void stride(SAMPLER::Synth &synth) {
+  synth.swing = CORE::MODULATOR::tick(synth.lfo);
+  for (Whole at = 0; at < SAMPLER::POLYPHONY; ++at)
+    if (synth.allocator.notes[at].sounding) SAMPLER::steer(synth, at);
+}
 
-auto sampled(const Vector<Float> &line, Float place) -> Float {
-  const Whole at = Whole(place);
-  const Float here = line[at];
-  const Float there = at + 1 < line.size() ? line[at + 1] : here;
-  return here + (there - here) * (place - Float(at));
+void end(SAMPLER::Synth &synth, Whole at) {
+  CORE::ENVELOPE::choke(synth.voices[at].loudness);
+  CORE::ENVELOPE::choke(synth.voices[at].contour);
+  synth.allocator.notes[at].sounding = false;
+  synth.allocator.notes[at].level = 0;
 }
 
 void sound(
-  SAMPLER::Player &player, SAMPLER::Voice &voice,
-  AUDIO::PLUGIN::Sample *const *lanes, Whole frame) {
-  if (!voice.live) return;
-  const SAMPLER::Source &source = player.sources[voice.source];
-  const Float total = Float(SAMPLER::frames(source));
-  if (voice.place >= total) {
-    voice.place = player.loop == 0 ? total : voice.from + (voice.place - total);
-    if (voice.place >= total) return (void)(voice.live = false);
+  SAMPLER::Synth &synth, Whole at, AUDIO::PLUGIN::Sample *const *lanes,
+  Whole frame) {
+  SAMPLER::Voice &voice = synth.voices[at];
+  const Float gain =
+    CORE::ENVELOPE::tick(voice.loudness, synth.loudness) * voice.level;
+  const Whole reads = synth.clips[voice.clip].lanes.size();
+  Float last = 0;
+  for (Whole channel = 0; channel < synth.channels; ++channel) {
+    if (channel < reads)
+      last = SAMPLER::filtered(
+        synth, voice, channel, SAMPLER::read(synth, voice, channel));
+    lanes[channel][frame] += last * gain;
   }
-  const Float scale = voice.level * voice.velocity;
-  for (Whole channel = 0; channel < player.channels; ++channel) {
-    const Whole line = channel < source.lanes.size() ? channel : 0;
-    lanes[channel][frame] += ::sampled(source.lanes[line], voice.place) * scale;
-  }
-  voice.place += voice.step;
-  if (!voice.gated) {
-    voice.level -= voice.fall;
-    if (voice.level <= 0) voice.live = false;
-    return;
-  }
-  voice.level += voice.rise;
-  if (voice.level > 1) voice.level = 1;
-}
-
-void publish(SAMPLER::Player &player, Float peak) {
-  const Whole idle = player.face.load(std::memory_order_relaxed) ^ 1u;
-  player.level[idle] = peak;
-  player.face.store(idle, std::memory_order_release);
+  const Flag walking = SAMPLER::walk(voice);
+  if (!walking || !CORE::ENVELOPE::sounding(voice.loudness)) ::end(synth, at);
 }
 
 }  // namespace
@@ -51,23 +40,23 @@ void publish(SAMPLER::Player &player, Float peak) {
 void SOUND::PLUGINS::SAMPLER::render(
   void *instance, AUDIO::PLUGIN::Sample *const *lanes, Whole frames,
   const AUDIO::PLUGIN::Event *events, Whole count) {
-  ::denormals();
-  auto &player = *static_cast<Player *>(instance);
-  Whole next = 0;
+  CORE::BLOCK::denormals();
+  auto &synth = *static_cast<Synth *>(instance);
+  const auto land = [&synth](const AUDIO::PLUGIN::Event &event) {
+    apply(synth, event);
+  };
+  CORE::BLOCK::Cursor cursor;
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
-    while (next < count && events[next].offset <= frame)
-      apply(player, events[next++]);
-    for (Whole channel = 0; channel < player.channels; ++channel)
+    CORE::BLOCK::due(cursor, events, count, frame, land);
+    if (CORE::BLOCK::due(synth.stride, STRIDE)) ::stride(synth);
+    for (Whole channel = 0; channel < synth.channels; ++channel)
       lanes[channel][frame] = 0;
-    for (Voice &voice : player.voices) ::sound(player, voice, lanes, frame);
-    for (Whole channel = 0; channel < player.channels; ++channel) {
-      const Float sample = lanes[channel][frame] * player.gain;
-      lanes[channel][frame] = sample;
-      const Float magnitude = sample < 0 ? -sample : sample;
-      if (magnitude > peak) peak = magnitude;
-    }
+    for (Whole at = 0; at < POLYPHONY; ++at)
+      if (synth.allocator.notes[at].sounding) ::sound(synth, at, lanes, frame);
+    const Float heard = CORE::BLOCK::loudest(lanes, synth.channels, frame);
+    if (heard > peak) peak = heard;
   }
-  while (next < count) apply(player, events[next++]);
-  ::publish(player, peak);
+  CORE::BLOCK::rest(cursor, events, count, land);
+  CORE::BLOCK::publish(synth.meter, CORE::BLOCK::clipped(peak));
 }

@@ -6,10 +6,16 @@ using namespace SOUND::PLUGINS;
 
 using Surface = CORE::TABLE::Surface<POLYMOD::Synth, POLYMOD::SHEET>;
 
+constexpr CORE::MODULATOR::Seed WALK = 0x2F6B1D35u;
+
 auto create(Whole rate, Whole channels) -> void * {
   if (rate == 0 || channels == 0) return nullptr;
   auto *synth = new POLYMOD::Synth{.rate = rate, .channels = channels};
   CORE::TABLE::rest(POLYMOD::SHEET, synth->rows);
+  CORE::LINE::build(synth->chorus, rate);
+  CORE::VOICE::draw(synth->trims, CORE::MODULATOR::SEED);
+  for (Whole at = 0; at < POLYMOD::VOICES; ++at)
+    CORE::MODULATOR::seed(synth->voices[at].drift, WALK * (at + 1));
   POLYMOD::settle(*synth);
   return synth;
 }

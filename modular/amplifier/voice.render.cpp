@@ -5,15 +5,16 @@ namespace {
 using namespace SOUND::PLUGINS;
 
 void gate(
-  const AMPLIFIER::Module &module, AUDIO::PLUGIN::Sample *const *lanes,
-  Whole frame) {
+  AMPLIFIER::Module &module, AUDIO::PLUGIN::Sample *const *lanes, Whole frame,
+  Flag due) {
   const Float *rows = module.rows;
   const Whole channels = module.channels;
   for (Whole channel = 0; channel < channels; ++channel) {
-    const Float cv = lanes[AMPLIFIER::CV * channels + channel][frame];
-    const Float opened = rows[AMPLIFIER::OFFSET] + rows[AMPLIFIER::DEPTH] * cv;
-    const Float gain = (opened < 0 ? 0 : opened) * rows[AMPLIFIER::GAIN];
-    lanes[channel][frame] *= gain;
+    auto *in = CORE::BLOCK::lane(lanes, AMPLIFIER::IN, channel, channels);
+    const Float cv =
+      CORE::BLOCK::lane(lanes, AMPLIFIER::CV, channel, channels)[frame];
+    const Float control = rows[AMPLIFIER::OFFSET] + rows[AMPLIFIER::DEPTH] * cv;
+    in[frame] = AMPLIFIER::amplify(module, {channel, control, in[frame], due});
   }
 }
 
@@ -31,7 +32,8 @@ void SOUND::PLUGINS::AMPLIFIER::render(
   Float peak = 0;
   for (Whole frame = 0; frame < frames; ++frame) {
     CORE::BLOCK::due(cursor, events, count, frame, applied);
-    ::gate(module, lanes, frame);
+    const Flag due = CORE::BLOCK::due(module.stride, STRIDE);
+    ::gate(module, lanes, frame, due);
     const Float size = CORE::BLOCK::loudest(lanes, module.channels, frame);
     if (size > peak) peak = size;
   }

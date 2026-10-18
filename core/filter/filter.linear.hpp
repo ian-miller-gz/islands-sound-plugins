@@ -50,10 +50,14 @@ struct Variable {
   Float weights[WEIGHTS] = {0, 0, 0};
   Float states[INTEGRATORS] = {0, 0};
   Float mix[WEIGHTS] = {0, 0, 1};
+  Float saturation = 0;
 };
 
 void settle(
   Variable &variable, Whole kind, Float cutoff, Float emphasis, Whole rate);
+void settle(
+  Variable &variable, Whole kind, Float cutoff, Float emphasis,
+  Float saturation, Whole rate);
 auto split(Variable &variable, Float in) -> Taps;
 auto tick(Variable &variable, Float in) -> Float;
 

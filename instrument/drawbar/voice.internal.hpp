@@ -1,49 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #pragma once
 #include "drawbar.hpp"
+#include "voice.parts.hpp"
 #include "../../core/block/block.hpp"
 #include "../../core/envelope/envelope.hpp"
-#include "../../core/filter/filter.hpp"
-#include "../../core/line/line.hpp"
-#include "../../core/modulator/modulator.hpp"
 #include "../../core/noise/noise.hpp"
 #include "../../core/oscillator/oscillator.hpp"
-#include "../../core/shaper/shaper.hpp"
 
 namespace SOUND::PLUGINS::DRAWBAR {
-
-constexpr Whole WHEELS = 91;
-
-struct Pair {
-  Float left = 0;
-  Float right = 0;
-};
-
-struct Scanner {
-  CORE::LINE::Line line;
-  CORE::LINE::Sweep sweep;
-  CORE::MODULATOR::Lfo lfo;
-  Float wet = 0;
-  Float dry = 1;
-};
-
-struct Rotor {
-  CORE::LINE::Line line;
-  CORE::LINE::Sweep near;
-  CORE::LINE::Sweep far;
-  CORE::MODULATOR::Smoother speed;
-  CORE::PHASE::Wheel phase = 0;
-  Float target = 0;
-  Float swing = 0;
-};
-
-struct Rotary {
-  CORE::FILTER::Biquad low;
-  CORE::FILTER::Biquad high;
-  Rotor horn;
-  Rotor drum;
-  Flag spinning = false;
-};
 
 struct Organ {
   Whole rate = 0;
@@ -63,6 +27,10 @@ struct Organ {
   CORE::ENVELOPE::Envelope percussion;
   CORE::ENVELOPE::Gate gate;
   CORE::NOISE::Burst click;
+  Contacts contacts;
+  Leaks leaks;
+  Preamp preamp;
+  Room room;
   Scanner scanner;
   Rotary rotary;
   CORE::BLOCK::Meter meter;
@@ -73,6 +41,14 @@ void pull(Organ &organ);
 void settle(Organ &organ);
 void apply(Organ &organ, const AUDIO::PLUGIN::Event &event);
 
+void arm(Organ &organ, Whole pitch);
+void lift(Organ &organ, Whole pitch);
+void close(Organ &organ);
+auto closed(const Organ &organ, Whole pitch, Whole bar) -> Flag;
+
+void build(Leaks &leaks);
+void leak(Organ &organ);
+
 void build(Scanner &scanner, Whole rate);
 void settle(Scanner &scanner, Whole mode, Whole rate);
 auto tick(Scanner &scanner, Float in) -> Float;
@@ -80,6 +56,12 @@ auto tick(Scanner &scanner, Float in) -> Float;
 void build(Rotary &rotary, Whole rate);
 void settle(Rotary &rotary, Whole mode, Whole rate);
 auto tick(Rotary &rotary, const Organ &organ, Float in) -> Pair;
+
+void build(Preamp &preamp, Whole rate);
+auto tick(Preamp &preamp, const Float *rows, Float in) -> Float;
+
+void build(Room &room, Whole rate);
+auto tick(Room &room, Float wet, Pair dry) -> Pair;
 
 auto sound(Organ &organ) -> Pair;
 

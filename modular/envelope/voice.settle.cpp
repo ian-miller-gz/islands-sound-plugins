@@ -9,45 +9,36 @@ constexpr Whole CHANGES = CORE::VOICE::LIFTED + 1;
 void kept(ENVELOPE::Module &, const CORE::VOICE::Note &) {}
 
 void struck(ENVELOPE::Module &module, const CORE::VOICE::Note &note) {
-  CORE::ENVELOPE::strike(module.gate, module.envelope, note.velocity);
+  ENVELOPE::strike(module, note.velocity);
 }
 
 void tied(ENVELOPE::Module &module, const CORE::VOICE::Note &note) {
+  if (module.left.delay > 0) return;
   CORE::ENVELOPE::tie(module.gate, module.envelope, note.velocity);
 }
 
 void lifted(ENVELOPE::Module &module, const CORE::VOICE::Note &) {
-  CORE::ENVELOPE::lift(module.gate);
+  if (!module.edge.high) ENVELOPE::lift(module);
 }
 
 using Change = void (*)(ENVELOPE::Module &, const CORE::VOICE::Note &);
 
 constexpr Change CHANGED[CHANGES] = {kept, struck, tied, lifted};
 
-auto adsr(const Float *rows) -> CORE::ENVELOPE::Envelope {
-  return CORE::ENVELOPE::ADSR::create(
-    rows[ENVELOPE::ATTACK], rows[ENVELOPE::DECAY], rows[ENVELOPE::SUSTAIN],
-    rows[ENVELOPE::RELEASE]);
+constexpr Whole TIMES[] = {
+  ENVELOPE::ATTACK, ENVELOPE::DECAY, ENVELOPE::RELEASE, ENVELOPE::DELAY,
+  ENVELOPE::HOLD};
+
+void stretch(const ENVELOPE::Module &module, Float *timed) {
+  const Float *rows = module.rows;
+  const Float octaves = -rows[ENVELOPE::TIME];
+  for (Whole row = 0; row < ENVELOPE::PARAMETERS; ++row) timed[row] = rows[row];
+  for (const Whole row : TIMES) {
+    const CORE::TABLE::Row &described = ENVELOPE::ROWS[row];
+    timed[row] = CORE::BLOCK::scaled(
+      rows[row], module.cv, octaves, described.least, described.most);
+  }
 }
-
-auto ad(const Float *rows) -> CORE::ENVELOPE::Envelope {
-  return CORE::ENVELOPE::AD::create(
-    rows[ENVELOPE::ATTACK], rows[ENVELOPE::DECAY]);
-}
-
-auto ar(const Float *rows) -> CORE::ENVELOPE::Envelope {
-  return CORE::ENVELOPE::AR::create(
-    rows[ENVELOPE::ATTACK], rows[ENVELOPE::RELEASE]);
-}
-
-auto gate(const Float *rows) -> CORE::ENVELOPE::Envelope {
-  return CORE::ENVELOPE::GATE::create(rows[ENVELOPE::VELOCITY]);
-}
-
-using Builder = auto (*)(const Float *) -> CORE::ENVELOPE::Envelope;
-
-constexpr Builder BUILDERS[] = {adsr, ad, ar, gate};
-static_assert(std::size(BUILDERS) == std::size(ENVELOPE::SHAPES));
 
 }  // namespace
 
@@ -61,14 +52,11 @@ void SOUND::PLUGINS::ENVELOPE::seat(Module &module) {
 }
 
 void SOUND::PLUGINS::ENVELOPE::settle(Module &module) {
-  const Float *rows = module.rows;
-  const Whole shape = Whole(rows[SHAPE]);
-  CORE::ENVELOPE::Envelope &envelope = module.envelope;
-  envelope = ::BUILDERS[shape <= GATE ? shape : ADSR](rows);
-  envelope.curve = Whole(rows[CURVE]);
-  envelope.trigger = Whole(rows[TRIGGER]);
-  envelope.depth = rows[VELOCITY];
-  CORE::ENVELOPE::shape(envelope, module.rate);
+  Float timed[PARAMETERS] = {};
+  ::stretch(module, timed);
+  module.envelope = shaped(timed);
+  CORE::ENVELOPE::shape(module.envelope, module.rate);
+  module.spans = spanned(timed, module.rate);
 }
 
 void SOUND::PLUGINS::ENVELOPE::apply(

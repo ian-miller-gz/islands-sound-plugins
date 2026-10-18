@@ -21,7 +21,18 @@ constexpr Float SHINE = 6000;
 constexpr Float WASH = 1.5f;
 constexpr Float BALANCE = 0.5f;
 constexpr Float SPLASH = 0.5f;
-constexpr Float STRAIGHT = 0;
+constexpr Float DRUM = 90;
+constexpr Float SKIN = 0.4f;
+constexpr Float BEND = 0.3f;
+constexpr Float CLEAR = 4000;
+constexpr Float SPREAD = 0.011f;
+constexpr Float CLAPPED = 0.3f;
+constexpr Float PALM = 1100;
+constexpr Float WOOD = 2500;
+constexpr Float KNOCK = 0.06f;
+constexpr Float PITCH = 0;
+constexpr Float BELL = 0.35f;
+constexpr Float EVEN = 0;
 
 }  // namespace
 
@@ -30,12 +41,17 @@ void SOUND::PLUGINS::RHYTHM::settle(Box &box) {
   ::settle(box.snare, ::SNARE, ::BRIGHT, ::SNAPPY, ::CRACK, box.rate);
   ::settle(box.hat, ::CENTRE, ::CLOSED, ::OPEN, ::SHINE, box.rate);
   ::settle(box.cymbal, ::CENTRE, ::WASH, ::BALANCE, ::SPLASH, box.rate);
+  ::settle(box.tom, ::DRUM, ::SKIN, ::BEND, ::CLEAR, box.rate);
+  ::settle(box.clap, ::SPREAD, ::CLAPPED, ::PALM, box.rate);
+  ::settle(box.rim, ::WOOD, ::KNOCK, box.rate);
+  ::settle(box.cowbell, ::PITCH, ::BELL, box.rate);
   pace(box);
   if (box.rows[RUN] > 0) CORE::CLOCK::run(box.clock);
 }
 
 void SOUND::PLUGINS::RHYTHM::pace(Box &box) {
   const Pattern &chosen = pattern(Whole(box.rows[PATTERN]));
+  const Float swing = chosen.division == SIXTEENTHS ? box.rows[SWING] : ::EVEN;
   CORE::CLOCK::settle(
-    box.clock, box.rows[TEMPO], Float(chosen.division), ::STRAIGHT, box.rate);
+    box.clock, box.rows[TEMPO], Float(chosen.division), swing, box.rate);
 }

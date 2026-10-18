@@ -11,6 +11,8 @@ enum Curve : Whole { LINEAR, EXPONENTIAL, CURVES };
 enum Trigger : Whole { RESET, RESUME, TRIGGERS };
 
 constexpr Float FULL = 1.0f;
+constexpr Float RISE = 0.3f;
+constexpr Float SETTLE = 0.001f;
 
 struct Slope {
   Float scale = 1;
@@ -26,6 +28,8 @@ struct Envelope {
   Whole trigger = RESET;
   Flag sustained = true;
   Float depth = 0;
+  Float rise = RISE;
+  Float fall = SETTLE;
   Slope slopes[STAGES];
   Float bounds[STAGES] = {};
 };

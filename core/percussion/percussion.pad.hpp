@@ -32,5 +32,6 @@ struct Voicing {
 void settle(Pad &pad, const Voicing &voicing, Whole rate);
 void strike(Pad &pad, Float velocity);
 auto tick(Pad &pad) -> Float;
+auto sounding(const Pad &pad) -> Flag;
 
 }  // namespace SOUND::PLUGINS::CORE::PERCUSSION

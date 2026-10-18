@@ -4,54 +4,34 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Whole QUADRUPLE = 4;
-constexpr Whole TRIPLE = 3;
-constexpr Whole SIXTEENTHS = 4;
-constexpr Whole TRIPLETS = 3;
 constexpr Whole BIT = 1;
 
-constexpr RHYTHM::Pattern TABLE[RHYTHM::PATTERNS] = {
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1000000010100000, 0b0000100000001000, 0b1010101010101010, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1000100010001000, 0b0000100000001000, 0b0010001000100010, 0}},
-  {TRIPLE, SIXTEENTHS, {0b100000000000, 0b000010001000, 0b101010101010, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1001100110011001, 0b1001001000100100, 0b1010101010101010, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1001100110011001, 0b0100100101001001, 0b1011101110111011, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1000001010000010, 0b1001001000101000, 0b1010101010101010, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1000100010001010, 0b0000100000001000, 0, 0b1000100010001000}},
-  {QUADRUPLE, SIXTEENTHS, {0b1000000010000000, 0b0010001000101011, 0, 0}},
-  {QUADRUPLE, TRIPLETS, {0b100000100000, 0, 0b000100000100, 0b100101100101}},
-  {QUADRUPLE, TRIPLETS, {0b100000100000, 0b000100000100, 0b101101101101, 0}},
-  {QUADRUPLE, TRIPLETS, {0b100000100100, 0b000100000100, 0b111111111111, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1000000010000000, 0b0000001000101000, 0b1010101010101010, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1000000010000000, 0b0000100000101000, 0b1010101010101010, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1000001000100000, 0b0010100100001010, 0b1010101010101010, 0}},
-  {QUADRUPLE, SIXTEENTHS, {0b1000000010000000, 0b0010001000100010, 0, 0}},
-  {QUADRUPLE,
-   SIXTEENTHS,
-   {0b1000000010000000, 0b0000100000001000, 0, 0b1000100010001000}}};
+using Pick = auto (*)(Whole at) -> const RHYTHM::Pattern &;
+
+struct Place {
+  Pick pick;
+  Whole at;
+};
+
+constexpr Pick STRAIGHT = RHYTHM::STRAIGHT::pattern;
+constexpr Pick TRIPLE = RHYTHM::TRIPLE::pattern;
+
+constexpr Place PLACES[RHYTHM::PATTERNS] = {
+  {STRAIGHT, 0}, {STRAIGHT, 1},  {STRAIGHT, 2},  {STRAIGHT, 3},
+  {STRAIGHT, 4}, {STRAIGHT, 5},  {STRAIGHT, 6},  {STRAIGHT, 7},
+  {TRIPLE, 0},   {TRIPLE, 1},    {TRIPLE, 2},    {STRAIGHT, 8},
+  {STRAIGHT, 9}, {STRAIGHT, 10}, {STRAIGHT, 11}, {STRAIGHT, 12}};
+
+auto lit(Whole lane, Whole steps, Whole step) -> Flag {
+  if (step >= steps) return false;
+  return ((lane >> (steps - ::BIT - step)) & ::BIT) != 0;
+}
 
 }  // namespace
 
 auto SOUND::PLUGINS::RHYTHM::pattern(Whole index) -> const Pattern & {
-  return ::TABLE[index < PATTERNS ? index : 0];
+  const ::Place &place = ::PLACES[index < PATTERNS ? index : 0];
+  return place.pick(place.at);
 }
 
 auto SOUND::PLUGINS::RHYTHM::length(const Pattern &pattern) -> Whole {
@@ -60,7 +40,11 @@ auto SOUND::PLUGINS::RHYTHM::length(const Pattern &pattern) -> Whole {
 
 auto SOUND::PLUGINS::RHYTHM::struck(
   const Pattern &pattern, Whole voice, Whole step) -> Flag {
-  const Whole steps = length(pattern);
-  if (voice >= VOICES || step >= steps) return false;
-  return ((pattern.lanes[voice] >> (steps - ::BIT - step)) & ::BIT) != 0;
+  if (voice >= VOICES) return false;
+  return ::lit(pattern.lanes[voice], length(pattern), step);
+}
+
+auto SOUND::PLUGINS::RHYTHM::accented(const Pattern &pattern, Whole step)
+  -> Flag {
+  return ::lit(pattern.accent, length(pattern), step);
 }

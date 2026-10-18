@@ -65,7 +65,7 @@ inline constexpr CORE::TABLE::Row REST[] = {
   {"Tune", "ct", 0, -CENTS, CENTS, 0, nullptr},
   {"Bend", "st", 0, -SEMITONES, SEMITONES, 0, nullptr},
   {"Volume", "", 0.5f, 0, 1, 0, nullptr}};
-static_assert(std::size(REST) == PARAMETERS - TAIL);
+static_assert(std::size(REST) == SECOND - TAIL);
 
 constexpr auto describe(Whole index) -> CORE::TABLE::Row {
   if (index < FIRST) return HEAD[index];

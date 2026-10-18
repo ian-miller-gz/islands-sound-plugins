@@ -15,6 +15,7 @@ struct Module {
 };
 
 void settle(Module &module);
+void tune(Module &module, Whole channel, Float cv);
 void apply(Module &module, const AUDIO::PLUGIN::Event &event);
 
 void render(

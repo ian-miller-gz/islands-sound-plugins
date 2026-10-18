@@ -41,6 +41,20 @@ auto glide(DUO::Synth &synth, Whole part) -> Float {
   return CORE::VOICE::tick(allocator.notes[part], allocator.glide);
 }
 
+auto play(DUO::Synth &synth, Float low, Float lfo, Float random, Float width)
+  -> DUO::Tones {
+  const Float *rows = synth.rows;
+  const Float high = ::glide(synth, CORE::VOICE::UPPER);
+  const Float shift = synth.tune + rows[DUO::BEND] + rows[DUO::VIBRATO] * lfo +
+                      rows[DUO::SAMPLE] * random;
+  const Float root = rows[DUO::KEYBOARD] > 0 ? low : DUO::REFERENCE + DRONE;
+  const Float first =
+    root + rows[DUO::COARSE1] + shift + DUO::stray(synth, CORE::VOICE::LOWER);
+  const Float second = high + rows[DUO::COARSE2] + synth.fine + shift +
+                       DUO::stray(synth, CORE::VOICE::UPPER);
+  return DUO::sing(synth, first, second, width);
+}
+
 }  // namespace
 
 auto SOUND::PLUGINS::DUO::sound(Synth &synth) -> Float {
@@ -51,18 +65,14 @@ auto SOUND::PLUGINS::DUO::sound(Synth &synth) -> Float {
   const Float adsr = CORE::ENVELOPE::tick(synth.adsr.gate, synth.adsr.envelope);
   const Float ar = CORE::ENVELOPE::tick(synth.ar.gate, synth.ar.envelope);
   const Float low = ::glide(synth, CORE::VOICE::LOWER);
-  const Float high = ::glide(synth, CORE::VOICE::UPPER);
-  const Float drift =
-    synth.tune + rows[BEND] + rows[VIBRATO] * lfo + rows[SAMPLE] * random;
-  const Float root = rows[KEYBOARD] > 0 ? low : REFERENCE + ::DRONE;
-  const Tones tones = sing(
-    synth, root + rows[COARSE1] + drift,
-    high + rows[COARSE2] + synth.fine + drift, ::width(synth, lfo, adsr));
+  const Tones tones =
+    ::play(synth, low, lfo, random, ::width(synth, lfo, adsr));
   synth.input = tones.saw + (noise - tones.saw) * rows[MIX];
   const Float sum = tones.mixed + rows[NOISE] * noise;
-  const Float contour = rows[CONTOUR] > 0 ? ar : adsr;
-  const Float filtered = filter(synth, sum, low, lfo, random, contour);
-  const Float gain = rows[AMPLIFIER] > 0 ? ar : adsr;
+  steer(synth, {low, lfo, random, rows[CONTOUR] > 0 ? ar : adsr});
+  const Float filtered = filter(synth, sum);
+  const Float loud = CORE::ENVELOPE::weigh(synth.velocity, rows[VELOCITY]);
+  const Float gain = (rows[AMPLIFIER] > 0 ? ar : adsr) * loud;
   ::quiet(synth);
   return CORE::SHAPER::tick(synth.blocker, filtered * gain);
 }

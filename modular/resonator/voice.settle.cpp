@@ -6,13 +6,9 @@
 namespace {
 using namespace SOUND::PLUGINS;
 
-constexpr Whole KINDS[RESONATOR::MODES] = {
-  CORE::FILTER::LOW, CORE::FILTER::BAND, CORE::FILTER::HIGH,
-  CORE::FILTER::NOTCH};
-
-auto kind(const RESONATOR::Module &module) -> Whole {
+auto mode(const RESONATOR::Module &module) -> Whole {
   const Whole mode = Whole(module.rows[RESONATOR::MODE]);
-  return KINDS[mode < RESONATOR::MODES ? mode : RESONATOR::LOW];
+  return mode < RESONATOR::MODES ? mode : RESONATOR::LOW;
 }
 
 }  // namespace
@@ -20,16 +16,24 @@ auto kind(const RESONATOR::Module &module) -> Whole {
 void SOUND::PLUGINS::RESONATOR::settle(Module &module) {
   module.lfo.hertz = module.rows[RATE];
   CORE::MODULATOR::settle(module.lfo, module.rate);
-  module.countdown = 0;
+  CORE::BLOCK::reset(module.stride);
+  const Whole model = chosen(module);
+  if (model == module.model) return;
+  for (Stage &stage : module.stages) stage = Stage{};
+  module.model = model;
 }
 
 void SOUND::PLUGINS::RESONATOR::sweep(
-  Module &module, Whole channel, Float octaves) {
+  Module &module, Whole channel, Float swing, Float cv) {
   const Float *rows = module.rows;
-  const Float hertz = rows[CUTOFF] * std::exp2(octaves);
-  CORE::FILTER::settle(
-    module.filters[channel], ::kind(module), hertz, rows[EMPHASIS],
-    module.rate);
+  const Tone tone = {
+    .kind = ::mode(module),
+    .cutoff = CORE::BLOCK::scaled(
+      rows[CUTOFF] * std::exp2(swing), cv, rows[DEPTH], LOWEST, HIGHEST),
+    .emphasis = rows[EMPHASIS],
+    .drive = rows[DRIVE],
+    .rate = module.rate * TWICE};
+  model(module).settle(module.stages[channel], tone);
 }
 
 void SOUND::PLUGINS::RESONATOR::apply(
